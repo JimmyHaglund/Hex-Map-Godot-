@@ -22,3 +22,8 @@ SceneInstantiator="*res://Scenes/SceneInstantiator.tscn"
 [dotnet]
 
 project/assembly_name="MeshBasics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=2
+environment/defaults/default_clear_color=Color(0.293479, 0.490838, 0.380369, 1)

@@ -12,11 +12,10 @@
 script = ExtResource("1_52rku")
 HexCellPrefab = ExtResource("2_dagm6")
 CellLabelPrefab = ExtResource("3_48iag")
-TouchedColor = Color(0.637474, 0.315847, 0.564645, 1)
 
 [node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape")]
 material_override = ExtResource("4_5rgnw")
-cast_shadow = 0
+gi_mode = 2
 mesh = SubResource("ArrayMesh_0fglf")
 script = ExtResource("4_sgmtd")
 CollisionShape = NodePath("StaticBody3D/CollisionShape3D")

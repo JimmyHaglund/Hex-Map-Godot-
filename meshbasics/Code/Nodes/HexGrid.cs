@@ -13,8 +13,7 @@ public sealed partial class HexGrid : Node3D {
     [Export] public int Width { get; set; } = 6;
     [Export] public int Height { get; set; } = 6;
     [Export] public Color DefaultColor { get; set; } = new(1, 1, 1);
-    [Export] public Color TouchedColor { get; set; } = new(230, 150, 210);
-
+    
     private HexMesh _hexMesh;
     private HexCell[] _cells;
 
@@ -37,7 +36,7 @@ public sealed partial class HexGrid : Node3D {
     public HexCell GetCell(Vector3 position) {
         var coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
-        if (index >= _cells.Length || index <= 0) return null;
+        if (index >= _cells.Length || index < 0) return null;
         return _cells[index];
     }
 

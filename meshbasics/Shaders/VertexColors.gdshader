@@ -17,5 +17,5 @@ void fragment() {
     ALBEDO = final_color.rgb;
     METALLIC = metallic;
     ROUGHNESS = 1.0 - glossiness; // Godot uses roughness instead of smoothness
-    ALPHA = final_color.a;
+
 }
