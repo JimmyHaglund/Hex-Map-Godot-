@@ -78,6 +78,7 @@ public sealed partial class HexGrid : Node3D {
         Label3D label = InstantiateChild<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
         label.Text = cell.Coordinates.ToStringOnSeparateLines();
+        cell.UiRect = label;
     }
 
     private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{

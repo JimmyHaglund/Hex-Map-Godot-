@@ -8,6 +8,7 @@ public sealed partial class HexCell : Node3D {
 
     public Color Color { get; set; }
     public HexCoordinates Coordinates { get; set; }
+    public Node3D UiRect { get; set; }
     public int Elevation {
         get => _elevation;
         set {
@@ -15,6 +16,11 @@ public sealed partial class HexCell : Node3D {
             var newPosition = Position;
             newPosition.Y = value * HexMetrics.ElevationStep;
             Position = newPosition;
+
+            if (UiRect is null) return;
+            var uiPosition = UiRect.Position;
+            uiPosition.Y = newPosition.Y + 0.05f;
+            UiRect.Position = uiPosition;
         }
     }
 
