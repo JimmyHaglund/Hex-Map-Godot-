@@ -79,6 +79,12 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         AddQuad(v1, v2, v3, v4);
         AddQuadColor(cell.Color, neighbor.Color);
+
+        HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
+        if (direction <= HexDirection.E && nextNeighbor is not null) {
+            AddTriangle(v2, v4, v2 + HexMetrics.GetBridge(direction.Next()));
+            AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
+        }
     }
 
     void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
