@@ -67,7 +67,20 @@ public sealed partial class HexMesh : MeshInstance3D {
         HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
         HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
-        AddQuadColor(cell.Color, cell.Color + neighbor.Color);
+        Color bridgeColor = (cell.Color + neighbor.Color) * 0.5f;
+        AddQuadColor(cell.Color, bridgeColor);
+        AddTriangle(v1, center + HexMetrics.GetFirstCorner(direction), v3);
+        AddTriangleColor(
+            cell.Color,
+            (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
+            bridgeColor
+        );
+        AddTriangle(v2, v4, center + HexMetrics.GetSecondCorner(direction));
+        AddTriangleColor(
+            cell.Color,
+            bridgeColor,
+            (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
+        );
         // AddQuadColor(
         //     cell.Color,
         //     cell.Color,
