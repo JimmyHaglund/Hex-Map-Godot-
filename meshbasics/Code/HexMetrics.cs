@@ -12,6 +12,7 @@ public static class HexMetrics {
         new (InnerRadius, 0.0f, -0.5f * OuterRadius),
         new (0.0f, 0.0f, -OuterRadius),
         new (-InnerRadius, 0.0f, -0.5f * OuterRadius),
-        new (-InnerRadius, 0.0f, 0.5f * OuterRadius)
+        new (-InnerRadius, 0.0f, 0.5f * OuterRadius),
+        new (0.0f, 0.0f, OuterRadius)
     };
 }

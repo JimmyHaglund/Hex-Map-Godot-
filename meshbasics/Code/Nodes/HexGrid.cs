@@ -12,17 +12,28 @@ public sealed partial class HexGrid : Node3D {
     [ExportCategory("HexGrid Configuration")]
     [Export] public int Width { get; set; } = 6;
     [Export] public int Height { get; set; } = 6;
+    private HexMesh _hexMesh;
 
     private HexCell[] cells;
-    public override void _Ready() {
-        cells = new HexCell[Height * Width];
 
+    public override void _EnterTree() {
+        cells = new HexCell[Height * Width];
+        _hexMesh = this.GetChild<HexMesh>(0);
+
+        GD.Print(_hexMesh.Name);
         for (int z = 0, i = 0; z < Height; z++) {
             for (int x = 0; x < Width; x++) {
                 CreateCell(x, z, i++);
             }
         }
+
+
     }
+
+    public override void _Ready() {
+        _hexMesh.Triangulate(cells);
+    }
+
 
     void CreateCell(int x, int z, int i) {
         Vector3 position;

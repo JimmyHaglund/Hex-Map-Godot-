@@ -1,12 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://dacbihjsexuto"]
+[gd_scene load_steps=5 format=3 uid="uid://dacbihjsexuto"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexCell.cs" id="1_fwy77"]
+[ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="2_080vp"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_l02ow"]
-size = Vector2(10, 10)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ut3jk"]
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_gdc1h"]
+
+[node name="HexCell" type="Node3D"]
 script = ExtResource("1_fwy77")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_l02ow")
+material_override = SubResource("StandardMaterial3D_ut3jk")
+mesh = SubResource("ArrayMesh_gdc1h")
+script = ExtResource("2_080vp")
