@@ -1,6 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=9 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
+[ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
+[ext_resource type="Script" path="res://Code/Nodes/TouchHex.cs" id="2_md2cv"]
+[ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
 albedo_color = Color(0.0490858, 0.131412, 0.177493, 1)
@@ -9,10 +12,23 @@ albedo_color = Color(0.0490858, 0.131412, 0.177493, 1)
 material = SubResource("StandardMaterial3D_7ero0")
 size = Vector2(200, 200)
 
+[sub_resource type="SphereMesh" id="SphereMesh_hw2ro"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pf745"]
+albedo_color = Color(0.321569, 1, 0.686275, 1)
+
 [node name="Demo" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-1, 6.24785e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 34.8552, 53.6606, 1.53194)
+
+[node name="Node3D" type="Node3D" parent="Camera3D" node_paths=PackedStringArray("Camera")]
+script = ExtResource("1_qmp3k")
+Camera = NodePath("..")
+
+[node name="Node" type="Node" parent="Camera3D"]
+script = ExtResource("2_md2cv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -22,3 +38,11 @@ mesh = SubResource("PlaneMesh_bnbs1")
 transform = Transform3D(0.844985, 0.525987, -0.0966353, -0.310676, 0.629877, 0.711853, 0.435294, -0.571483, 0.695648, 0, 1.66242, 0)
 
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
+
+[node name="MOusePOinter" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0474968, 0.0449371, 0.0137749)
+script = ExtResource("4_qyimf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MOusePOinter"]
+mesh = SubResource("SphereMesh_hw2ro")
+surface_material_override/0 = SubResource("StandardMaterial3D_pf745")

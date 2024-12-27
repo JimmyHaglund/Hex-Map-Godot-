@@ -1,9 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://bkqosooy180ch"]
+[gd_scene load_steps=7 format=3 uid="uid://bkqosooy180ch"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
 [ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
 [ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="4_sgmtd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wolmo"]
+albedo_color = Color(0.701961, 0.780392, 0.368627, 1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 
@@ -12,6 +15,13 @@ script = ExtResource("1_52rku")
 HexCellPrefab = ExtResource("2_dagm6")
 CellLabelPrefab = ExtResource("3_48iag")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape")]
+material_override = SubResource("StandardMaterial3D_wolmo")
+cast_shadow = 0
 mesh = SubResource("ArrayMesh_0fglf")
 script = ExtResource("4_sgmtd")
+CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="HexMesh"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HexMesh/StaticBody3D"]

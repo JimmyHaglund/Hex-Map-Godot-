@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMesh : MeshInstance3D {
+    [Export] public CollisionShape3D CollisionShape { get; set; }
 
     private ArrayMesh _mesh;
     private List<Vector3> _vertices = new();
@@ -26,18 +27,19 @@ public sealed partial class HexMesh : MeshInstance3D {
         var surfaceTool = new SurfaceTool();
 
         surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
-        surfaceTool.SetMaterial(_mesh.SurfaceGetMaterial(0));
+        // surfaceTool.SetMaterial(_mesh.SurfaceGetMaterial(0));
 
         for(var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
-            surfaceTool.SetColor(new Color(0.25f, 0.35f, 0.5f));
-            surfaceTool.SetUV(new Vector2(0, 0));
+            // surfaceTool.SetColor(new Color(0.25f, 0.35f, 0.5f));
+            // surfaceTool.SetUV(new Vector2(0, 0));
             surfaceTool.AddVertex(vertex);
         }
 
-        Mesh tempMesh = new();
-
         surfaceTool.Commit(_mesh);
+
+        CollisionShape.Shape = _mesh.CreateTrimeshShape();
+
         // _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, _vertices.ToArray());
         // hexMesh.triangles = triangles.ToArray();
         // hexMesh.RecalculateNormals();

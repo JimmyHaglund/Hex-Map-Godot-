@@ -26,8 +26,6 @@ public sealed partial class HexGrid : Node3D {
                 CreateCell(x, z, i++);
             }
         }
-
-
     }
 
     public override void _Ready() {
