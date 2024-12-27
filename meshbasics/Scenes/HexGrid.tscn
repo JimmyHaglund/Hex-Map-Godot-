@@ -3,10 +3,8 @@
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
 [ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
 [ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
+[ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/VertexColorMaterial.tres" id="4_5rgnw"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="4_sgmtd"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wolmo"]
-albedo_color = Color(0.701961, 0.780392, 0.368627, 1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 
@@ -14,9 +12,10 @@ albedo_color = Color(0.701961, 0.780392, 0.368627, 1)
 script = ExtResource("1_52rku")
 HexCellPrefab = ExtResource("2_dagm6")
 CellLabelPrefab = ExtResource("3_48iag")
+TouchedColor = Color(0.637474, 0.315847, 0.564645, 1)
 
 [node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape")]
-material_override = SubResource("StandardMaterial3D_wolmo")
+material_override = ExtResource("4_5rgnw")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_0fglf")
 script = ExtResource("4_sgmtd")

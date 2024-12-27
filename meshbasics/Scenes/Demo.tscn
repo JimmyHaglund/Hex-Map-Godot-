@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=8 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
-[ext_resource type="Script" path="res://Code/Nodes/TouchHex.cs" id="2_md2cv"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
@@ -27,11 +26,8 @@ transform = Transform3D(-1, 6.24785e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.
 script = ExtResource("1_qmp3k")
 Camera = NodePath("..")
 
-[node name="Node" type="Node" parent="Camera3D"]
-script = ExtResource("2_md2cv")
-
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("PlaneMesh_bnbs1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -40,7 +36,7 @@ transform = Transform3D(0.844985, 0.525987, -0.0966353, -0.310676, 0.629877, 0.7
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
 
 [node name="MOusePOinter" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0474968, 0.0449371, 0.0137749)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0477524, 0.0898705, 0.0283718)
 script = ExtResource("4_qyimf")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MOusePOinter"]
