@@ -43,14 +43,11 @@ public sealed partial class HexGrid : Node3D {
 
         HexCell cell = cells[i] = InstantiateChild<HexCell>(HexCellPrefab, $"HexCell_{i}");
         cell.Position = position;
+        cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
 
-        AddCellLabel(x, z, i, position);
-    }
-
-    private void AddCellLabel(int x, int z, int i, Vector3 worldPosition) {
         Label3D label = InstantiateChild<Label3D>(CellLabelPrefab);
-        label.Position = new Vector3(worldPosition.X, label.Position.Y, worldPosition.Z);
-        label.Text = $"{x}\n{z}";
+        label.Position = new Vector3(position.X, label.Position.Y, position.Z);
+        label.Text = cell.Coordinates.ToStringOnSeparateLines();
     }
 
     private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{
