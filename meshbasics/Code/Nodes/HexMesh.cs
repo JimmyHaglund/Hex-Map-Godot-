@@ -57,8 +57,8 @@ public sealed partial class HexMesh : MeshInstance3D {
         for (int i = 0; i < 6; i++) {
             AddTriangle(
                 center,
-                center + HexMetrics.GetFirstCorner(direction),
-                center + HexMetrics.GetSecondCorner(direction)
+                center + HexMetrics.GetFirstSolidCorner(direction),
+                center + HexMetrics.GetSecondSolidCorner(direction)
             );
             HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
             HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
