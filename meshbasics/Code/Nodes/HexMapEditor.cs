@@ -26,8 +26,10 @@ public sealed partial class HexMapEditor : Node2D {
     }
 
     void EditCell(HexCell cell) {
+        if (cell is null) return;
         cell.Color = _activeColor;
         cell.Elevation = _activeElevation;
+        HexGrid.Refresh();
     }
 
     public void SetElevation(float elevationPercentage) {

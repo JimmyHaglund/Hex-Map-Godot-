@@ -46,6 +46,7 @@ mesh = SubResource("SphereMesh_hw2ro")
 surface_material_override/0 = SubResource("StandardMaterial3D_pf745")
 
 [node name="HexMapEditor" type="Node2D" parent="." node_paths=PackedStringArray("HexGrid")]
+position = Vector2(63, -171)
 script = ExtResource("4_fqh23")
 Colors = PackedColorArray(0.905049, 0.848337, 0.424126, 1, 0.259905, 0.630793, 0.479689, 1, 0.108825, 0.339266, 0.971792, 1, 0.838877, 0.111098, 0.348332, 1)
 HexGrid = NodePath("../HexGrid")
@@ -115,9 +116,11 @@ offset_bottom = 21.0
 text = "Red"
 
 [node name="ElevationSlider" type="VSlider" parent="HexMapEditor"]
-offset_left = -2.0
-offset_right = 14.0
-offset_bottom = 8.0
+offset_left = 962.0
+offset_top = 323.0
+offset_right = 978.0
+offset_bottom = 589.39
+tick_count = 100
 
 [connection signal="pressed" from="HexMapEditor/ColorPicker/CheckBoxYellow" to="HexMapEditor" method="SelectColor" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/ColorPicker/CheckBoxGreen" to="HexMapEditor" method="SelectColor" binds= [1]]

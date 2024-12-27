@@ -9,7 +9,7 @@ public static class HexMetrics {
     public const float SolidFactor = 0.75f;
     public const float BlendFactor = 1.0f - SolidFactor;
     public const float ElevationStep = 5.0f;
-    public const float Maxelevation = 100.0f;
+    public const float Maxelevation = 5.0f;
 
     public static Vector3[] Corners = {
         new (0.0f, 0.0f, OuterRadius),
