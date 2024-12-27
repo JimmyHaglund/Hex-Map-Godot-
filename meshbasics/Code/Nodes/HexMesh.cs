@@ -60,6 +60,7 @@ public sealed partial class HexMesh : MeshInstance3D {
                 center + HexMetrics.GetFirstSolidCorner(direction),
                 center + HexMetrics.GetSecondSolidCorner(direction)
             );
+
             HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
             HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
             HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
