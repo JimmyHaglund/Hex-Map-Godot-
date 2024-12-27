@@ -26,7 +26,7 @@ public sealed partial class HexGrid : Node3D {
 
     void CreateCell(int x, int z, int i) {
         Vector3 position;
-        position.X = x * HexMetrics.InnerRadius * 2.0f;
+        position.X = (x + z * 0.5f - z / 2) * HexMetrics.InnerRadius * 2.0f;
         position.Y = 0f;
         position.Z = z * HexMetrics.OuterRadius * 1.5f;
 

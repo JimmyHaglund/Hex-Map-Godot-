@@ -12,7 +12,7 @@ size = Vector2(200, 200)
 [node name="Demo" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 9.80056e-15, -8.74228e-08, -6.97849e-08, 0.602331, 0.798247, 5.26574e-08, 0.798247, -0.602331, 17.9787, 24.9949, -4.25963)
+transform = Transform3D(-1, 6.24785e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 34.8552, 53.6606, 1.53194)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
