@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://dacbihjsexuto"]
+
+[ext_resource type="Script" path="res://Code/Nodes/HexCell.cs" id="1_fwy77"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_l02ow"]
+size = Vector2(10, 10)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_fwy77")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_l02ow")

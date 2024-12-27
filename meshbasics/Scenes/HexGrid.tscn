@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkqosooy180ch"]
+
+[ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
+[ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
+[ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
+
+[node name="HexGrid" type="Node3D"]
+script = ExtResource("1_52rku")
+HexCellPrefab = ExtResource("2_dagm6")
+CellLabelPrefab = ExtResource("3_48iag")

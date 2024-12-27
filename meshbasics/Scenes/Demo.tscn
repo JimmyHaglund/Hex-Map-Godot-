@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://7x60g5iqbehg"]
+
+[ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
+albedo_color = Color(0.0490858, 0.131412, 0.177493, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bnbs1"]
+material = SubResource("StandardMaterial3D_7ero0")
+size = Vector2(200, 200)
+
+[node name="Demo" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 9.80056e-15, -8.74228e-08, -6.97849e-08, 0.602331, 0.798247, 5.26574e-08, 0.798247, -0.602331, 17.9787, 24.9949, -4.25963)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("PlaneMesh_bnbs1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.844985, 0.525987, -0.0966353, -0.310676, 0.629877, 0.711853, 0.435294, -0.571483, 0.695648, 0, 1.66242, 0)
+
+[node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
