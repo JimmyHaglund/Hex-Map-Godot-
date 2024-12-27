@@ -60,7 +60,8 @@ public sealed partial class HexMesh : MeshInstance3D {
                 center + HexMetrics.GetFirstCorner(direction),
                 center + HexMetrics.GetSecondCorner(direction)
             );
-            AddTriangleColor(cell.Color);
+            HexCell neighbor = cell.GetNeighbor(direction);
+            AddTriangleColor(cell.Color, neighbor.Color, neighbor.Color);
         }
     }
 
@@ -74,9 +75,16 @@ public sealed partial class HexMesh : MeshInstance3D {
         // _triangles.Add(vertexIndex + 2);
     }
 
-    void AddTriangleColor(Color color) {
+    private void AddTriangleColor(Color color) {
         _colors.Add(color);
         _colors.Add(color);
         _colors.Add(color);
+    }
+
+    private void AddTriangleColor(Color c1, Color c2, Color c3) {
+        _colors.Add(c1);
+        _colors.Add(c2);
+        _colors.Add(c3);
+
     }
 }
