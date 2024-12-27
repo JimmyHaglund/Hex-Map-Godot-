@@ -60,8 +60,14 @@ public sealed partial class HexMesh : MeshInstance3D {
                 center + HexMetrics.GetFirstCorner(direction),
                 center + HexMetrics.GetSecondCorner(direction)
             );
-            HexCell neighbor = cell.GetNeighbor(direction);
-            AddTriangleColor(cell.Color, neighbor.Color, neighbor.Color);
+            HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
+            HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
+            HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
+            AddTriangleColor(
+                cell.Color,
+                (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
+                (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
+            );
         }
     }
 
