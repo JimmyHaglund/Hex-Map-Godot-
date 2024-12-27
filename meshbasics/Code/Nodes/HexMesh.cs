@@ -46,13 +46,19 @@ public sealed partial class HexMesh : MeshInstance3D {
         // hexMesh.RecalculateNormals();
     }
 
-    void Triangulate(HexCell cell) {
+    private void Triangulate(HexCell cell) {
+        for (HexDirection direction = HexDirection.NE; direction <= HexDirection.NW; direction++) {
+            Triangulate(direction, cell);
+        }
+    }
+
+    private void Triangulate(HexDirection direction, HexCell cell) {
         Vector3 center = cell.Position;
         for (int i = 0; i < 6; i++) {
             AddTriangle(
                 center,
-                center + HexMetrics.Corners[i],
-                center + HexMetrics.Corners[i + 1]
+                center + HexMetrics.GetFirstCorner(direction),
+                center + HexMetrics.GetSecondCorner(direction)
             );
             AddTriangleColor(cell.Color);
         }

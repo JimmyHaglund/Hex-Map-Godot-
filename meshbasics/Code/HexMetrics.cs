@@ -15,4 +15,12 @@ public static class HexMetrics {
         new (-InnerRadius, 0.0f, 0.5f * OuterRadius),
         new (0.0f, 0.0f, OuterRadius)
     };
+
+    public static Vector3 GetFirstCorner(HexDirection direction) {
+        return Corners[(int)direction];
+    }
+
+    public static Vector3 GetSecondCorner(HexDirection direction) {
+        return Corners[(int)direction + 1];
+    }
 }

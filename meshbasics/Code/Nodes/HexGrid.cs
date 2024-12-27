@@ -56,6 +56,25 @@ public sealed partial class HexGrid : Node3D {
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Color = DefaultColor;
 
+        if (x > 0) {
+            cell.SetNeighbor(HexDirection.W, _cells[i - 1]);
+        }
+        if (z > 0) {
+            if ((z & 1) == 0) {
+                cell.SetNeighbor(HexDirection.SE, _cells[i - Width]);
+                if (x > 0) {
+                    cell.SetNeighbor(HexDirection.SW, _cells[i - Width - 1]);
+                }
+            }
+            else {
+                cell.SetNeighbor(HexDirection.SW, _cells[i - Width]);
+                if (x < Width - 1) {
+                    cell.SetNeighbor(HexDirection.SE, _cells[i - Width + 1]);
+                }
+            }
+        }
+
+
         Label3D label = InstantiateChild<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
         label.Text = cell.Coordinates.ToStringOnSeparateLines();
