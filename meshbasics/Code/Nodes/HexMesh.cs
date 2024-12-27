@@ -56,37 +56,29 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 center = cell.Position;
         Vector3 v1 = center + HexMetrics.GetFirstSolidCorner(direction);
         Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(direction);
+
         AddTriangle(center, v1, v2);
         AddTriangleColor(cell.Color);
+        var triangulate = () => TriangulateConnection(direction, cell, v1, v2);
 
+        if (direction == HexDirection.NE) {
+            triangulate();
+        }
+
+        if (direction <= HexDirection.SE) {
+            triangulate();
+        }
+    }
+
+    private void TriangulateConnection(HexDirection direction, HexCell cell, Vector3 v1, Vector3 v2) {
+        HexCell neighbor = cell.GetNeighbor(direction);
+        if (neighbor is null) return;
         Vector3 bridge = HexMetrics.GetBridge(direction);
-        Vector3 v3 = v1 + bridge; // center + HexMetrics.GetFirstCorner(direction);
-        Vector3 v4 = v2 + bridge; // center + HexMetrics.GetSecondCorner(direction);
+        Vector3 v3 = v1 + bridge;
+        Vector3 v4 = v2 + bridge;
+
         AddQuad(v1, v2, v3, v4);
-        
-        HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
-        HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
-        HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
-        Color bridgeColor = (cell.Color + neighbor.Color) * 0.5f;
-        AddQuadColor(cell.Color, bridgeColor);
-        AddTriangle(v1, center + HexMetrics.GetFirstCorner(direction), v3);
-        AddTriangleColor(
-            cell.Color,
-            (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
-            bridgeColor
-        );
-        AddTriangle(v2, v4, center + HexMetrics.GetSecondCorner(direction));
-        AddTriangleColor(
-            cell.Color,
-            bridgeColor,
-            (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
-        );
-        // AddQuadColor(
-        //     cell.Color,
-        //     cell.Color,
-        //     (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
-        //     (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
-        // );
+        AddQuadColor(cell.Color, neighbor.Color);
     }
 
     void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {

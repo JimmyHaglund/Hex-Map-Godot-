@@ -38,7 +38,6 @@ public static class HexMetrics {
     }
 
     public static Vector3 GetBridge(HexDirection direction) {
-        return (Corners[(int)direction] + Corners[(int)direction + 1]) *
-            0.5f * BlendFactor;
+        return (Corners[(int)direction] + Corners[(int)direction + 1]) * BlendFactor;
     }
 }
