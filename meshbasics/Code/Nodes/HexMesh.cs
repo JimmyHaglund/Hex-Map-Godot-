@@ -59,33 +59,21 @@ public sealed partial class HexMesh : MeshInstance3D {
         AddTriangle(center, v1, v2);
         AddTriangleColor(cell.Color);
 
-        Vector3 v3 = center + HexMetrics.GetFirstCorner(direction);
-        Vector3 v4 = center + HexMetrics.GetSecondCorner(direction);
+        Vector3 bridge = HexMetrics.GetBridge(direction);
+        Vector3 v3 = v1 + bridge; // center + HexMetrics.GetFirstCorner(direction);
+        Vector3 v4 = v2 + bridge; // center + HexMetrics.GetSecondCorner(direction);
         AddQuad(v1, v2, v3, v4);
         
         HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
         HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
-        AddQuadColor(
-            cell.Color,
-            cell.Color,
-            (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
-            (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
-        );
-
-        // for (int i = 0; i < 6; i++) {
-        //     AddTriangle(center, v1, v2);
-        // 
-        // 
-        //     HexCell previousNeighbor = cell.GetNeighbor(direction.Previous()) ?? cell;
-        //     HexCell neighbor = cell.GetNeighbor(direction) ?? cell;
-        //     HexCell nextNeighbor = cell.GetNeighbor(direction.Next()) ?? cell;
-        //     AddTriangleColor(
-        //         cell.Color,
-        //         (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
-        //         (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
-        //     );
-        // }
+        AddQuadColor(cell.Color, cell.Color + neighbor.Color);
+        // AddQuadColor(
+        //     cell.Color,
+        //     cell.Color,
+        //     (cell.Color + previousNeighbor.Color + neighbor.Color) / 3.0f,
+        //     (cell.Color + neighbor.Color + nextNeighbor.Color) / 3.0f
+        // );
     }
 
     void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
@@ -137,5 +125,16 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(c3);
         _colors.Add(c4);
         _colors.Add(c2);
+    }
+
+    void AddQuadColor(Color c1, Color c2) {
+        _colors.Add(c2);
+        _colors.Add(c1);
+        _colors.Add(c1);
+
+        _colors.Add(c2);
+        _colors.Add(c2);
+        _colors.Add(c1);
+
     }
 }

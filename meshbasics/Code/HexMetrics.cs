@@ -1,4 +1,5 @@
 using Godot;
+using static Godot.RenderingDevice;
 
 namespace JHM.MeshBasics;
 
@@ -34,5 +35,10 @@ public static class HexMetrics {
 
     public static Vector3 GetSecondSolidCorner(HexDirection direction) {
         return Corners[(int)direction + 1] * SolidFactor;
+    }
+
+    public static Vector3 GetBridge(HexDirection direction) {
+        return (Corners[(int)direction] + Corners[(int)direction + 1]) *
+            0.5f * BlendFactor;
     }
 }
