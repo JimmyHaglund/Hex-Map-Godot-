@@ -34,22 +34,14 @@ public sealed partial class HexGrid : Node3D {
         _hexMesh.Triangulate(_cells);
     }
 
-    public override void _PhysicsProcess(double delta) {
-        if (Input.IsMouseButtonPressed(MouseButton.Left)) {
-            TryTouch();
-        }
-    }
-
-    private void TryTouch() {
-        var mousePosition = Mouse3D.MouseWorldPosition;
-        var coordinates = HexCoordinates.FromPosition(mousePosition);
+    public void ColorCell(Vector3 position, Color color) {
+        var coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
         if (index >= _cells.Length) return;
 
         HexCell cell = _cells[index];
-        cell.Color = TouchedColor;
+        cell.Color = color;
         _hexMesh.Triangulate(_cells);
-        GD.Print(coordinates);
     }
 
 

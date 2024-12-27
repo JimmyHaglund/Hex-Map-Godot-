@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=10 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
+[ext_resource type="ButtonGroup" uid="uid://ba2gr3etk24ym" path="res://Misc/ColorButtonGroup.tres" id="4_2w26v"]
+[ext_resource type="Script" path="res://Code/Nodes/HexMapEditor.cs" id="4_fqh23"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
@@ -27,7 +29,7 @@ script = ExtResource("1_qmp3k")
 Camera = NodePath("..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("PlaneMesh_bnbs1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -42,3 +44,74 @@ script = ExtResource("4_qyimf")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MOusePOinter"]
 mesh = SubResource("SphereMesh_hw2ro")
 surface_material_override/0 = SubResource("StandardMaterial3D_pf745")
+
+[node name="HexMapEditor" type="Node2D" parent="." node_paths=PackedStringArray("HexGrid")]
+script = ExtResource("4_fqh23")
+Colors = PackedColorArray(0.905049, 0.848337, 0.424126, 1, 0.259905, 0.630793, 0.479689, 1, 0.108825, 0.339266, 0.971792, 1, 0.838877, 0.111098, 0.348332, 1)
+HexGrid = NodePath("../HexGrid")
+
+[node name="CheckBoxYellow" type="CheckBox" parent="HexMapEditor"]
+offset_left = 953.0
+offset_top = 213.0
+offset_right = 977.0
+offset_bottom = 237.0
+button_pressed = true
+button_group = ExtResource("4_2w26v")
+
+[node name="Label" type="Label" parent="HexMapEditor/CheckBoxYellow"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = -2.0
+offset_right = 73.0
+offset_bottom = 21.0
+text = "Yellow"
+
+[node name="CheckBoxGreen" type="CheckBox" parent="HexMapEditor"]
+offset_left = 953.0
+offset_top = 234.0
+offset_right = 977.0
+offset_bottom = 258.0
+button_group = ExtResource("4_2w26v")
+
+[node name="Label" type="Label" parent="HexMapEditor/CheckBoxGreen"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = -2.0
+offset_right = 73.0
+offset_bottom = 21.0
+text = "Green"
+
+[node name="CheckBoxBlue" type="CheckBox" parent="HexMapEditor"]
+offset_left = 953.0
+offset_top = 257.0
+offset_right = 977.0
+offset_bottom = 281.0
+button_group = ExtResource("4_2w26v")
+
+[node name="Label" type="Label" parent="HexMapEditor/CheckBoxBlue"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = -2.0
+offset_right = 73.0
+offset_bottom = 21.0
+text = "Blue"
+
+[node name="CheckBoxRed" type="CheckBox" parent="HexMapEditor"]
+offset_left = 950.0
+offset_top = 280.0
+offset_right = 974.0
+offset_bottom = 304.0
+button_group = ExtResource("4_2w26v")
+
+[node name="Label" type="Label" parent="HexMapEditor/CheckBoxRed"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = -2.0
+offset_right = 73.0
+offset_bottom = 21.0
+text = "Red"
+
+[connection signal="pressed" from="HexMapEditor/CheckBoxYellow" to="HexMapEditor" method="SelectColor" binds= [0]]
+[connection signal="pressed" from="HexMapEditor/CheckBoxGreen" to="HexMapEditor" method="SelectColor" binds= [1]]
+[connection signal="pressed" from="HexMapEditor/CheckBoxBlue" to="HexMapEditor" method="SelectColor" binds= [2]]
+[connection signal="pressed" from="HexMapEditor/CheckBoxRed" to="HexMapEditor" method="SelectColor" binds= [3]]
