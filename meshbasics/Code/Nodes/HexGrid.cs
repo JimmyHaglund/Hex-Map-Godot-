@@ -34,16 +34,16 @@ public sealed partial class HexGrid : Node3D {
         _hexMesh.Triangulate(_cells);
     }
 
-    public void ColorCell(Vector3 position, Color color) {
+    public HexCell GetCell(Vector3 position) {
         var coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
-        if (index >= _cells.Length) return;
-
-        HexCell cell = _cells[index];
-        cell.Color = color;
-        _hexMesh.Triangulate(_cells);
+        if (index >= _cells.Length || index <= 0) return null;
+        return _cells[index];
     }
 
+    public void Refresh() {
+        _hexMesh.Triangulate(_cells);
+    }
 
     private void CreateCell(int x, int z, int i) {
         Vector3 position;
