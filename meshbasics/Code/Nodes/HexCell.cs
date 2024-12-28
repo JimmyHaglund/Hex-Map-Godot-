@@ -7,6 +7,10 @@ public sealed partial class HexCell : Node3D {
     private int _elevation = int.MinValue;
     private Node3D _uiRect;
     private Color _color;
+    private bool _hasIncomingRiver;
+    private bool _hasOutgoingRiver;
+    private HexDirection _incomingRiver;
+    private HexDirection _outgoingRiver;
 
     public Color Color {
         get {
@@ -41,6 +45,48 @@ public sealed partial class HexCell : Node3D {
             UpdateUiAltitude();
             Refresh();
         }
+    }
+
+    public bool HasIncomingRiver {
+        get {
+            return _hasIncomingRiver;
+        }
+    }
+
+    public bool HasOutgoingRiver {
+        get {
+            return _hasOutgoingRiver;
+        }
+    }
+
+    public HexDirection IncomingRiver {
+        get {
+            return _incomingRiver;
+        }
+    }
+
+    public HexDirection OutgoingRiver {
+        get {
+            return _outgoingRiver;
+        }
+    }
+
+    public bool HasRiver {
+        get {
+            return _hasIncomingRiver || _hasOutgoingRiver;
+        }
+    }
+
+    public bool HasRiverBeginOrEnd {
+        get {
+            return _hasIncomingRiver != _hasOutgoingRiver;
+        }
+    }
+
+    public bool HasRiverThroughEdge(HexDirection direction) {
+        return
+            _hasIncomingRiver && _incomingRiver == direction ||
+            _hasOutgoingRiver && _outgoingRiver == direction;
     }
 
     private void UpdateUiAltitude() {
