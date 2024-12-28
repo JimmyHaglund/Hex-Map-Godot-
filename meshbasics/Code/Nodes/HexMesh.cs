@@ -64,15 +64,48 @@ public sealed partial class HexMesh : MeshInstance3D {
             center + HexMetrics.GetSecondSolidCorner(direction)
         );
 
-        if (cell.HasRiverThroughEdge(direction)) {
-            e.v3.Y = cell.StreamBedY;
+        if (cell.HasRiver) {
+            if (cell.HasRiverThroughEdge(direction)) {
+                e.v3.Y = cell.StreamBedY;
+                TriangulateWithRiver(direction, cell, center, e);
+            }
+        } else { 
+            TriangulateEdgeFan(center, e, cell.Color);
         }
 
-        TriangulateEdgeFan(center, e, cell.Color);
-        
         if (direction <= HexDirection.SE) {
             TriangulateConnection(direction, cell, e);
         }
+    }
+
+    private void TriangulateWithRiver(
+        HexDirection direction,
+        HexCell cell,
+        Vector3 center,
+        EdgeVertices e
+    ) {
+        Vector3 centerL = center +
+            HexMetrics.GetFirstSolidCorner(direction.Previous()) * 0.25f;
+        Vector3 centerR = center +
+            HexMetrics.GetSecondSolidCorner(direction.Next()) * 0.25f;
+        EdgeVertices m = new EdgeVertices(
+            centerL.Lerp(e.v1, 0.5f),
+            centerR.Lerp(e.v5, 0.5f),
+            1.0f / 6.0f
+        );
+        m.v3.Y = center.Y = e.v3.Y;
+        TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+
+        AddTriangle(centerL, m.v1, m.v2);
+        AddTriangleColor(cell.Color);
+
+        AddQuad(centerL, center, m.v2, m.v3);
+        AddQuadColor(cell.Color);
+        AddQuad(center, centerR, m.v3, m.v4);
+        AddQuadColor(cell.Color);
+
+        AddTriangle(centerR, m.v4, m.v5);
+        AddTriangleColor(cell.Color);
     }
 
     private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1) {
@@ -406,6 +439,15 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(c1);
         _colors.Add(c2);
         _colors.Add(c2);
+    }
+
+    void AddQuadColor(Color color) {
+        _colors.Add(color);
+        _colors.Add(color);
+        _colors.Add(color);
+        _colors.Add(color);
+        _colors.Add(color);
+        _colors.Add(color);
     }
 
     private Vector3 Perturb(Vector3 position) {
