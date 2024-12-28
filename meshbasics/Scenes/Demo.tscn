@@ -133,8 +133,11 @@ offset_right = 978.0
 offset_bottom = 589.39
 tick_count = 5
 
-[node name="HexMapCamera" type="Node3D" parent="."]
+[node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("5_mpgou")
+Grid = NodePath("../HexGrid")
+ZoomedInMovementSpeed = 150.0
+ZoomedOutMovementSpeed = 600.0
 
 [node name="CameraSwivel" type="Node3D" parent="HexMapCamera"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
