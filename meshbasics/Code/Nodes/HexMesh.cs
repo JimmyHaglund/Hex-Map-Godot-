@@ -150,49 +150,40 @@ public sealed partial class HexMesh : MeshInstance3D {
                 TriangulateCornerTerraces(
                     bottom, bottomCell, left, leftCell, right, rightCell
                 );
-                return;
-            }
-            if (rightEdgeType == HexEdgeType.Flat) {
+            } else if (rightEdgeType == HexEdgeType.Flat) {
                 TriangulateCornerTerraces(
                     left, leftCell, right, rightCell, bottom, bottomCell
                 );
-                return;
+            } else {  
+                TriangulateCornerTerracesCliff(
+                    bottom, bottomCell, left, leftCell, right, rightCell
+                );
             }
-            TriangulateCornerTerracesCliff(
-                bottom, bottomCell, left, leftCell, right, rightCell
-            );
-            return;
-        }
-
-        if (rightEdgeType == HexEdgeType.Slope) {
+        } else if (rightEdgeType == HexEdgeType.Slope) {
             if (leftEdgeType == HexEdgeType.Flat) {
                 TriangulateCornerTerraces(
                     right, rightCell, bottom, bottomCell, left, leftCell
                 );
-                return;
             }
-            TriangulateCornerCliffTerraces(
-                bottom, bottomCell, left, leftCell, right, rightCell
-            );
-            return;
-        }
-
-        if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
+            else {
+                TriangulateCornerCliffTerraces(
+                    bottom, bottomCell, left, leftCell, right, rightCell
+                );
+            }
+        } else if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
             if (leftCell.Elevation < rightCell.Elevation) {
                 TriangulateCornerCliffTerraces(
                     right, rightCell, bottom, bottomCell, left, leftCell
                 );
-            }
-            else {
+            } else {
                 TriangulateCornerTerracesCliff(
                     left, leftCell, right, rightCell, bottom, bottomCell
                 );
             }
-            return;
+        } else { 
+            AddTriangle(bottom, left, right);
+            AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
         }
-
-        AddTriangle(bottom, left, right);
-        AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
     }
 
     private void TriangulateCornerTerraces(
