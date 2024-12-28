@@ -4,6 +4,7 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexMapCamera : Node3D {
     private float _zoomedInPercentage = 0.5f;
+    private float _rotationAngle = 0.0f;
     private Node3D _swivel;
     private Node3D _stick;
 
@@ -21,19 +22,32 @@ public sealed partial class HexMapCamera : Node3D {
     [Export] public float SwivelZoomedInAngle { get; set; } = 45.0f;
     [Export] public float SwivelZoomedOutAngle { get; set; } = 90.0f;
 
+    [ExportCategory("Rotation Settings")]
+    [Export] public float RotationSpeed { get; set; } = 5.0f;
+
     public override void _EnterTree() {
         _swivel = GetChild<Node3D>(0);
         _stick = _swivel.GetChild<Node3D>(0);
     }
 
     public override void _Process(double delta) {
-        var fDelta = (float)delta;
-        float zoomDelta = fDelta * ZoomFactor * (
+        var fDeltaTime = (float)delta;
+        float zoomDelta = fDeltaTime * ZoomFactor * (
             Input.IsActionJustPressed("ZoomIn") ? 1.0f 
             : Input.IsActionJustPressed("ZoomOut") ? -1.0f 
             : 0.0f);
         if (zoomDelta != 0f) {
             AdjustZoom(zoomDelta);
+        }
+
+        var inputRotation = Input.IsActionPressed("RotateLeft") ? 0.50f
+            : Input.IsActionPressed("RotateRight") ? -0.50f
+            : 0.0f;
+        if (Input.IsActionPressed("EnableRotation")) {
+            inputRotation += -0.0005f * Input.GetLastMouseVelocity().X;
+        }
+        if (inputRotation != 0.0f) {
+            AdjustRotation(inputRotation, fDeltaTime);
         }
 
         float inputMoveDeltaX = Input.IsActionPressed("MoveLeft") ? 1.0f
@@ -43,9 +57,8 @@ public sealed partial class HexMapCamera : Node3D {
             : Input.IsActionPressed("MoveBack") ? -1.0f
             : 0.0f;
         if (inputMoveDeltaX != 0.0f || inputMoveDeltaY != 0.0f) {
-            AdjustPosition(inputMoveDeltaX, inputMoveDeltaY, fDelta);
+            AdjustPosition(inputMoveDeltaX, inputMoveDeltaY, fDeltaTime);
         }
-        
     }
 
     private void AdjustZoom(float delta) {
@@ -62,7 +75,7 @@ public sealed partial class HexMapCamera : Node3D {
 
     private void AdjustPosition(float xDelta, float zDelta, float timeDelta) {
         Vector3 position = Position;
-        Vector3 direction = new Vector3(xDelta, 0.0f, zDelta).Normalized();
+        Vector3 direction = Quaternion.FromEuler(Rotation) * new Vector3(xDelta, 0.0f, zDelta).Normalized();
         float distance = Mathf.Lerp(ZoomedOutMovementSpeed, ZoomedInMovementSpeed, _zoomedInPercentage) * timeDelta;
         position += direction * distance;
         Position = ClampPosition(position);
@@ -80,5 +93,10 @@ public sealed partial class HexMapCamera : Node3D {
         position.Z = Mathf.Clamp(position.Z, 0f, zMax);
 
         return position;
+    }
+
+    void AdjustRotation(float deltaRotation, float deltaTime) {
+        _rotationAngle += deltaRotation * RotationSpeed * deltaTime;
+        Rotation = new(0.0f, _rotationAngle, 0.0f);
     }
 }
