@@ -84,7 +84,16 @@ public sealed partial class HexMapEditor : Control {
         if (_applyElevation) {
             cell.Elevation = _activeElevation;
         }
-        // HexGrid.Refresh();
+
+        if (_riverMode == OptionalToggle.Off) {
+            cell.RemoveRiver();
+        }
+        else if (_isDrag && _riverMode == OptionalToggle.On) {
+            HexCell otherCell = cell.GetNeighbor(_dragDirection.Opposite());
+            if (otherCell != null) {
+                otherCell.SetOutgoingRiver(_dragDirection);
+            }
+        }
     }
 
     public void SetElevation(float elevationStep) {
