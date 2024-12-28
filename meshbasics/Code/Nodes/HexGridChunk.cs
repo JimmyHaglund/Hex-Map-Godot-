@@ -16,6 +16,7 @@ public sealed partial class HexGridChunk : Node3D {
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
+    private bool _labelsVisible = true;
 
     // public override void _EnterTree() {
     //     // gridCanvas = GetComponentInChildren<Canvas>();
@@ -50,5 +51,11 @@ public sealed partial class HexGridChunk : Node3D {
         HexMesh.Triangulate(_cells);
         _shouldUpdate = false;
         RefreshCompleted();
+    }
+
+    public void SetUIVisible(bool visible) {
+        if (visible == _labelsVisible) return;
+        _labelsVisible = visible;
+        foreach (var cell in _cells) cell.SetShowLabel(visible);
     }
 }

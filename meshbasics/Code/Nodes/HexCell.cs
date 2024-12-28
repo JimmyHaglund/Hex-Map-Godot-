@@ -71,6 +71,11 @@ public sealed partial class HexCell : Node3D {
         );
     }
 
+    public void SetShowLabel(bool visible) {
+        if (UiRect is null) return;
+        UiRect.Visible = visible;
+    }
+
     private void Refresh() {
         if (Chunk is null) return;
         Chunk.Refresh();

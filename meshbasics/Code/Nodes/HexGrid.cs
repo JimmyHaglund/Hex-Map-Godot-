@@ -28,7 +28,6 @@ public sealed partial class HexGrid : Node3D {
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
 
-        // _hexMesh = this.GetChild<HexMesh>(0);
         _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
         _cellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
 
@@ -58,10 +57,6 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    // public override void _Ready() {
-    //     _hexMesh.Triangulate(_cells);
-    // }
-
     public HexCell GetCell(Vector3 position) {
         var coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * _cellCountX + coordinates.Z / 2;
@@ -82,9 +77,10 @@ public sealed partial class HexGrid : Node3D {
         return _cells[x + z * _cellCountX];
     }
 
-    // public void Refresh() {
-    //     _hexMesh.Triangulate(_cells);
-    // }
+    public void SetUIVisible(bool visible) {
+        foreach (var chunk in _chunks) chunk.SetUIVisible(visible);
+    }
+
 
     private void CreateCell(int x, int z, int i) {
         Vector3 position;
