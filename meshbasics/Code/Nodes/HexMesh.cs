@@ -4,15 +4,16 @@ using System.Collections.Generic;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMesh : MeshInstance3D {
-    [Export] public CollisionShape3D CollisionShape { get; set; }
-    [Export] public CollisionShape3D AltShape { get; set; }
+    private static List<Vector3> _vertices = new();
+    private static List<Color> _colors = new();
+    private static List<Vector3> _normals = new();
     private ArrayMesh _mesh;
-    private List<Vector3> _vertices = new();
     // private List<int> _triangles = new();
-    private List<Color> _colors = new();
-    private List<Vector3> _normals = new();
     private CollisionShape3D _activeShape;
     private CollisionShape3D _inactiveShape;
+
+    [Export] public CollisionShape3D CollisionShape { get; set; }
+    [Export] public CollisionShape3D AltShape { get; set; }
 
     public override void _Ready() {
         _mesh = Mesh as ArrayMesh;

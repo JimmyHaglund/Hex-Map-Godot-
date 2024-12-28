@@ -22,7 +22,7 @@ albedo_color = Color(0.321569, 1, 0.686275, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 211.629, 444.463, 1.53194)
+transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.532)
 
 [node name="Node3D" type="Node3D" parent="Camera3D" node_paths=PackedStringArray("Camera")]
 script = ExtResource("1_qmp3k")
@@ -52,12 +52,13 @@ shadow_blur = 0.0
 
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
 ChunkCountX = 4
+ChunkCountZ = 3
 
-[node name="MOusePOinter" type="Node3D" parent="."]
+[node name="MousePointer" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0477524, 0.0898705, 0.0283718)
 script = ExtResource("4_qyimf")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MOusePOinter"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MousePointer"]
 mesh = SubResource("SphereMesh_hw2ro")
 surface_material_override/0 = SubResource("StandardMaterial3D_pf745")
 
