@@ -98,6 +98,14 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    public float StreamBedY {
+        get {
+            return
+                (Elevation + HexMetrics.StreamBedElevationOffset) *
+                HexMetrics.ElevationStep;
+        }
+    }
+
     public bool HasRiverThroughEdge(HexDirection direction) {
         return
             _hasIncomingRiver && _incomingRiver == direction ||
