@@ -9,35 +9,53 @@ public sealed partial class HexMapEditor : Control {
 
     private Color _activeColor;
     private int _activeElevation = 1;
-    private bool _mouseIsDown = false;
     private bool _applyColor = false;
     private bool _applyElevation = true;
     private int _brushSize;
     private OptionalToggle _riverMode;
-
-    // public override void _PhysicsProcess(double _) {
-    //     if (Input.IsMouseButtonPressed(MouseButton.Left)) {
-    //         if (_mouseIsDown) return;
-    //         HandleInput();
-    //     } else {
-    //         _mouseIsDown = false;
-    //     }
-    // }
+    private bool _isDrag;
+    private HexDirection _dragDirection;
+    private HexCell _previousCell;
 
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
-            if (_mouseIsDown) return;
             HandleInput();
         }
         else {
-            _mouseIsDown = false;
+            _previousCell = null;
         }
     }
 
     void HandleInput() {
         if (HexGrid.IsRefreshing) return;
         var mousePosition = Mouse3D.MouseWorldPosition;
-        EditCells(HexGrid.GetCell(mousePosition));
+        var cell = HexGrid.GetCell(mousePosition);
+        if (cell is null) {
+            _previousCell = null;
+            return;
+        }
+        if (_previousCell != null && _previousCell != cell) {
+            ValidateDrag(cell);
+        } else {
+            _isDrag = false;
+        }
+
+        EditCells(cell);
+        _previousCell = cell;
+    }
+
+    private void ValidateDrag(HexCell currentCell) {
+        for (
+            _dragDirection = HexDirection.NE;
+            _dragDirection <= HexDirection.NW;
+            _dragDirection++
+        ) {
+            if (_previousCell.GetNeighbor(_dragDirection) == currentCell) {
+                _isDrag = true;
+                return;
+            }
+        }
+        _isDrag = false;
     }
 
     private void EditCells(HexCell center) {
