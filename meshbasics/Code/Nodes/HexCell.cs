@@ -133,4 +133,36 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    private void RefreshSelfOnly() {
+        Chunk.Refresh();
+    }
+
+    public void RemoveOutgoingRiver() {
+        if (!_hasOutgoingRiver) {
+            return;
+        }
+        _hasOutgoingRiver = false;
+        RefreshSelfOnly();
+
+        HexCell neighbor = GetNeighbor(_outgoingRiver);
+        neighbor._hasIncomingRiver = false;
+        neighbor.RefreshSelfOnly();
+    }
+
+    public void RemoveIncomingRiver() {
+        if (!_hasIncomingRiver) {
+            return;
+        }
+        _hasIncomingRiver = false;
+        RefreshSelfOnly();
+
+        HexCell neighbor = GetNeighbor(_incomingRiver);
+        neighbor._hasOutgoingRiver = false;
+        neighbor.RefreshSelfOnly();
+    }
+
+    public void RemoveRiver() {
+        RemoveOutgoingRiver();
+        RemoveIncomingRiver();
+    }
 }
