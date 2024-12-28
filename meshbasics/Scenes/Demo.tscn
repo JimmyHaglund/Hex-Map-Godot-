@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=11 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
 [ext_resource type="ButtonGroup" uid="uid://ba2gr3etk24ym" path="res://Misc/ColorButtonGroup.tres" id="4_2w26v"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapEditor.cs" id="4_fqh23"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
+[ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
 albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
@@ -20,13 +21,6 @@ albedo_color = Color(0.321569, 1, 0.686275, 1)
 
 [node name="Demo" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.532)
-
-[node name="Node3D" type="Node3D" parent="Camera3D" node_paths=PackedStringArray("Camera")]
-script = ExtResource("1_qmp3k")
-Camera = NodePath("..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, -184.599, 0)
@@ -138,6 +132,23 @@ offset_top = 323.0
 offset_right = 978.0
 offset_bottom = 589.39
 tick_count = 5
+
+[node name="HexMapCamera" type="Node3D" parent="."]
+script = ExtResource("5_mpgou")
+
+[node name="CameraSwivel" type="Node3D" parent="HexMapCamera"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
+
+[node name="CameraStick" type="Node3D" parent="HexMapCamera/CameraSwivel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -45)
+
+[node name="Camera3D" type="Camera3D" parent="HexMapCamera/CameraSwivel/CameraStick"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0318947, -0.00157738, -0.00157928)
+
+[node name="Node3D" type="Node3D" parent="HexMapCamera" node_paths=PackedStringArray("Camera")]
+transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.5)
+script = ExtResource("1_qmp3k")
+Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 
 [connection signal="pressed" from="HexMapEditor/ColorPicker/CheckBoxYellow" to="HexMapEditor" method="SelectColor" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/ColorPicker/CheckBoxGreen" to="HexMapEditor" method="SelectColor" binds= [1]]

@@ -18,7 +18,6 @@ public sealed partial class HexMapEditor : Node2D {
     public override void _PhysicsProcess(double _) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
             if (_mouseIsDown) return;
-            // _mouseIsDown = true;
             HandleInput();
         } else {
             _mouseIsDown = false;
@@ -29,7 +28,6 @@ public sealed partial class HexMapEditor : Node2D {
         if (HexGrid.IsRefreshing) return;
 
         var mousePosition = Mouse3D.MouseWorldPosition;
-        GD.Print(mousePosition);
         EditCell(HexGrid.GetCell(mousePosition));
     }
 
