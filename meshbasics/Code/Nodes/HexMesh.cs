@@ -76,8 +76,9 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 v4 = v2 + bridge;
         v3.Y = v4.Y = neighbor.Elevation * HexMetrics.ElevationStep;
 
-        AddQuad(v1, v2, v3, v4);
-        AddQuadColor(cell.Color, neighbor.Color);
+        TriangulateEdgeTerraces(v1, v2, cell, v3, v4, neighbor);
+        // AddQuad(v1, v2, v3, v4);
+        // AddQuadColor(cell.Color, neighbor.Color);
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (direction <= HexDirection.E && nextNeighbor is not null) {
@@ -88,7 +89,38 @@ public sealed partial class HexMesh : MeshInstance3D {
         }
     }
 
-    void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
+    private void TriangulateEdgeTerraces(
+        Vector3 beginLeft,
+        Vector3 beginRight,
+        HexCell beginCell,
+        Vector3 endLeft,
+        Vector3 endRight,
+        HexCell endCell
+    ) {
+        Vector3 v3 = HexMetrics.TerraceLerp(beginLeft, endLeft, 1);
+        Vector3 v4 = HexMetrics.TerraceLerp(beginRight, endRight, 1);
+        Color c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, 1);
+
+        AddQuad(beginLeft, beginRight, v3, v4);
+        AddQuadColor(beginCell.Color, c2);
+
+        for (var i = 2; i < HexMetrics.TerraceSteps; i++) {
+            Vector3 v1 = v3;
+            Vector3 v2 = v4;
+            Color c1 = c2;
+            v3 = HexMetrics.TerraceLerp(beginLeft, endLeft, i);
+            v4 = HexMetrics.TerraceLerp(beginRight, endRight, i);
+            c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, i);
+            AddQuad(v1, v2, v3, v4);
+            AddQuadColor(c1, c2);
+        }
+
+
+        AddQuad(v3, v4, endLeft, endRight);
+        AddQuadColor(c2, endCell.Color);
+    }
+
+    private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
         int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v3 - v2);
         _vertices.Add(v1);
@@ -155,7 +187,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(c4);
     }
 
-    void AddQuadColor(Color c1, Color c2) {
+    private void AddQuadColor(Color c1, Color c2) {
         _colors.Add(c1);
         _colors.Add(c1);
         _colors.Add(c2);
