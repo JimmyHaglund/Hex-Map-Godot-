@@ -4,11 +4,22 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexCell : Node3D {
     private HexCell[] _neighbors = new HexCell[6];
-    private int _elevation;
+    private int _elevation = int.MinValue;
     private Node3D _uiRect;
+    private Color _color;
 
-    public Color Color { get; set; }
+    public Color Color {
+        get {
+            return _color;
+        }
+        set {
+            if (_color == value) return;
+            _color = value;
+            Refresh();
+        }
+    }
     public HexCoordinates Coordinates { get; set; }
+    public HexGridChunk Chunk { get; set; }
     public Node3D UiRect {
         get => _uiRect;
         set {
@@ -19,6 +30,7 @@ public sealed partial class HexCell : Node3D {
     public int Elevation {
         get => _elevation;
         set {
+            if (_elevation == value) return;
             _elevation = value;
             var newPosition = Position;
             newPosition.Y = value * HexMetrics.ElevationStep;
@@ -27,6 +39,7 @@ public sealed partial class HexCell : Node3D {
                 HexMetrics.ElevationPerturbStrength;
             Position = newPosition;
             UpdateUiAltitude();
+            Refresh();
         }
     }
 
@@ -57,4 +70,16 @@ public sealed partial class HexCell : Node3D {
             Elevation, otherCell.Elevation
         );
     }
+
+    private void Refresh() {
+        if (Chunk is null) return;
+        Chunk.Refresh();
+
+        for (int i = 0; i < _neighbors.Length; i++) {
+            HexCell neighbor = _neighbors[i];
+            if (neighbor is null || neighbor.Chunk == Chunk) continue;
+            neighbor.Chunk.Refresh();
+        }
+    }
+
 }

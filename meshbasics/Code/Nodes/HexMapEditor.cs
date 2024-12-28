@@ -9,6 +9,7 @@ public sealed partial class HexMapEditor : Node2D {
 
     private Color _activeColor;
     private int _activeElevation;
+    private bool _mouseIsDown = false;
 
     public override void _Ready() {
         SelectColor(0);
@@ -16,12 +17,19 @@ public sealed partial class HexMapEditor : Node2D {
 
     public override void _PhysicsProcess(double _) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
+            if (_mouseIsDown) return;
+            // _mouseIsDown = true;
             HandleInput();
+        } else {
+            _mouseIsDown = false;
         }
     }
 
     void HandleInput() {
+        if (HexGrid.IsRefreshing) return;
+
         var mousePosition = Mouse3D.MouseWorldPosition;
+        GD.Print(mousePosition);
         EditCell(HexGrid.GetCell(mousePosition));
     }
 

@@ -10,8 +10,12 @@ namespace JHM.MeshBasics;
 public sealed partial class HexGridChunk : Node3D {
     HexCell[] _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
     // Canvas GridCanvas;
+    private bool _shouldUpdate = true;
 
     [Export] public HexMesh HexMesh { get; set; }
+
+    public event Action RefreshStarted;
+    public event Action RefreshCompleted;
 
     // public override void _EnterTree() {
     //     // gridCanvas = GetComponentInChildren<Canvas>();
@@ -25,7 +29,26 @@ public sealed partial class HexGridChunk : Node3D {
 
     public void AddCell(int index, HexCell cell) {
         _cells[index] = cell;
+        cell.Chunk = this;
         this.AddChild(cell);
+
         if (cell.UiRect is not null) this.AddChild(cell.UiRect);
+    }
+
+    public void Refresh() {
+        _shouldUpdate = true;// HexMesh.Triangulate(_cells);
+    }
+
+    public override void _Process(double delta) {
+        if (_shouldUpdate) {
+            CallDeferred("LateUpdate");
+            RefreshStarted();
+        }
+    }
+
+    private void LateUpdate() {
+        HexMesh.Triangulate(_cells);
+        _shouldUpdate = false;
+        RefreshCompleted();
     }
 }

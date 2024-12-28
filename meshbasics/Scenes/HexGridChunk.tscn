@@ -11,13 +11,18 @@ resource_local_to_scene = true
 script = ExtResource("1_hk31i")
 HexMesh = NodePath("HexMesh")
 
-[node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape")]
+[node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
 material_override = ExtResource("5_a1qwg")
 gi_mode = 2
 mesh = SubResource("ArrayMesh_0fglf")
 script = ExtResource("6_nfodi")
 CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
+AltShape = NodePath("AltStaticBody/AltCollisionShape3D")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="HexMesh"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HexMesh/StaticBody3D"]
+
+[node name="AltStaticBody" type="StaticBody3D" parent="HexMesh"]
+
+[node name="AltCollisionShape3D" type="CollisionShape3D" parent="HexMesh/AltStaticBody"]

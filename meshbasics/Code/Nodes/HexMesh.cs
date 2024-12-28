@@ -5,15 +5,19 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexMesh : MeshInstance3D {
     [Export] public CollisionShape3D CollisionShape { get; set; }
-
+    [Export] public CollisionShape3D AltShape { get; set; }
     private ArrayMesh _mesh;
     private List<Vector3> _vertices = new();
     // private List<int> _triangles = new();
     private List<Color> _colors = new();
     private List<Vector3> _normals = new();
+    private CollisionShape3D _activeShape;
+    private CollisionShape3D _inactiveShape;
 
     public override void _Ready() {
         _mesh = Mesh as ArrayMesh;
+        _activeShape = CollisionShape;
+        _inactiveShape = AltShape;
         if (_mesh is null) {
             GD.PrintErr("HexMesh requires an ArrayMesh.");
         }
@@ -41,14 +45,24 @@ public sealed partial class HexMesh : MeshInstance3D {
         }
         surfaceTool.Commit(_mesh);
 
-
-        CollisionShape.Shape = _mesh.CreateTrimeshShape();
+        var shape = _mesh.CreateTrimeshShape();
+        _inactiveShape.Shape = shape;
+        CallDeferred("SwapCollisionShape");
     }
 
     private void Triangulate(HexCell cell) {
         for (HexDirection direction = HexDirection.NE; direction <= HexDirection.NW; direction++) {
             Triangulate(direction, cell);
         }
+    }
+
+    private void SwapCollisionShape() {
+        var deactivated = _activeShape;
+        var activated = _inactiveShape;
+        _activeShape = activated;
+        _inactiveShape = deactivated;
+        activated.ProcessMode = ProcessModeEnum.Inherit;
+        deactivated.ProcessMode = ProcessModeEnum.Disabled;
     }
 
     private void Triangulate(HexDirection direction, HexCell cell) {

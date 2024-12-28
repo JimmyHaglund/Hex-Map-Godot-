@@ -20,6 +20,9 @@ public sealed partial class HexGrid : Node3D {
     [Export] public int ChunkCountZ { get; set; } = 6;
     [Export] public Color DefaultColor { get; set; } = new(1, 1, 1);
 
+
+    private int _refreshStack = 0;
+    public bool IsRefreshing => _refreshStack > 0;
     
 
     public override void _EnterTree() {
@@ -40,6 +43,8 @@ public sealed partial class HexGrid : Node3D {
             for (int x = 0; x < ChunkCountX; x++) {
                 var chunk = InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
                 _chunks[i++] = chunk;
+                chunk.RefreshStarted += () => _refreshStack++;
+                chunk.RefreshCompleted += () => _refreshStack--;
             }
         }
     }
