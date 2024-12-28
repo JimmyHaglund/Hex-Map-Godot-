@@ -135,7 +135,7 @@ offset_left = 962.0
 offset_top = 323.0
 offset_right = 978.0
 offset_bottom = 589.39
-tick_count = 100
+tick_count = 5
 
 [connection signal="pressed" from="HexMapEditor/ColorPicker/CheckBoxYellow" to="HexMapEditor" method="SelectColor" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/ColorPicker/CheckBoxGreen" to="HexMapEditor" method="SelectColor" binds= [1]]

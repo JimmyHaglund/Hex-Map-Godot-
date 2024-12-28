@@ -55,10 +55,17 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 v1 = center + HexMetrics.GetFirstSolidCorner(direction);
         Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(direction);
 
-        AddTriangle(center, v1, v2);
+        Vector3 e1 = v1.Lerp(v2, 1.0f / 3.0f);
+        Vector3 e2 = v1.Lerp(v2, 2.0f / 3.0f);
+
+        AddTriangle(center, v1, e1);
         AddTriangleColor(cell.Color);
-        var triangulateConnection = () => TriangulateConnection(direction, cell, v1, v2);
-        
+        AddTriangle(center, e1, e2);
+        AddTriangleColor(cell.Color);
+        AddTriangle(center, e2, v2);
+        AddTriangleColor(cell.Color);
+
+        var triangulateConnection = () => TriangulateConnection(direction, cell, v1, e1, e2, v2);
         if (direction == HexDirection.NE) {
             triangulateConnection();
         }
@@ -68,20 +75,29 @@ public sealed partial class HexMesh : MeshInstance3D {
         }
     }
 
-    private void TriangulateConnection(HexDirection direction, HexCell cell, Vector3 v1, Vector3 v2) {
+    private void TriangulateConnection(HexDirection direction, HexCell cell, Vector3 v1, Vector3 e1, Vector3 e2, Vector3 v2) {
         HexCell neighbor = cell.GetNeighbor(direction);
         if (neighbor is null) return;
         Vector3 bridge = HexMetrics.GetBridge(direction);
         Vector3 v3 = v1 + bridge;
         Vector3 v4 = v2 + bridge;
         v3.Y = v4.Y = neighbor.Position.Y;
+        Vector3 e3 = v3.Lerp(v4, 1.0f / 3.0f);
+        Vector3 e4 = v3.Lerp(v4, 2.0f / 3.0f);
 
         if (cell.GetEdgeType(direction) == HexEdgeType.Slope) { 
             TriangulateEdgeTerraces(v1, v2, cell, v3, v4, neighbor);
         } else {
-            AddQuad(v1, v2, v3, v4);
+            AddQuad(v1, e1, v3, e3);
+            AddQuadColor(cell.Color, neighbor.Color);
+
+            AddQuad(e1, e2, e3, e4);
+            AddQuadColor(cell.Color, neighbor.Color);
+
+            AddQuad(e2, v2, e4, v4);
             AddQuadColor(cell.Color, neighbor.Color);
         }
+
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (direction <= HexDirection.E && nextNeighbor is not null) {
             Vector3 v5 = v2 + HexMetrics.GetBridge(direction.Next());
