@@ -13,6 +13,7 @@ public sealed partial class HexMapEditor : Control {
     private bool _applyColor = false;
     private bool _applyElevation = true;
     private int _brushSize;
+    private OptionalToggle _riverMode;
 
     // public override void _PhysicsProcess(double _) {
     //     if (Input.IsMouseButtonPressed(MouseButton.Left)) {
@@ -95,4 +96,14 @@ public sealed partial class HexMapEditor : Control {
     public void SetBrushSize(float size) {
         _brushSize = (int)size;
     }
+
+    public void SetRiverMode(int mode) {
+        _riverMode = (OptionalToggle)mode;
+    }
+
+    #region Definitions
+    private enum OptionalToggle {
+        Disable = 0, On = 1, Off = 2
+    }
+    #endregion
 }

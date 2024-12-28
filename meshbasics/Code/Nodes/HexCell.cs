@@ -3,6 +3,7 @@ using Godot;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexCell : Node3D {
+
     private HexCell[] _neighbors = new HexCell[6];
     private int _elevation = int.MinValue;
     private Node3D _uiRect;
@@ -202,4 +203,6 @@ public sealed partial class HexCell : Node3D {
         RemoveOutgoingRiver();
         RemoveIncomingRiver();
     }
+
+
 }
