@@ -8,12 +8,13 @@ public sealed partial class HexGrid : Node3D {
     [ExportCategory("HexGrid Dependencies")]
     [Export] public PackedScene HexCellPrefab { get; set; }
     [Export] public PackedScene CellLabelPrefab { get; set; }
+    [Export] public Texture2D NoiseSource { get; set; }
 
     [ExportCategory("HexGrid Configuration")]
     [Export] public int Width { get; set; } = 6;
     [Export] public int Height { get; set; } = 6;
     [Export] public Color DefaultColor { get; set; } = new(1, 1, 1);
-    
+
     private HexMesh _hexMesh;
     private HexCell[] _cells;
 
@@ -31,6 +32,7 @@ public sealed partial class HexGrid : Node3D {
 
     public override void _Ready() {
         _hexMesh.Triangulate(_cells);
+        HexMetrics.NoiseSource = NoiseSource;
     }
 
     public HexCell GetCell(Vector3 position) {
