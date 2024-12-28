@@ -43,6 +43,20 @@ public sealed partial class HexCell : Node3D {
                 HexMetrics.ElevationPerturbStrength;
             Position = newPosition;
             UpdateUiAltitude();
+
+            if (
+                _hasOutgoingRiver &&
+                _elevation < GetNeighbor(_outgoingRiver)._elevation
+            ) {
+                RemoveOutgoingRiver();
+            }
+            if (
+                _hasIncomingRiver &&
+                _elevation > GetNeighbor(_incomingRiver)._elevation
+            ) {
+                RemoveIncomingRiver();
+            }
+
             Refresh();
         }
     }
@@ -136,6 +150,29 @@ public sealed partial class HexCell : Node3D {
     private void RefreshSelfOnly() {
         Chunk.Refresh();
     }
+
+    public void SetOutgoingRiver(HexDirection direction) {
+        if (_hasOutgoingRiver && _outgoingRiver == direction) {
+            return;
+        }
+
+        HexCell neighbor = GetNeighbor(direction);
+        if (neighbor == null || _elevation < neighbor._elevation) {
+            return;
+        }
+
+        RemoveOutgoingRiver();
+        if (_hasIncomingRiver && _incomingRiver == direction) {
+            RemoveIncomingRiver();
+        }
+
+        neighbor.RemoveIncomingRiver();
+        neighbor._hasIncomingRiver = true;
+        neighbor._incomingRiver = direction.Opposite();
+        neighbor.RefreshSelfOnly();
+    }
+
+
 
     public void RemoveOutgoingRiver() {
         if (!_hasOutgoingRiver) {
