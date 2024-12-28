@@ -19,6 +19,8 @@ public sealed partial class HexGrid : Node3D {
     private HexCell[] _cells;
 
     public override void _EnterTree() {
+        HexMetrics.NoiseSource = NoiseSource.GetImage();
+
         _cells = new HexCell[Height * Width];
         _hexMesh = this.GetChild<HexMesh>(0);
 
@@ -32,7 +34,6 @@ public sealed partial class HexGrid : Node3D {
 
     public override void _Ready() {
         _hexMesh.Triangulate(_cells);
-        HexMetrics.NoiseSource = NoiseSource;
     }
 
     public HexCell GetCell(Vector3 position) {

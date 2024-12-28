@@ -294,9 +294,9 @@ public sealed partial class HexMesh : MeshInstance3D {
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
         //int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v3 - v2);
-        _vertices.Add(v1);
-        _vertices.Add(v2);
-        _vertices.Add(v3);
+        _vertices.Add(Perturb(v1));
+        _vertices.Add(Perturb(v2));
+        _vertices.Add(Perturb(v3));
         _normals.Add(normal);
         _normals.Add(normal);
         _normals.Add(normal);
@@ -322,13 +322,13 @@ public sealed partial class HexMesh : MeshInstance3D {
     private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) {
         int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v2 - v3);
-        _vertices.Add(v2);
-        _vertices.Add(v1);
-        _vertices.Add(v3);
+        _vertices.Add(Perturb(v2));
+        _vertices.Add(Perturb(v1));
+        _vertices.Add(Perturb(v3));
 
-        _vertices.Add(v2);
-        _vertices.Add(v3);
-        _vertices.Add(v4);
+        _vertices.Add(Perturb(v2));
+        _vertices.Add(Perturb(v3));
+        _vertices.Add(Perturb(v4));
 
         _normals.Add(normal);
         _normals.Add(normal);
@@ -366,5 +366,13 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(c1);
         _colors.Add(c2);
         _colors.Add(c2);
+    }
+
+    private Vector3 Perturb(Vector3 position) {
+        Vector4 sample = HexMetrics.SampleNoise(position);
+        position.X += 2.0f * sample.X - 1.0f;
+        position.Y += 2.0f * sample.Y - 1.0f;
+        position.Z += 2.0f * sample.Z - 1.0f;
+        return position;
     }
 }

@@ -16,7 +16,7 @@ public static class HexMetrics {
     public const float HorizontalTerraceStepSize = 1.0f / TerraceSteps;
     public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
-    public static Texture2D NoiseSource { get; set; }
+    public static Image NoiseSource { get; set; }
 
     public static Vector3[] Corners = {
         new (0.0f, 0.0f, OuterRadius),
@@ -75,7 +75,7 @@ public static class HexMetrics {
     }
 
     public static Vector4 SampleNoise(Vector3 position) {
-        var pixel = NoiseSource.GetImage().GetPixel((int)position.X, (int)position.Z);
+        var pixel = NoiseSource.GetPixel((int)position.X, (int)position.Z);
         return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
     }
 }
