@@ -175,6 +175,10 @@ public sealed partial class HexCell : Node3D {
             RemoveIncomingRiver();
         }
 
+        _hasOutgoingRiver = true;
+        _outgoingRiver = direction;
+        RefreshSelfOnly();
+
         neighbor.RemoveIncomingRiver();
         neighbor._hasIncomingRiver = true;
         neighbor._incomingRiver = direction.Opposite();

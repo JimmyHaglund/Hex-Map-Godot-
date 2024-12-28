@@ -56,16 +56,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             Triangulate(direction, cell);
         }
     }
-
-    private void SwapCollisionShape() {
-        var deactivated = _activeShape;
-        var activated = _inactiveShape;
-        _activeShape = activated;
-        _inactiveShape = deactivated;
-        activated.ProcessMode = ProcessModeEnum.Inherit;
-        deactivated.ProcessMode = ProcessModeEnum.Disabled;
-    }
-
+    
     private void Triangulate(HexDirection direction, HexCell cell) {
         Vector3 center = cell.Position;
         EdgeVertices e = new(
@@ -73,25 +64,11 @@ public sealed partial class HexMesh : MeshInstance3D {
             center + HexMetrics.GetSecondSolidCorner(direction)
         );
 
-        TriangulateEdgeFan(center, e, cell.Color);
+        if (cell.HasRiverThroughEdge(direction)) {
+            e.v3.Y = cell.StreamBedY;
+        }
 
-        // Vector3 v1 = center + HexMetrics.GetFirstSolidCorner(direction);
-        // Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(direction);
-        // 
-        // Vector3 e1 = v1.Lerp(v2, 1.0f / 3.0f);
-        // Vector3 e2 = v1.Lerp(v2, 2.0f / 3.0f);
-        // 
-        // AddTriangle(center, v1, e1);
-        // AddTriangleColor(cell.Color);
-        // AddTriangle(center, e1, e2);
-        // AddTriangleColor(cell.Color);
-        // AddTriangle(center, e2, v2);
-        // AddTriangleColor(cell.Color);
-        // 
-        // var triangulateConnection = () => TriangulateConnection(direction, cell, v1, e1, e2, v2);
-        // if (direction == HexDirection.NE) {
-        //     triangulateConnection();
-        // }
+        TriangulateEdgeFan(center, e, cell.Color);
         
         if (direction <= HexDirection.SE) {
             TriangulateConnection(direction, cell, e);
@@ -104,6 +81,10 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 bridge = HexMetrics.GetBridge(direction);
         bridge.Y = neighbor.Position.Y - cell.Position.Y;
         EdgeVertices e2 = new(e1.v1 + bridge, e1.v5 + bridge);
+
+        if (cell.HasRiverThroughEdge(direction)) {
+            e2.v3.Y = neighbor.StreamBedY;
+        }
 
         if (cell.GetEdgeType(direction) == HexEdgeType.Slope) { 
             TriangulateEdgeTerraces(e1, cell, e2, neighbor);
@@ -433,5 +414,14 @@ public sealed partial class HexMesh : MeshInstance3D {
         // position.Y += HexMetrics.CellPerturbStrength * (2.0f * sample.Y - 1.0f);
         position.Z += HexMetrics.CellPerturbStrength * (2.0f * sample.Z - 1.0f);
         return position;
+    }
+
+    private void SwapCollisionShape() {
+        var deactivated = _activeShape;
+        var activated = _inactiveShape;
+        _activeShape = activated;
+        _inactiveShape = deactivated;
+        activated.ProcessMode = ProcessModeEnum.Inherit;
+        deactivated.ProcessMode = ProcessModeEnum.Disabled;
     }
 }
