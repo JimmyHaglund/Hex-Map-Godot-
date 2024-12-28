@@ -238,7 +238,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             );
         }
         else {
-            AddTriangle(left, right, boundary);
+            AddTriangleUnperturbed(Perturb(left), Perturb(right), boundary);
             AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
@@ -263,7 +263,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             );
         }
         else {
-            AddTriangle(left, right, boundary);
+            AddTriangleUnperturbed(Perturb(left), Perturb(right), boundary);
             AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
