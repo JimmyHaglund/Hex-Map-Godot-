@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwok11esd24iw"]
+
+[ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
+[ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/VertexColorMaterial.tres" id="5_a1qwg"]
+[ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="6_nfodi"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
+resource_local_to_scene = true
+
+[node name="Chunk" type="Node3D" node_paths=PackedStringArray("HexMesh")]
+script = ExtResource("1_hk31i")
+HexMesh = NodePath("HexMesh")
+
+[node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape")]
+material_override = ExtResource("5_a1qwg")
+gi_mode = 2
+mesh = SubResource("ArrayMesh_0fglf")
+script = ExtResource("6_nfodi")
+CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="HexMesh"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HexMesh/StaticBody3D"]

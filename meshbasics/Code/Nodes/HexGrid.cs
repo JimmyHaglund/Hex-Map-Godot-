@@ -3,31 +3,45 @@ using Godot;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexGrid : Node3D {
+    private int _cellCountX;
+    private int _cellCountY;
+    // private HexMesh _hexMesh;
+    private HexCell[] _cells;
+    private HexGridChunk[] _chunks;
+
     [ExportCategory("HexGrid Dependencies")]
     [Export] public PackedScene HexCellPrefab { get; set; }
     [Export] public PackedScene CellLabelPrefab { get; set; }
     [Export] public Texture2D NoiseSource { get; set; }
+    [Export] public PackedScene ChunkPrefab { get; set; }
 
     [ExportCategory("HexGrid Configuration")]
     [Export] public int ChunkCountX { get; set; } = 6;
-    [Export] public int ChunkCountY { get; set; } = 6;
+    [Export] public int ChunkCountZ { get; set; } = 6;
     [Export] public Color DefaultColor { get; set; } = new(1, 1, 1);
 
-
-    private int _cellCountX;
-    private int _cellCountY;
-
-    private HexMesh _hexMesh;
-    private HexCell[] _cells;
+    
 
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
 
-        _hexMesh = this.GetChild<HexMesh>(0);
+        // _hexMesh = this.GetChild<HexMesh>(0);
         _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
-        _cellCountY = ChunkCountY * HexMetrics.ChunkSizeY;
+        _cellCountY = ChunkCountZ * HexMetrics.ChunkSizeZ;
 
+        CreateChunks();
         CreateCells();
+    }
+
+    private void CreateChunks() {
+        _chunks = new HexGridChunk[ChunkCountX * ChunkCountZ];
+
+        for (int z = 0, i = 0; z < ChunkCountZ; z++) {
+            for (int x = 0; x < ChunkCountX; x++) {
+                var chunk = InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
+                _chunks[i++] = chunk;
+            }
+        }
     }
 
     private void CreateCells() {
@@ -39,9 +53,9 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    public override void _Ready() {
-        _hexMesh.Triangulate(_cells);
-    }
+    // public override void _Ready() {
+    //     _hexMesh.Triangulate(_cells);
+    // }
 
     public HexCell GetCell(Vector3 position) {
         var coordinates = HexCoordinates.FromPosition(position);
@@ -50,9 +64,9 @@ public sealed partial class HexGrid : Node3D {
         return _cells[index];
     }
 
-    public void Refresh() {
-        _hexMesh.Triangulate(_cells);
-    }
+    // public void Refresh() {
+    //     _hexMesh.Triangulate(_cells);
+    // }
 
     private void CreateCell(int x, int z, int i) {
         Vector3 position;
@@ -60,7 +74,7 @@ public sealed partial class HexGrid : Node3D {
         position.Y = 0f;
         position.Z = z * HexMetrics.OuterRadius * 1.5f;
 
-        HexCell cell = _cells[i] = InstantiateChild<HexCell>(HexCellPrefab, $"HexCell_{i}");
+        HexCell cell = _cells[i] = InstantiateOrphan<HexCell>(HexCellPrefab, $"HexCell_{i}");
         cell.Position = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Color = DefaultColor;
@@ -84,16 +98,37 @@ public sealed partial class HexGrid : Node3D {
         }
 
 
-        Label3D label = InstantiateChild<Label3D>(CellLabelPrefab);
+        Label3D label = InstantiateOrphan<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
         label.Text = cell.Coordinates.ToStringOnSeparateLines();
         cell.Elevation = 0;
         cell.UiRect = label;
+
+        AddCellToChunk(x, z, cell);
+    }
+
+    private void AddCellToChunk(int x, int z, HexCell cell) {
+        int chunkX = x / HexMetrics.ChunkSizeX;
+        int chunkZ = z / HexMetrics.ChunkSizeZ;
+        HexGridChunk chunk = _chunks[chunkX + chunkZ * ChunkCountX];
+
+        int localX = x - chunkX * HexMetrics.ChunkSizeX;
+        int localZ = z - chunkZ * HexMetrics.ChunkSizeZ;
+        chunk.AddCell(localX + localZ * HexMetrics.ChunkSizeX, cell);
+
     }
 
     private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{
         T result = scene.Instantiate<T>();
         this.AddChild(result);
+        if (name is not null) {
+            result.Name = name;
+        }
+        return result;
+    }
+
+    private T InstantiateOrphan<T>(PackedScene scene, string name = null) where T : Node {
+        T result = scene.Instantiate<T>();
         if (name is not null) {
             result.Name = name;
         }

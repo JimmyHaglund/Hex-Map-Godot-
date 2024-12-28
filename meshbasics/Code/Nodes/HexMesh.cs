@@ -41,6 +41,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         }
         surfaceTool.Commit(_mesh);
 
+
         CollisionShape.Shape = _mesh.CreateTrimeshShape();
     }
 

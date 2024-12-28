@@ -52,7 +52,6 @@ shadow_blur = 0.0
 
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
 ChunkCountX = 4
-ChunkCountY = 3
 
 [node name="MOusePOinter" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0477524, 0.0898705, 0.0283718)

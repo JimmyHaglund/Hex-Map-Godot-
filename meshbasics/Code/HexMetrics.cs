@@ -12,7 +12,7 @@ public static class HexMetrics {
     public const float NoiseScale = 0.003f;
     public const float ElevationPerturbStrength = 1.5f;
     public const int ChunkSizeX = 5;
-    public const int ChunkSizeY = 5;
+    public const int ChunkSizeZ = 5;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
     public const float BlendFactor = 1.0f - SolidFactor;

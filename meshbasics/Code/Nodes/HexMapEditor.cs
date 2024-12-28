@@ -29,7 +29,7 @@ public sealed partial class HexMapEditor : Node2D {
         if (cell is null) return;
         cell.Color = _activeColor;
         cell.Elevation = _activeElevation;
-        HexGrid.Refresh();
+        // HexGrid.Refresh();
     }
 
     public void SetElevation(float elevationPercentage) {
