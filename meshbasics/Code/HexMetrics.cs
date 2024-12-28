@@ -5,11 +5,11 @@ namespace JHM.MeshBasics;
 
 public static class HexMetrics {
     public const float OuterRadius = 10.0f;
-    public const float SolidFactor = 0.75f;
-    public const float ElevationStep = 5.0f;
+    public const float SolidFactor = 0.80f;
+    public const float ElevationStep = 3.0f;
     public const float Maxelevation = 5.0f;
     public const int TerracesPerSlope = 2;
-    public const float CellPerturbStrength = 5.0f;
+    public const float CellPerturbStrength = 4.0f;
     public const float NoiseScale = 0.003f;
     public const float ElevationPerturbStrength = 1.5f;
 

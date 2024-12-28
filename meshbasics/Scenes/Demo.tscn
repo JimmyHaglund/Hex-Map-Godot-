@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
-albedo_color = Color(0.0490858, 0.131412, 0.177493, 1)
+albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bnbs1"]
 material = SubResource("StandardMaterial3D_7ero0")
@@ -29,8 +29,8 @@ script = ExtResource("1_qmp3k")
 Camera = NodePath("..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.999996, -0.00270064, 0.00113153, 0.00270046, 0.999996, 0.000155477, -0.00113195, -0.000152426, 0.999999, 0, -0.5, 0)
-visible = false
+transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, -184.599, 0)
+gi_mode = 0
 mesh = SubResource("PlaneMesh_bnbs1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

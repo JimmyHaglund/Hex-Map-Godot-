@@ -26,4 +26,5 @@ project/assembly_name="MeshBasics"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=2
-environment/defaults/default_clear_color=Color(0.293479, 0.490838, 0.380369, 1)
+lights_and_shadows/directional_shadow/16_bits=false
+environment/defaults/default_clear_color=Color(0.434129, 0.342109, 0.290994, 1)
