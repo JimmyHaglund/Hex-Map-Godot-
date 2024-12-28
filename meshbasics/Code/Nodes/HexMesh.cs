@@ -103,7 +103,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         if (neighbor is null) return;
         Vector3 bridge = HexMetrics.GetBridge(direction);
         bridge.Y = neighbor.Position.Y - cell.Position.Y;
-        EdgeVertices e2 = new(e1.v1 + bridge, e1.v4 + bridge);
+        EdgeVertices e2 = new(e1.v1 + bridge, e1.v5 + bridge);
 
         if (cell.GetEdgeType(direction) == HexEdgeType.Slope) { 
             TriangulateEdgeTerraces(e1, cell, e2, neighbor);
@@ -113,21 +113,21 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (direction <= HexDirection.E && nextNeighbor is not null) {
-            Vector3 v5 = e1.v4 + HexMetrics.GetBridge(direction.Next());
+            Vector3 v5 = e1.v5 + HexMetrics.GetBridge(direction.Next());
             v5.Y = nextNeighbor.Position.Y;
 
             if (cell.Elevation <= neighbor.Elevation) {
                 if (cell.Elevation <= nextNeighbor.Elevation) {
                     // If the cell is the lowest (or tied for lowest) of its neighbors, use it as the bottom one.
-                    TriangulateCorner(e1.v4, cell, e2.v4, neighbor, v5, nextNeighbor);
+                    TriangulateCorner(e1.v5, cell, e2.v5, neighbor, v5, nextNeighbor);
                 } else {
                     // If nextNeighbor is lowest...
-                    TriangulateCorner(v5, nextNeighbor, e1.v4, cell, e2.v4, neighbor);
+                    TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
                 }
             } else if (neighbor.Elevation <= nextNeighbor.Elevation) {
-                TriangulateCorner(e2.v4, neighbor, v5, nextNeighbor, e1.v4, cell);
+                TriangulateCorner(e2.v5, neighbor, v5, nextNeighbor, e1.v5, cell);
             } else {
-                TriangulateCorner(v5, nextNeighbor, e1.v4, cell, e2.v4, neighbor);
+                TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
             }
 
             // AddTriangle(v2, v4, v5);
@@ -317,6 +317,8 @@ public sealed partial class HexMesh : MeshInstance3D {
         AddTriangleColor(color);
         AddTriangle(center, edge.v3, edge.v4);
         AddTriangleColor(color);
+        AddTriangle(center, edge.v4, edge.v5);
+        AddTriangleColor(color);
     }
 
     private void TriangulateEdgeStrip(
@@ -328,6 +330,8 @@ public sealed partial class HexMesh : MeshInstance3D {
         AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
         AddQuadColor(c1, c2);
         AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
+        AddQuadColor(c1, c2);
+        AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
         AddQuadColor(c1, c2);
     }
 
