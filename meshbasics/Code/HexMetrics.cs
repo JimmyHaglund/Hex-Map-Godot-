@@ -84,7 +84,10 @@ public static class HexMetrics {
         position *= NoiseScale;
         position.X = position.X % w;
         position.Z = position.Z % h;
-        
+
+        if (position.X < 0) position.X += w;
+        if (position.Z < 0) position.Z += h;
+
         var pixel = NoiseSource.GetPixel((int)position.X, (int)position.Z);
         return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
     }

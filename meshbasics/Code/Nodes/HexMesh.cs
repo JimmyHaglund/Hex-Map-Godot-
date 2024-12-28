@@ -90,7 +90,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         EdgeVertices e2 = new(e1.v1 + bridge, e1.v4 + bridge);
 
         if (cell.GetEdgeType(direction) == HexEdgeType.Slope) { 
-            TriangulateEdgeTerraces(e1.v1, e1.v4, cell, e2.v1, e2.v4, neighbor);
+            TriangulateEdgeTerraces(e1, cell, e2, neighbor);
         } else {
             TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color);
         }
@@ -120,34 +120,23 @@ public sealed partial class HexMesh : MeshInstance3D {
     }
 
     private void TriangulateEdgeTerraces(
-        Vector3 beginLeft,
-        Vector3 beginRight,
-        HexCell beginCell,
-        Vector3 endLeft,
-        Vector3 endRight,
-        HexCell endCell
+        EdgeVertices begin, HexCell beginCell,
+        EdgeVertices end, HexCell endCell
     ) {
-        Vector3 v3 = HexMetrics.TerraceLerp(beginLeft, endLeft, 1);
-        Vector3 v4 = HexMetrics.TerraceLerp(beginRight, endRight, 1);
+        EdgeVertices e2 = EdgeVertices.TerraceLerp(begin, end, 1);
         Color c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, 1);
 
-        AddQuad(beginLeft, beginRight, v3, v4);
-        AddQuadColor(beginCell.Color, c2);
+        TriangulateEdgeStrip(begin, beginCell.Color, e2, c2);
 
         for (var i = 2; i < HexMetrics.TerraceSteps; i++) {
-            Vector3 v1 = v3;
-            Vector3 v2 = v4;
+            EdgeVertices e1 = e2;
             Color c1 = c2;
-            v3 = HexMetrics.TerraceLerp(beginLeft, endLeft, i);
-            v4 = HexMetrics.TerraceLerp(beginRight, endRight, i);
+            e2 = EdgeVertices.TerraceLerp(begin, end, i);
             c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, i);
-            AddQuad(v1, v2, v3, v4);
-            AddQuadColor(c1, c2);
+            TriangulateEdgeStrip(e1, c1, e2, c2);
         }
 
-
-        AddQuad(v3, v4, endLeft, endRight);
-        AddQuadColor(c2, endCell.Color);
+        TriangulateEdgeStrip(e2, c2, end, c2);
     }
 
     private void TriangulateCorner(
@@ -354,7 +343,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     }
 
     private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) {
-        int vertexIndex = _vertices.Count;
+        //int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v2 - v3);
         _vertices.Add(Perturb(v2));
         _vertices.Add(Perturb(v1));
