@@ -9,6 +9,8 @@ public static class HexMetrics {
     public const float ElevationStep = 5.0f;
     public const float Maxelevation = 5.0f;
     public const int TerracesPerSlope = 2;
+    public const float CellPerturbStrength = 5.0f;
+    public const float NoiseScale = 0.003f;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
     public const float BlendFactor = 1.0f - SolidFactor;
@@ -75,6 +77,13 @@ public static class HexMetrics {
     }
 
     public static Vector4 SampleNoise(Vector3 position) {
+        var w = NoiseSource.GetWidth();
+        var h = NoiseSource.GetHeight();
+        position *= w;
+        position *= NoiseScale;
+        position.X = position.X % w;
+        position.Z = position.Z % h;
+        
         var pixel = NoiseSource.GetPixel((int)position.X, (int)position.Z);
         return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
     }

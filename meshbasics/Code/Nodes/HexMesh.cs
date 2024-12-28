@@ -370,9 +370,9 @@ public sealed partial class HexMesh : MeshInstance3D {
 
     private Vector3 Perturb(Vector3 position) {
         Vector4 sample = HexMetrics.SampleNoise(position);
-        position.X += 2.0f * sample.X - 1.0f;
-        position.Y += 2.0f * sample.Y - 1.0f;
-        position.Z += 2.0f * sample.Z - 1.0f;
+        position.X += HexMetrics.CellPerturbStrength * (2.0f * sample.X - 1.0f);
+        position.Y += HexMetrics.CellPerturbStrength * (2.0f * sample.Y - 1.0f);
+        position.Z += HexMetrics.CellPerturbStrength * (2.0f * sample.Z - 1.0f);
         return position;
     }
 }

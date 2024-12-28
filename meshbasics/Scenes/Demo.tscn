@@ -29,7 +29,8 @@ script = ExtResource("1_qmp3k")
 Camera = NodePath("..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(0.999996, -0.00270064, 0.00113153, 0.00270046, 0.999996, 0.000155477, -0.00113195, -0.000152426, 0.999999, 0, -0.5, 0)
+visible = false
 mesh = SubResource("PlaneMesh_bnbs1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
