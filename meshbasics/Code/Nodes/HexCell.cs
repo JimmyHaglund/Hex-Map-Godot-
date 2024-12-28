@@ -22,6 +22,9 @@ public sealed partial class HexCell : Node3D {
             _elevation = value;
             var newPosition = Position;
             newPosition.Y = value * HexMetrics.ElevationStep;
+            newPosition.Y +=
+                (HexMetrics.SampleNoise(newPosition).Y * 2f - 1f) *
+                HexMetrics.ElevationPerturbStrength;
             Position = newPosition;
             UpdateUiAltitude();
         }
@@ -30,7 +33,7 @@ public sealed partial class HexCell : Node3D {
     private void UpdateUiAltitude() {
         if (UiRect is null) return;
         var uiPosition = UiRect.Position;
-        uiPosition.Y = Position.Y + 1.15f;
+        uiPosition.Y = Position.Y + 0.05f;
         UiRect.Position = uiPosition;
     }
 

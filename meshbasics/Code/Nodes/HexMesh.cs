@@ -74,7 +74,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 bridge = HexMetrics.GetBridge(direction);
         Vector3 v3 = v1 + bridge;
         Vector3 v4 = v2 + bridge;
-        v3.Y = v4.Y = neighbor.Elevation * HexMetrics.ElevationStep;
+        v3.Y = v4.Y = neighbor.Position.Y;
 
         if (cell.GetEdgeType(direction) == HexEdgeType.Slope) { 
             TriangulateEdgeTerraces(v1, v2, cell, v3, v4, neighbor);
@@ -85,7 +85,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (direction <= HexDirection.E && nextNeighbor is not null) {
             Vector3 v5 = v2 + HexMetrics.GetBridge(direction.Next());
-            v5.Y = nextNeighbor.Elevation * HexMetrics.ElevationStep;
+            v5.Y = nextNeighbor.Position.Y;
 
             if (cell.Elevation <= neighbor.Elevation) {
                 if (cell.Elevation <= nextNeighbor.Elevation) {
@@ -371,7 +371,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     private Vector3 Perturb(Vector3 position) {
         Vector4 sample = HexMetrics.SampleNoise(position);
         position.X += HexMetrics.CellPerturbStrength * (2.0f * sample.X - 1.0f);
-        position.Y += HexMetrics.CellPerturbStrength * (2.0f * sample.Y - 1.0f);
+        // position.Y += HexMetrics.CellPerturbStrength * (2.0f * sample.Y - 1.0f);
         position.Z += HexMetrics.CellPerturbStrength * (2.0f * sample.Z - 1.0f);
         return position;
     }
