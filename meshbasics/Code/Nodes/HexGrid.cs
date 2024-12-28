@@ -4,7 +4,7 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexGrid : Node3D {
     private int _cellCountX;
-    private int _cellCountY;
+    private int _cellCountZ;
     // private HexMesh _hexMesh;
     private HexCell[] _cells;
     private HexGridChunk[] _chunks;
@@ -30,7 +30,7 @@ public sealed partial class HexGrid : Node3D {
 
         // _hexMesh = this.GetChild<HexMesh>(0);
         _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
-        _cellCountY = ChunkCountZ * HexMetrics.ChunkSizeZ;
+        _cellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
 
         CreateChunks();
         CreateCells();
@@ -50,8 +50,8 @@ public sealed partial class HexGrid : Node3D {
     }
 
     private void CreateCells() {
-        _cells = new HexCell[_cellCountY * _cellCountX];
-        for (int z = 0, i = 0; z < _cellCountY; z++) {
+        _cells = new HexCell[_cellCountZ * _cellCountX];
+        for (int z = 0, i = 0; z < _cellCountZ; z++) {
             for (int x = 0; x < _cellCountX; x++) {
                 CreateCell(x, z, i++);
             }
@@ -67,6 +67,19 @@ public sealed partial class HexGrid : Node3D {
         int index = coordinates.X + coordinates.Z * _cellCountX + coordinates.Z / 2;
         if (index >= _cells.Length || index < 0) return null;
         return _cells[index];
+    }
+
+    public HexCell GetCell(HexCoordinates coordinates) {
+        int z = coordinates.Z;
+        if (z < 0 || z >= _cellCountZ) {
+            return null;
+        }
+        int x = coordinates.X + z / 2;
+        if (x < 0 || x >= _cellCountX) {
+            return null;
+        }
+
+        return _cells[x + z * _cellCountX];
     }
 
     // public void Refresh() {

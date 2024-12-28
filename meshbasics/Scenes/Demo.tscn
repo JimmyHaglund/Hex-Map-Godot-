@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=10 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
-[ext_resource type="ButtonGroup" uid="uid://ba2gr3etk24ym" path="res://Misc/ColorButtonGroup.tres" id="4_2w26v"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapEditor.cs" id="4_fqh23"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
@@ -70,9 +69,9 @@ HexGrid = NodePath("../HexGrid")
 [node name="Background2" type="ColorRect" parent="HexMapEditor"]
 layout_mode = 0
 offset_left = -11.0
-offset_top = -10.0
+offset_top = -12.0
 offset_right = 300.94
-offset_bottom = 790.0
+offset_bottom = 788.0
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
 [node name="Color" type="VBoxContainer" parent="HexMapEditor"]
@@ -83,15 +82,9 @@ offset_right = 309.0
 offset_bottom = 585.0
 scale = Vector2(0.625, 0.625)
 
-[node name="CheckBoxBlank" type="CheckBox" parent="HexMapEditor/Color"]
+[node name="CheckButton" type="CheckButton" parent="HexMapEditor/Color"]
+layout_direction = 3
 layout_mode = 2
-button_group = ExtResource("4_2w26v")
-
-[node name="Label" type="Label" parent="HexMapEditor/Color/CheckBoxBlank"]
-layout_mode = 0
-offset_left = 28.0
-offset_right = 117.0
-offset_bottom = 23.0
 text = "Apply Color"
 
 [node name="ColorPicker2" type="ColorPicker" parent="HexMapEditor/Color"]
@@ -106,6 +99,7 @@ offset_right = 25.0
 offset_bottom = 409.0
 
 [node name="ElevationSlider" type="VSlider" parent="HexMapEditor/ElevationControls"]
+layout_mode = 0
 offset_left = 29.0
 offset_top = 28.0
 offset_right = 45.0
@@ -115,6 +109,7 @@ value = 1.0
 tick_count = 5
 
 [node name="EnableElevationCheck" type="CheckButton" parent="HexMapEditor/ElevationControls"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 4.0
 offset_right = 60.0
@@ -128,6 +123,29 @@ offset_top = -2.0
 offset_right = 114.0
 offset_bottom = 21.0
 text = "Elevation"
+
+[node name="BrushSizeControls" type="Control" parent="HexMapEditor"]
+anchors_preset = 0
+offset_left = 106.0
+offset_top = 365.0
+offset_right = 146.0
+offset_bottom = 405.0
+
+[node name="BrushSizeSlider" type="VSlider" parent="HexMapEditor/BrushSizeControls"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 28.0
+offset_right = 45.0
+offset_bottom = 142.01
+max_value = 4.0
+value = 1.0
+tick_count = 5
+
+[node name="Brush Size" type="Label" parent="HexMapEditor/BrushSizeControls"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Brush Size"
 
 [node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("5_mpgou")
@@ -149,5 +167,7 @@ transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0
 script = ExtResource("1_qmp3k")
 Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 
-[connection signal="toggled" from="HexMapEditor/Color/CheckBoxBlank" to="HexMapEditor" method="SetApplyColor"]
+[connection signal="toggled" from="HexMapEditor/Color/CheckButton" to="HexMapEditor" method="SetApplyColor"]
 [connection signal="color_changed" from="HexMapEditor/Color/ColorPicker2" to="HexMapEditor" method="SetColor"]
+[connection signal="value_changed" from="HexMapEditor/ElevationControls/ElevationSlider" to="HexMapEditor" method="SetElevation"]
+[connection signal="value_changed" from="HexMapEditor/BrushSizeControls/BrushSizeSlider" to="HexMapEditor" method="SetBrushSize"]

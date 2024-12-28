@@ -12,6 +12,7 @@ public sealed partial class HexMapEditor : Control {
     private bool _mouseIsDown = false;
     private bool _applyColor = false;
     private bool _applyElevation = true;
+    private int _brushSize;
 
     // public override void _PhysicsProcess(double _) {
     //     if (Input.IsMouseButtonPressed(MouseButton.Left)) {
@@ -35,10 +36,28 @@ public sealed partial class HexMapEditor : Control {
     void HandleInput() {
         if (HexGrid.IsRefreshing) return;
         var mousePosition = Mouse3D.MouseWorldPosition;
-        EditCell(HexGrid.GetCell(mousePosition));
+        EditCells(HexGrid.GetCell(mousePosition));
     }
 
-    void EditCell(HexCell cell) {
+    private void EditCells(HexCell center) {
+        if (center is null) return;
+        int centerX = center.Coordinates.X;
+        int centerZ = center.Coordinates.Z;
+        for (int r = 0, z = centerZ - _brushSize; z <= centerZ; z++, r++) {
+            for (int x = centerX - r; x <= centerX + _brushSize; x++) {
+                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+            }
+        }
+
+        for (int r = 0, z = centerZ + _brushSize; z > centerZ; z--, r++) {
+            for (int x = centerX - _brushSize; x <= centerX + r; x++) {
+                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+            }
+        }
+
+    }
+
+    private void EditCell(HexCell cell) {
         if (cell is null) return;
         if (_applyColor) {
             cell.Color = _activeColor;
@@ -49,9 +68,9 @@ public sealed partial class HexMapEditor : Control {
         // HexGrid.Refresh();
     }
 
-    public void SetElevation(int elevationStep) {
+    public void SetElevation(float elevationStep) {
         // var result = HexMetrics.Maxelevation * elevationStep / 100;
-        _activeElevation = elevationStep;
+        _activeElevation = (int)elevationStep;
     }
 
     public void SelectColor(int index) {
@@ -71,5 +90,9 @@ public sealed partial class HexMapEditor : Control {
 
     public void ToggleElevationEnabled(bool value) {
         _applyElevation = value;
+    }
+
+    public void SetBrushSize(float size) {
+        _brushSize = (int)size;
     }
 }
