@@ -216,6 +216,26 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 boundary = begin.Lerp(right, b);
         Color boundaryColor = beginCell.Color.Lerp(rightCell.Color, b);
 
+        TriangulateBoundaryTriangle(
+            begin, beginCell, left, leftCell, boundary, boundaryColor
+        );
+
+        if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
+            TriangulateBoundaryTriangle(
+                left, leftCell, right, rightCell, boundary, boundaryColor
+            );
+        }
+        else {
+            AddTriangle(left, right, boundary);
+            AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
+        }
+    }
+
+    private void TriangulateBoundaryTriangle(
+        Vector3 begin, HexCell beginCell,
+        Vector3 left, HexCell leftCell,
+        Vector3 boundary, Color boundaryColor
+    ) {
         Vector3 v2 = HexMetrics.TerraceLerp(begin, left, 1);
         Color c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, 1);
 
@@ -235,9 +255,8 @@ public sealed partial class HexMesh : MeshInstance3D {
         AddTriangleColor(c2, leftCell.Color, boundaryColor);
     }
 
-
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
-        int vertexIndex = _vertices.Count;
+        //int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v3 - v2);
         _vertices.Add(v1);
         _vertices.Add(v2);
