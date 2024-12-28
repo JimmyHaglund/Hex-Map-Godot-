@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace JHM.MeshBasics;
 
@@ -11,9 +9,13 @@ public sealed partial class HexGrid : Node3D {
     [Export] public Texture2D NoiseSource { get; set; }
 
     [ExportCategory("HexGrid Configuration")]
-    [Export] public int Width { get; set; } = 6;
-    [Export] public int Height { get; set; } = 6;
+    [Export] public int ChunkCountX { get; set; } = 6;
+    [Export] public int ChunkCountY { get; set; } = 6;
     [Export] public Color DefaultColor { get; set; } = new(1, 1, 1);
+
+
+    private int _cellCountX;
+    private int _cellCountY;
 
     private HexMesh _hexMesh;
     private HexCell[] _cells;
@@ -21,12 +23,17 @@ public sealed partial class HexGrid : Node3D {
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
 
-        _cells = new HexCell[Height * Width];
         _hexMesh = this.GetChild<HexMesh>(0);
+        _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
+        _cellCountY = ChunkCountY * HexMetrics.ChunkSizeY;
 
-        GD.Print(_hexMesh.Name);
-        for (int z = 0, i = 0; z < Height; z++) {
-            for (int x = 0; x < Width; x++) {
+        CreateCells();
+    }
+
+    private void CreateCells() {
+        _cells = new HexCell[_cellCountY * _cellCountX];
+        for (int z = 0, i = 0; z < _cellCountY; z++) {
+            for (int x = 0; x < _cellCountX; x++) {
                 CreateCell(x, z, i++);
             }
         }
@@ -38,7 +45,7 @@ public sealed partial class HexGrid : Node3D {
 
     public HexCell GetCell(Vector3 position) {
         var coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * _cellCountX + coordinates.Z / 2;
         if (index >= _cells.Length || index < 0) return null;
         return _cells[index];
     }
@@ -63,15 +70,15 @@ public sealed partial class HexGrid : Node3D {
         }
         if (z > 0) {
             if ((z & 1) == 0) {
-                cell.SetNeighbor(HexDirection.SE, _cells[i - Width]);
+                cell.SetNeighbor(HexDirection.SE, _cells[i - _cellCountX]);
                 if (x > 0) {
-                    cell.SetNeighbor(HexDirection.SW, _cells[i - Width - 1]);
+                    cell.SetNeighbor(HexDirection.SW, _cells[i - _cellCountX - 1]);
                 }
             }
             else {
-                cell.SetNeighbor(HexDirection.SW, _cells[i - Width]);
-                if (x < Width - 1) {
-                    cell.SetNeighbor(HexDirection.SE, _cells[i - Width + 1]);
+                cell.SetNeighbor(HexDirection.SW, _cells[i - _cellCountX]);
+                if (x < _cellCountX - 1) {
+                    cell.SetNeighbor(HexDirection.SE, _cells[i - _cellCountX + 1]);
                 }
             }
         }
