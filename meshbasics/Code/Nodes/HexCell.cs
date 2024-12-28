@@ -32,4 +32,10 @@ public sealed partial class HexCell : Node3D {
         _neighbors[(int)direction] = cell;
         cell._neighbors[(int)direction.Opposite()] = this;
     }
+
+    public HexEdgeType GetEdgeType(HexDirection direction) {
+        return HexMetrics.GetEdgeType(
+            Elevation, _neighbors[(int)direction].Elevation
+        );
+    }
 }

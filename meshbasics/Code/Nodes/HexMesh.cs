@@ -76,14 +76,31 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 v4 = v2 + bridge;
         v3.Y = v4.Y = neighbor.Elevation * HexMetrics.ElevationStep;
 
-        TriangulateEdgeTerraces(v1, v2, cell, v3, v4, neighbor);
-        // AddQuad(v1, v2, v3, v4);
-        // AddQuadColor(cell.Color, neighbor.Color);
-
+        if (cell.GetEdgeType(direction) == HexEdgeType.Slope) { 
+            TriangulateEdgeTerraces(v1, v2, cell, v3, v4, neighbor);
+        } else {
+            AddQuad(v1, v2, v3, v4);
+            AddQuadColor(cell.Color, neighbor.Color);
+        }
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (direction <= HexDirection.E && nextNeighbor is not null) {
             Vector3 v5 = v2 + HexMetrics.GetBridge(direction.Next());
             v5.Y = nextNeighbor.Elevation * HexMetrics.ElevationStep;
+
+            if (cell.Elevation <= neighbor.Elevation) {
+                if (cell.Elevation <= nextNeighbor.Elevation) {
+                    // If the cell is the lowest (or tied for lowest) of its neighbors, use it as the bottom one.
+                    TriangulateCorner(v2, cell, v4, neighbor, v5, nextNeighbor);
+                } else {
+                    // If nextNeighbor is lowest...
+                    TriangulateCorner(v5, nextNeighbor, v2, cell, v4, neighbor);
+                }
+            } else if (neighbor.Elevation <= nextNeighbor.Elevation) {
+                TriangulateCorner(v4, neighbor, v5, nextNeighbor, v2, cell);
+            } else {
+                TriangulateCorner(v5, nextNeighbor, v2, cell, v4, neighbor);
+            }
+
             AddTriangle(v2, v4, v5);
             AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
         }
@@ -118,6 +135,15 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         AddQuad(v3, v4, endLeft, endRight);
         AddQuadColor(c2, endCell.Color);
+    }
+
+    private void TriangulateCorner(
+        Vector3 bottom, HexCell bottomCell,
+        Vector3 left, HexCell leftCell,
+        Vector3 right, HexCell rightCell
+    ) {
+        AddTriangle(bottom, left, right);
+        AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
     }
 
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {

@@ -59,4 +59,16 @@ public static class HexMetrics {
         float h = step * HexMetrics.HorizontalTerraceStepSize;
         return a.Lerp(b, h);
     }
+
+    public static HexEdgeType GetEdgeType(int elevation1, int elevation2) {
+        int delta = elevation2 - elevation1;
+
+        return delta switch {
+            0 => HexEdgeType.Flat,
+            1 => HexEdgeType.Slope,
+            -1 => HexEdgeType.Slope,
+            _ => HexEdgeType.Cliff
+
+        };
+    }
 }
