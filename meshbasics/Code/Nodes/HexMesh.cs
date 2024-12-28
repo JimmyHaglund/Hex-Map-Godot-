@@ -171,6 +171,24 @@ public sealed partial class HexMesh : MeshInstance3D {
                 );
                 return;
             }
+            TriangulateCornerCliffTerraces(
+                bottom, bottomCell, left, leftCell, right, rightCell
+            );
+            return;
+        }
+
+        if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
+            if (leftCell.Elevation < rightCell.Elevation) {
+                TriangulateCornerCliffTerraces(
+                    right, rightCell, bottom, bottomCell, left, leftCell
+                );
+            }
+            else {
+                TriangulateCornerTerracesCliff(
+                    left, leftCell, right, rightCell, bottom, bottomCell
+                );
+            }
+            return;
         }
 
         AddTriangle(bottom, left, right);
@@ -213,6 +231,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 right, HexCell rightCell
     ) {
         float b = 1.0f / (rightCell.Elevation - beginCell.Elevation);
+        if (b < 0) b = -b;
         Vector3 boundary = begin.Lerp(right, b);
         Color boundaryColor = beginCell.Color.Lerp(rightCell.Color, b);
 
@@ -230,6 +249,32 @@ public sealed partial class HexMesh : MeshInstance3D {
             AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
+
+    private void TriangulateCornerCliffTerraces(
+        Vector3 begin, HexCell beginCell,
+        Vector3 left, HexCell leftCell,
+        Vector3 right, HexCell rightCell
+    ) {
+        float b = 1.0f / (leftCell.Elevation - beginCell.Elevation);
+        b *= Mathf.Sign(b);
+        Vector3 boundary = begin.Lerp(left, b);
+        Color boundaryColor = beginCell.Color.Lerp(leftCell.Color, b);
+
+        TriangulateBoundaryTriangle(
+            right, rightCell, begin, beginCell, boundary, boundaryColor
+        );
+
+        if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
+            TriangulateBoundaryTriangle(
+                left, leftCell, right, rightCell, boundary, boundaryColor
+            );
+        }
+        else {
+            AddTriangle(left, right, boundary);
+            AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
+        }
+    }
+
 
     private void TriangulateBoundaryTriangle(
         Vector3 begin, HexCell beginCell,
