@@ -158,6 +158,10 @@ public sealed partial class HexMesh : MeshInstance3D {
                 );
                 return;
             }
+            TriangulateCornerTerracesCliff(
+                bottom, bottomCell, left, leftCell, right, rightCell
+            );
+            return;
         }
 
         if (rightEdgeType == HexEdgeType.Slope) {
@@ -202,6 +206,35 @@ public sealed partial class HexMesh : MeshInstance3D {
         AddQuad(v3, v4, left, right);
         AddQuadColor(c3, c4, leftCell.Color, rightCell.Color);
     }
+
+    private void TriangulateCornerTerracesCliff(
+        Vector3 begin, HexCell beginCell,
+        Vector3 left, HexCell leftCell,
+        Vector3 right, HexCell rightCell
+    ) {
+        float b = 1.0f / (rightCell.Elevation - beginCell.Elevation);
+        Vector3 boundary = begin.Lerp(right, b);
+        Color boundaryColor = beginCell.Color.Lerp(rightCell.Color, b);
+
+        Vector3 v2 = HexMetrics.TerraceLerp(begin, left, 1);
+        Color c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, 1);
+
+        AddTriangle(begin, v2, boundary);
+        AddTriangleColor(beginCell.Color, c2, boundaryColor);
+
+        for (int i = 2; i < HexMetrics.TerraceSteps; i++) {
+            Vector3 v1 = v2;
+            Color c1 = c2;
+            v2 = HexMetrics.TerraceLerp(begin, left, i);
+            c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, i);
+            AddTriangle(v1, v2, boundary);
+            AddTriangleColor(c1, c2, boundaryColor);
+        }
+
+        AddTriangle(v2, left, boundary);
+        AddTriangleColor(c2, leftCell.Color, boundaryColor);
+    }
+
 
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
         int vertexIndex = _vertices.Count;
