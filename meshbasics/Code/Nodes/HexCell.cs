@@ -38,4 +38,10 @@ public sealed partial class HexCell : Node3D {
             Elevation, _neighbors[(int)direction].Elevation
         );
     }
+
+    public HexEdgeType GetEdgeType(HexCell otherCell) {
+        return HexMetrics.GetEdgeType(
+            Elevation, otherCell.Elevation
+        );
+    }
 }
