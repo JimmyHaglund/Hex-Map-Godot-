@@ -12,6 +12,10 @@ void fragment() {
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
     ALPHA = c.a;
-
-    ALBEDO.rg = UV;
+    vec2 modified_uv = UV;
+    if (modified_uv.y < 0.0) {
+        modified_uv.y = 1.0;
+    }
+	
+    ALBEDO.rg = modified_uv;
 }
