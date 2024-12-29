@@ -13,8 +13,10 @@ void fragment() {
 	float foam = Foam(shore, world_vertex.xz, _MainTex);
 	float waves = Waves(world_vertex.xz, _MainTex);
 	waves *= 1.0 - shore;
+	float shoreWater = max(foam, waves);
 	float river = River(UV2, _MainTex);
-	vec4 c = clamp(_Color + river, 0.0, 1.0);
+	float water = mix(shoreWater, river, UV.x);
+	vec4 c = clamp(_Color + water, 0.0, 1.0);
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
