@@ -13,9 +13,8 @@ void fragment() {
     ROUGHNESS = 1.0 - _Glossiness;
     ALPHA = c.a;
     vec2 modified_uv = UV;
-    if (modified_uv.y < 0.0) {
-        modified_uv.y = 1.0;
-    }
+    modified_uv.y -=  TIME;
+	modified_uv.y = fract(modified_uv.y);
 	
     ALBEDO.rg = modified_uv;
 }
