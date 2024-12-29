@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMesh : MeshInstance3D {
-    private static List<Vector3> _vertices = new();
-    private static List<Color> _colors = new();
-    private static List<Vector3> _normals = new();
+    private List<Vector3> _vertices = new();
+    private List<Color> _colors = new();
+    private List<Vector3> _normals = new();
     private ArrayMesh _mesh;
     // private List<int> _triangles = new();
     private CollisionShape3D _activeShape;
@@ -26,9 +26,9 @@ public sealed partial class HexMesh : MeshInstance3D {
 
     public void Clear() {
         _mesh.ClearSurfaces();
-        _vertices.Clear();
-        _colors.Clear();
-        _normals.Clear();
+        _vertices = ListPool<Vector3>.Get();
+        _colors = ListPool<Color>.Get();
+        _normals = ListPool<Vector3>.Get();
     }
 
     public void Apply() {
@@ -47,6 +47,10 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         var shape = _mesh.CreateTrimeshShape();
         _inactiveShape.Shape = shape;
+
+        ListPool<Vector3>.Add(_vertices);
+        ListPool<Color>.Add(_colors);
+        ListPool<Vector3>.Add(_normals);
         CallDeferred("SwapCollisionShape");
     }
 
