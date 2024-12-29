@@ -1,15 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://bkqosooy180ch"]
+[gd_scene load_steps=6 format=3 uid="uid://bkqosooy180ch"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
 [ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
 [ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
-[ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/VertexColorMaterial.tres" id="4_5rgnw"]
 [ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="4_77bli"]
-[ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="4_sgmtd"]
 [ext_resource type="PackedScene" uid="uid://bwok11esd24iw" path="res://Scenes/HexGridChunk.tscn" id="5_3ypkl"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
-resource_local_to_scene = true
 
 [node name="HexGrid" type="Node3D"]
 script = ExtResource("1_52rku")
@@ -17,15 +12,3 @@ HexCellPrefab = ExtResource("2_dagm6")
 CellLabelPrefab = ExtResource("3_48iag")
 NoiseSource = ExtResource("4_77bli")
 ChunkPrefab = ExtResource("5_3ypkl")
-
-[node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape")]
-visible = false
-material_override = ExtResource("4_5rgnw")
-gi_mode = 2
-mesh = SubResource("ArrayMesh_0fglf")
-script = ExtResource("4_sgmtd")
-CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="HexMesh"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HexMesh/StaticBody3D"]

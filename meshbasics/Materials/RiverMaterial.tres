@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="2_5n2ho"]
 
 [resource]
-render_priority = 1
+render_priority = 0
 shader = ExtResource("1_p5dps")
 shader_parameter/_Color = Color(0.235407, 0.484625, 0.601336, 0.270588)
 shader_parameter/_Metallic = null

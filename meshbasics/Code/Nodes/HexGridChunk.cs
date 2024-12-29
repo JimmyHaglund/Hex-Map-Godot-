@@ -102,6 +102,44 @@ public sealed partial class HexGridChunk : Node3D {
         if (direction <= HexDirection.SE) {
             TriangulateConnection(direction, cell, e);
         }
+
+        if (cell.IsUnderwater) {
+            TriangulateWater(direction, cell, center);
+        }
+    }
+
+    private void TriangulateWater(
+        HexDirection direction, HexCell cell, Vector3 center
+    ) {
+        center.Y = cell.WaterSurfaceY;
+        Vector3 c1 = center + HexMetrics.GetFirstSolidCorner(direction);
+        Vector3 c2 = center + HexMetrics.GetSecondSolidCorner(direction);
+
+        Water.AddTriangle(center, c1, c2);
+
+        if (direction <= HexDirection.SE) {
+            HexCell neighbor = cell.GetNeighbor(direction);
+            if (neighbor == null || !neighbor.IsUnderwater) {
+                return;
+            }
+
+            Vector3 bridge = HexMetrics.GetBridge(direction);
+            Vector3 e1 = c1 + bridge;
+            Vector3 e2 = c2 + bridge;
+
+            Water.AddQuad(c1, c2, e1, e2);
+
+            if (direction <= HexDirection.E) {
+                HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
+                if (nextNeighbor == null || !nextNeighbor.IsUnderwater) {
+                    return;
+                }
+                Water.AddTriangle(
+                    c2, e2, c2 + HexMetrics.GetBridge(direction.Next())
+                );
+            }
+
+        }
     }
 
     private void TriangulateWithRiver(

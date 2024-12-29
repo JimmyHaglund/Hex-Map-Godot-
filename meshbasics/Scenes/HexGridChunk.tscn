@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=11 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
@@ -11,6 +11,9 @@
 resource_local_to_scene = true
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_nb12b"]
+resource_local_to_scene = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_0o867"]
 resource_local_to_scene = true
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_kd5wo"]
@@ -53,7 +56,7 @@ UseUVCoordinates = true
 material_override = ExtResource("5_uat4n")
 cast_shadow = 0
 gi_mode = 2
-mesh = SubResource("ArrayMesh_nb12b")
+mesh = SubResource("ArrayMesh_0o867")
 script = ExtResource("6_nfodi")
 UseCollider = false
 UseColors = false
