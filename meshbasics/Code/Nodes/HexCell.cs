@@ -13,6 +13,8 @@ public sealed partial class HexCell : Node3D {
     private HexDirection _incomingRiver;
     private HexDirection _outgoingRiver;
     private bool[] _roads = new bool[6];
+    private int _waterLevel;
+
 
     public Color Color {
         get {
@@ -116,7 +118,15 @@ public sealed partial class HexCell : Node3D {
     public float RiverSurfaceY {
         get {
             return
-                (Elevation + HexMetrics.RiverSurfaceElevationOffset) *
+                (Elevation + HexMetrics.WaterElevationOffset) *
+                HexMetrics.ElevationStep;
+        }
+    }
+
+    public float WaterSurfaceY {
+        get {
+            return
+                (_waterLevel + HexMetrics.WaterElevationOffset) *
                 HexMetrics.ElevationStep;
         }
     }
@@ -135,6 +145,25 @@ public sealed partial class HexCell : Node3D {
     public HexDirection RiverBeginOrEndDirection {
         get {
             return HasIncomingRiver ? IncomingRiver : OutgoingRiver;
+        }
+    }
+
+    public int WaterLevel {
+        get {
+            return _waterLevel;
+        }
+        set {
+            if (_waterLevel == value) {
+                return;
+            }
+            _waterLevel = value;
+            Refresh();
+        }
+    }
+
+    public bool IsUnderwater {
+        get {
+            return _waterLevel > _elevation;
         }
     }
 
