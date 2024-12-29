@@ -328,7 +328,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     ) {
         float b = 1.0f / (rightCell.Elevation - beginCell.Elevation);
         if (b < 0) b = -b;
-        Vector3 boundary = Perturb(begin).Lerp(Perturb(right), b);
+        Vector3 boundary = HexMetrics.Perturb(begin).Lerp(HexMetrics.Perturb(right), b);
         Color boundaryColor = beginCell.Color.Lerp(rightCell.Color, b);
 
         TriangulateBoundaryTriangle(
@@ -341,7 +341,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             );
         }
         else {
-            AddTriangleUnperturbed(Perturb(left), Perturb(right), boundary);
+            AddTriangleUnPerturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
             AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
@@ -353,7 +353,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     ) {
         float b = 1.0f / (leftCell.Elevation - beginCell.Elevation);
         b *= Mathf.Sign(b);
-        Vector3 boundary = Perturb(begin).Lerp(Perturb(left), b);
+        Vector3 boundary = HexMetrics.Perturb(begin).Lerp(HexMetrics.Perturb(left), b);
         Color boundaryColor = beginCell.Color.Lerp(leftCell.Color, b);
 
         TriangulateBoundaryTriangle(
@@ -366,7 +366,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             );
         }
         else {
-            AddTriangleUnperturbed(Perturb(left), Perturb(right), boundary);
+            AddTriangleUnPerturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
             AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
@@ -377,23 +377,23 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 left, HexCell leftCell,
         Vector3 boundary, Color boundaryColor
     ) {
-        Vector3 v2 = Perturb(HexMetrics.TerraceLerp(begin, left, 1));
+        Vector3 v2 = HexMetrics.Perturb(HexMetrics.TerraceLerp(begin, left, 1));
         Color c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, 1);
 
 
-        AddTriangleUnperturbed(Perturb(begin), v2, boundary);
+        AddTriangleUnPerturbed(HexMetrics.Perturb(begin), v2, boundary);
         AddTriangleColor(beginCell.Color, c2, boundaryColor);
 
         for (int i = 2; i < HexMetrics.TerraceSteps; i++) {
             Vector3 v1 = v2;
             Color c1 = c2;
-            v2 = Perturb(HexMetrics.TerraceLerp(begin, left, i));
+            v2 = HexMetrics.Perturb(HexMetrics.TerraceLerp(begin, left, i));
             c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, i);
-            AddTriangleUnperturbed(v1, v2, boundary);
+            AddTriangleUnPerturbed(v1, v2, boundary);
             AddTriangleColor(c1, c2, boundaryColor);
         }
 
-        AddTriangleUnperturbed(v2, Perturb(left), boundary);
+        AddTriangleUnPerturbed(v2, HexMetrics.Perturb(left), boundary);
         AddTriangleColor(c2, leftCell.Color, boundaryColor);
     }
 
@@ -425,9 +425,9 @@ public sealed partial class HexMesh : MeshInstance3D {
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
         //int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v3 - v2);
-        _vertices.Add(Perturb(v1));
-        _vertices.Add(Perturb(v2));
-        _vertices.Add(Perturb(v3));
+        _vertices.Add(HexMetrics.Perturb(v1));
+        _vertices.Add(HexMetrics.Perturb(v2));
+        _vertices.Add(HexMetrics.Perturb(v3));
         _normals.Add(normal);
         _normals.Add(normal);
         _normals.Add(normal);
@@ -437,7 +437,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         // _triangles.Add(vertexIndex + 2);
     }
 
-    private void AddTriangleUnperturbed(Vector3 v1, Vector3 v2, Vector3 v3) {
+    private void AddTriangleUnPerturbed(Vector3 v1, Vector3 v2, Vector3 v3) {
         var normal = (v2 - v1).Cross(v3 - v2);
         _vertices.Add(v1);
         _vertices.Add(v2);
@@ -468,13 +468,13 @@ public sealed partial class HexMesh : MeshInstance3D {
     private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) {
         //int vertexIndex = _vertices.Count;
         var normal = (v2 - v1).Cross(v2 - v3);
-        _vertices.Add(Perturb(v2));
-        _vertices.Add(Perturb(v1));
-        _vertices.Add(Perturb(v3));
+        _vertices.Add(HexMetrics.Perturb(v2));
+        _vertices.Add(HexMetrics.Perturb(v1));
+        _vertices.Add(HexMetrics.Perturb(v3));
 
-        _vertices.Add(Perturb(v2));
-        _vertices.Add(Perturb(v3));
-        _vertices.Add(Perturb(v4));
+        _vertices.Add(HexMetrics.Perturb(v2));
+        _vertices.Add(HexMetrics.Perturb(v3));
+        _vertices.Add(HexMetrics.Perturb(v4));
 
         _normals.Add(normal);
         _normals.Add(normal);
@@ -521,14 +521,6 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(color);
         _colors.Add(color);
         _colors.Add(color);
-    }
-
-    private Vector3 Perturb(Vector3 position) {
-        Vector4 sample = HexMetrics.SampleNoise(position);
-        position.X += HexMetrics.CellPerturbStrength * (2.0f * sample.X - 1.0f);
-        // position.Y += HexMetrics.CellPerturbStrength * (2.0f * sample.Y - 1.0f);
-        position.Z += HexMetrics.CellPerturbStrength * (2.0f * sample.Z - 1.0f);
-        return position;
     }
 
     private void SwapCollisionShape() {

@@ -102,4 +102,11 @@ public static class HexMetrics {
             (Corners[(int)direction] + Corners[(int)direction + 1]) *
             (0.5f * SolidFactor);
     }
+
+    public static Vector3 Perturb(Vector3 position) {
+        Vector4 sample = SampleNoise(position);
+        position.X += (sample.X * 2f - 1f) * CellPerturbStrength;
+        position.Z += (sample.Z * 2f - 1f) * CellPerturbStrength;
+        return position;
+    }
 }
