@@ -6,13 +6,17 @@ uniform float _Metallic;
 uniform float _Glossiness;
 
 void fragment() {
-    vec2 modified_uv = UV;
-    modified_uv.x *= 0.0625;
-    modified_uv.y -= TIME * 0.25;
-
-    vec4 noise = texture(_MainTex, modified_uv);
-
-    vec4 c = _Color * noise.r;
+    vec2 uv1 = UV;
+    uv1.x = uv1.x * 0.0625 + TIME * 0.005;
+    uv1.y -= TIME * 0.25;
+    vec4 noise1 = texture(_MainTex, uv1);
+    
+    vec2 uv2 = UV;
+    uv2.x = uv2.x * 0.0625 - TIME * 0.0052;
+    uv2.y -= TIME * 0.23;
+    vec4 noise2 = texture(_MainTex, uv2);
+    
+    vec4 c = _Color * (noise1.r * noise2.a);
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
