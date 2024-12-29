@@ -16,9 +16,16 @@ void fragment() {
 	uv2.x += TIME;
 	vec4 noise2 = texture(_MainTex, uv2 * 0.025);
 	
-	float waves = noise1.z + noise2.x;
+	
+    
+	float blendWave = sin((world_vertex.x + world_vertex.z) * 0.1 + (noise1.y + noise2.z) + TIME);
+	blendWave *= blendWave;
+	
+	float waves = mix(noise1.z, noise1.w, blendWave)
+	 + mix(noise2.x, noise2.y, blendWave);
 	waves = clamp(waves, 0.75, 2.0) - 1.0;
-    vec4 c = clamp(_Color + waves, 0.0, 0.9);
+	
+	vec4 c = clamp(_Color + waves, 0.0, 1.0);
 	
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
