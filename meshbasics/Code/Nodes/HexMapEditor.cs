@@ -11,12 +11,15 @@ public sealed partial class HexMapEditor : Control {
     private int _activeElevation = 1;
     private bool _applyColor = false;
     private bool _applyElevation = true;
+    private bool _applyWaterLevel = false;
     private int _brushSize;
     private OptionalToggle _riverMode;
     private OptionalToggle _roadMode;
     private bool _isDrag;
     private HexDirection _dragDirection;
     private HexCell _previousCell;
+    private int _activeWaterLevel;
+
 
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
@@ -85,6 +88,9 @@ public sealed partial class HexMapEditor : Control {
         if (_applyElevation) {
             cell.Elevation = _activeElevation;
         }
+        if (_applyWaterLevel) {
+            cell.WaterLevel = _activeWaterLevel;
+        }
 
         if (_riverMode == OptionalToggle.Off) {
             cell.RemoveRiver();
@@ -103,6 +109,7 @@ public sealed partial class HexMapEditor : Control {
                 }
             }
         }
+        
     }
 
     public void SetElevation(float elevationStep) {
@@ -139,6 +146,14 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetRoadMode(int mode) {
         _roadMode = (OptionalToggle)mode;
+    }
+
+    public void SetApplyWaterLevel(bool toggle) {
+        _applyWaterLevel = toggle;
+    }
+
+    public void SetWaterLevel(float level) {
+        _activeWaterLevel = (int)level;
     }
 
     #region Definitions
