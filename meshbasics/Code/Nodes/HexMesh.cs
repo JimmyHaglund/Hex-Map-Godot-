@@ -155,6 +155,22 @@ public sealed partial class HexMesh : MeshInstance3D {
     private void TriangulateAdjacentToRiver(
         HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
     ) {
+        if (cell.HasRiverThroughEdge(direction.Next())) {
+            if (cell.HasRiverThroughEdge(direction.Previous())) {
+                center += HexMetrics.GetSolidEdgeMiddle(direction) *
+                    (HexMetrics.InnerToOuter * 0.5f);
+            } else if (
+                cell.HasRiverThroughEdge(direction.Previous2())
+            ) {
+                center += HexMetrics.GetFirstSolidCorner(direction) * 0.25f;
+            }
+        }else if (
+            cell.HasRiverThroughEdge(direction.Previous()) &&
+            cell.HasRiverThroughEdge(direction.Next2())
+        ) {
+            center += HexMetrics.GetSecondSolidCorner(direction) * 0.25f;
+        }
+
         EdgeVertices m = new EdgeVertices(
             center.Lerp(e.v1, 0.5f),
             center.Lerp(e.v5, 0.5f)
