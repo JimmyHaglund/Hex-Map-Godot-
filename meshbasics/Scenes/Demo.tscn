@@ -73,7 +73,7 @@ layout_mode = 2
 offset_left = 44.0
 offset_top = 1.0
 offset_right = 359.435
-offset_bottom = 804.825
+offset_bottom = 901.0
 scale = Vector2(0.6, 0.6)
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
@@ -101,6 +101,11 @@ alignment = 2
 [node name="ColorPicker2" type="ColorPicker" parent="HexMapEditor/Background2/VBoxContainer/Color"]
 layout_mode = 2
 edit_alpha = false
+
+[node name="ColorRect" type="ColorRect" parent="HexMapEditor/Background2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+color = Color(0.207512, 0.207512, 0.207512, 1)
 
 [node name="ElevationControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
 layout_mode = 2
@@ -181,6 +186,54 @@ text = "Remove"
 layout_mode = 2
 button_group = ExtResource("4_olliq")
 
+[node name="RoadControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls"]
+layout_mode = 2
+text = "Road"
+
+[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls"]
+layout_mode = 2
+
+[node name="Null" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null"]
+layout_mode = 2
+text = "N/A"
+
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null"]
+layout_mode = 2
+button_pressed = true
+button_group = ExtResource("4_olliq")
+
+[node name="Add" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add"]
+layout_mode = 2
+text = "Add"
+
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add"]
+layout_mode = 2
+button_group = ExtResource("4_olliq")
+
+[node name="Remove" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove"]
+layout_mode = 2
+text = "Remove"
+
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove"]
+layout_mode = 2
+button_group = ExtResource("4_olliq")
+
 [node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("5_mpgou")
 Grid = NodePath("../HexGrid")
@@ -210,3 +263,6 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [1]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [2]]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [0]]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [1]]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [2]]

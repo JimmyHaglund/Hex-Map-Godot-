@@ -13,6 +13,7 @@ public sealed partial class HexMapEditor : Control {
     private bool _applyElevation = true;
     private int _brushSize;
     private OptionalToggle _riverMode;
+    private OptionalToggle _roadMode;
     private bool _isDrag;
     private HexDirection _dragDirection;
     private HexCell _previousCell;
@@ -88,10 +89,18 @@ public sealed partial class HexMapEditor : Control {
         if (_riverMode == OptionalToggle.Off) {
             cell.RemoveRiver();
         }
-        else if (_isDrag && _riverMode == OptionalToggle.On) {
+        if (_roadMode == OptionalToggle.Off) {
+            cell.RemoveRoads();
+        }
+        if (_isDrag) {
             HexCell otherCell = cell.GetNeighbor(_dragDirection.Opposite());
-            if (otherCell != null) {
-                otherCell.SetOutgoingRiver(_dragDirection);
+            if (otherCell is not null) { 
+                if (_riverMode == OptionalToggle.On) {
+                    otherCell.SetOutgoingRiver(_dragDirection);
+                }
+                if (_roadMode == OptionalToggle.On) { 
+                    otherCell.AddRoad(_dragDirection);
+                }
             }
         }
     }
@@ -126,6 +135,10 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetRiverMode(int mode) {
         _riverMode = (OptionalToggle)mode;
+    }
+
+    public void SetRoadMode(int mode) {
+        _roadMode = (OptionalToggle)mode;
     }
 
     #region Definitions
