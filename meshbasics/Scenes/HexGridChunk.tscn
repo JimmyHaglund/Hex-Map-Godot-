@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=10 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
 [ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/VertexColorMaterial.tres" id="5_a1qwg"]
+[ext_resource type="Material" uid="uid://cmgf5cc3lk3rn" path="res://Materials/WaterMaterial.tres" id="5_uat4n"]
 [ext_resource type="Material" uid="uid://deb1ldds6tidn" path="res://Materials/RoadMaterial.tres" id="6_n8kls"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="6_nfodi"]
 
@@ -15,11 +16,12 @@ resource_local_to_scene = true
 [sub_resource type="ArrayMesh" id="ArrayMesh_kd5wo"]
 resource_local_to_scene = true
 
-[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers", "Roads")]
+[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers", "Roads", "Water")]
 script = ExtResource("1_hk31i")
 Terrain = NodePath("Terrain")
 Rivers = NodePath("Rivers")
 Roads = NodePath("Roads")
+Water = NodePath("Water")
 
 [node name="Terrain" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
 material_override = ExtResource("5_a1qwg")
@@ -46,6 +48,15 @@ script = ExtResource("6_nfodi")
 UseCollider = false
 UseColors = false
 UseUVCoordinates = true
+
+[node name="Water" type="MeshInstance3D" parent="."]
+material_override = ExtResource("5_uat4n")
+cast_shadow = 0
+gi_mode = 2
+mesh = SubResource("ArrayMesh_nb12b")
+script = ExtResource("6_nfodi")
+UseCollider = false
+UseColors = false
 
 [node name="Roads" type="MeshInstance3D" parent="."]
 material_override = ExtResource("6_n8kls")

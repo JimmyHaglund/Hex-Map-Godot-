@@ -8,5 +8,5 @@ render_priority = 1
 shader = ExtResource("1_p5dps")
 shader_parameter/_Color = Color(0.235407, 0.484625, 0.601336, 0.270588)
 shader_parameter/_Metallic = null
-shader_parameter/_Glossiness = 0.7
+shader_parameter/_Glossiness = 0.5
 shader_parameter/_MainTex = ExtResource("2_5n2ho")

@@ -12,6 +12,7 @@ public sealed partial class HexGridChunk : Node3D {
     [Export] public HexMesh Terrain { get; set; }
     [Export] public HexMesh Rivers { get; set; }
     [Export] public HexMesh Roads { get; set; }
+    [Export] public HexMesh Water { get; set; }
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
@@ -57,12 +58,14 @@ public sealed partial class HexGridChunk : Node3D {
         Terrain.Clear();
         Rivers.Clear();
         Roads.Clear();
+        Water.Clear();
         for (int i = 0; i < _cells.Length; i++) {
             Triangulate(_cells[i]);
         }
         Terrain.Apply();
         Rivers.Apply();
         Roads.Apply();
+        Water.Apply();
     }
 
     private void Triangulate(HexCell cell) {
