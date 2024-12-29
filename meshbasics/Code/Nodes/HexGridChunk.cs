@@ -167,10 +167,12 @@ public sealed partial class HexGridChunk : Node3D {
         Water.AddTriangle(center, e1.v3, e1.v4);
         Water.AddTriangle(center, e1.v4, e1.v5);
 
-        Vector3 bridge = HexMetrics.GetWaterBridge(direction);
+        Vector3 center2 = neighbor.Position;
+        center2.Y = center.Y;
+
         EdgeVertices e2 = new EdgeVertices(
-            e1.v1 + bridge,
-            e1.v5 + bridge
+            center2 + HexMetrics.GetSecondSolidCorner(direction.Opposite()),
+            center2 + HexMetrics.GetFirstSolidCorner(direction.Opposite())
         );
         WaterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
         WaterShore.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
@@ -184,8 +186,14 @@ public sealed partial class HexGridChunk : Node3D {
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (nextNeighbor != null) {
+            Vector3 v3 = nextNeighbor.Position + (nextNeighbor.IsUnderwater ?
+                HexMetrics.GetFirstWaterCorner(direction.Previous()) :
+                HexMetrics.GetFirstSolidCorner(direction.Previous()));
+            v3.Y = center.Y;
             WaterShore.AddTriangle(
-                e1.v5, e2.v5, e1.v5 + HexMetrics.GetWaterBridge(direction.Next())
+                e1.v5,
+                e2.v5,
+                v3
             );
             WaterShore.AddTriangleUV(
                 new Vector2(0f, 0f),
