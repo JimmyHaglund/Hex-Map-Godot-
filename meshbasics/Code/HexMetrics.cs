@@ -8,12 +8,12 @@ public static class HexMetrics {
     public const float ElevationStep = 3.0f;
     public const float Maxelevation = 5.0f;
     public const int TerracesPerSlope = 2;
-    public const float CellPerturbStrength = 0.0f;//4.0f;
+    public const float CellPerturbStrength = 4.0f;
     public const float NoiseScale = 0.003f;
     public const float ElevationPerturbStrength = 1.5f;
     public const int ChunkSizeX = 5;
     public const int ChunkSizeZ = 5;
-    public const float StreamBedElevationOffset = -1f;
+    public const float StreamBedElevationOffset = -1.75f;
     public const float RiverSurfaceElevationOffset = -0.5f;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
