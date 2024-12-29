@@ -189,8 +189,8 @@ public sealed partial class HexMesh : MeshInstance3D {
     }
 
     public void AddQuadUV(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4) {
-        _uvs.Add(uv1);
         _uvs.Add(uv2);
+        _uvs.Add(uv1);
         _uvs.Add(uv3);
 
         _uvs.Add(uv2);
@@ -199,8 +199,8 @@ public sealed partial class HexMesh : MeshInstance3D {
     }
 
     public void AddQuadUV(float uMin, float uMax, float vMin, float vMax) {
-        _uvs.Add(new Vector2(uMin, vMin));
         _uvs.Add(new Vector2(uMax, vMin));
+        _uvs.Add(new Vector2(uMin, vMin));
         _uvs.Add(new Vector2(uMin, vMax));
 
         _uvs.Add(new Vector2(uMax, vMin));

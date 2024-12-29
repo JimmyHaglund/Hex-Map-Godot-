@@ -150,6 +150,10 @@ public sealed partial class HexGridChunk : Node3D {
 
         Terrain.AddTriangle(centerR, m.v4, m.v5);
         Terrain.AddTriangleColor(cell.Color);
+
+        bool reversed = cell.IncomingRiver == direction;
+        TriangulateRiverQuad(centerL, centerR, m.v2, m.v4, cell.RiverSurfaceY, reversed);
+        TriangulateRiverQuad(m.v2, m.v4, e.v2, e.v4, cell.RiverSurfaceY, reversed);
     }
 
     private void TriangulateWithRiverBeginOrEnd(
@@ -443,5 +447,18 @@ public sealed partial class HexGridChunk : Node3D {
         Terrain.AddQuadColor(c1, c2);
         Terrain.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
         Terrain.AddQuadColor(c1, c2);
+    }
+
+    private void TriangulateRiverQuad(
+        Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
+        float y, bool reversed
+    ) {
+        v1.Y = v2.Y = v3.Y = v4.Y = y;
+        Rivers.AddQuad(v1, v2, v3, v4);
+        if (reversed) {
+            Rivers.AddQuadUV(1.0f, 0.0f, 1.0f, 0.0f);
+        } else { 
+            Rivers.AddQuadUV(0f, 1f, 0f, 1f);
+        }
     }
 }

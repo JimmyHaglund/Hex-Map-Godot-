@@ -5,6 +5,6 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_p5dps")
-shader_parameter/_Color = null
+shader_parameter/_Color = Vector4(1, 1, 1, 0.5)
 shader_parameter/_Metallic = null
-shader_parameter/_Glossiness = null
+shader_parameter/_Glossiness = 0.7
