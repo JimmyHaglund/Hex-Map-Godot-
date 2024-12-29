@@ -63,7 +63,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             }
             if (UseUV2Coordinates) {
                 var uv = Vector2.Zero;
-                if (_uvs != null && n < _uvs.Count) uv = _uvs[n];
+                if (_uv2s != null && n < _uv2s.Count) uv = _uv2s[n];
                 surfaceTool.SetUV2(uv);
             }
             if (UseColors) {

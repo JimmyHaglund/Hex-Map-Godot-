@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://c506dce10lnjn"]
 
-[ext_resource type="Shader" path="res://Shaders/EstuaryWater.gdshader" id="1_oa1kn"]
+[ext_resource type="Shader" path="res://Shaders/Estuary.gdshader" id="1_oa1kn"]
 [ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="2_5jdct"]
 
 [resource]

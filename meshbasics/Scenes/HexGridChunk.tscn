@@ -90,6 +90,7 @@ script = ExtResource("6_nfodi")
 UseCollider = false
 UseColors = false
 UseUVCoordinates = true
+UseUV2Coordinates = true
 
 [node name="Roads" type="MeshInstance3D" parent="."]
 material_override = ExtResource("6_n8kls")

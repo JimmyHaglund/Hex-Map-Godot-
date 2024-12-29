@@ -302,6 +302,20 @@ public sealed partial class HexGridChunk : Node3D {
             new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 1f)
         );
         Estuaries.AddQuadUV(0f, 0f, 0f, 1f);
+
+        Estuaries.AddQuadUV2(
+            new Vector2(1f, 0.8f), new Vector2(1f, 1.1f),
+            new Vector2(1f, 0.8f), new Vector2(0.5f, 1.1f)
+        );
+        Estuaries.AddTriangleUV2(
+            new Vector2(0.5f, 1.1f),
+            new Vector2(1.0f, 0.8f),
+            new Vector2(0.0f, 0.8f)
+        );
+        Estuaries.AddQuadUV2(
+            new Vector2(0.5f, 1.1f), new Vector2(0.0f, 1.1f),
+            new Vector2(0.0f, 0.8f), new Vector2(0.0f, 0.8f)
+        );
     }
 
     void TriangulateWaterfallInWater(
