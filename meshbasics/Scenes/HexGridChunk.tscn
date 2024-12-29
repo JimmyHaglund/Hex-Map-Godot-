@@ -7,9 +7,9 @@
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 resource_local_to_scene = true
 
-[node name="Chunk" type="Node3D" node_paths=PackedStringArray("HexMesh")]
+[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain")]
 script = ExtResource("1_hk31i")
-HexMesh = NodePath("HexMesh")
+Terrain = NodePath("HexMesh")
 
 [node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
 material_override = ExtResource("5_a1qwg")
