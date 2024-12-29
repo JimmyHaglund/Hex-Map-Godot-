@@ -14,6 +14,7 @@ public sealed partial class HexGridChunk : Node3D {
     [Export] public HexMesh Roads { get; set; }
     [Export] public HexMesh Water { get; set; }
     [Export] public HexMesh WaterShore { get; set; }
+    [Export] public HexMesh Estuaries { get; set; }
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
@@ -61,6 +62,7 @@ public sealed partial class HexGridChunk : Node3D {
         Roads.Clear();
         Water.Clear();
         WaterShore.Clear();
+        Estuaries.Clear();
         for (int i = 0; i < _cells.Length; i++) {
             Triangulate(_cells[i]);
         }
@@ -69,6 +71,7 @@ public sealed partial class HexGridChunk : Node3D {
         Roads.Apply();
         Water.Apply();
         WaterShore.Apply();
+        Estuaries.Apply();
     }
 
     private void Triangulate(HexCell cell) {
@@ -287,6 +290,18 @@ public sealed partial class HexGridChunk : Node3D {
         WaterShore.AddTriangleUV(
             new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f)
         );
+        Estuaries.AddQuad(e2.v1, e1.v2, e2.v2, e1.v3);
+        Estuaries.AddTriangle(e1.v3, e2.v2, e2.v4);
+        Estuaries.AddQuad(e1.v3, e1.v4, e2.v4, e2.v5);
+
+        Estuaries.AddQuadUV(
+            new Vector2(0f, 1f), new Vector2(0f, 0f),
+            new Vector2(0f, 1f), new Vector2(0f, 0f)
+        );
+        Estuaries.AddTriangleUV(
+            new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 1f)
+        );
+        Estuaries.AddQuadUV(0f, 0f, 0f, 1f);
     }
 
     void TriangulateWaterfallInWater(
