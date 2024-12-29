@@ -147,6 +147,11 @@ public sealed partial class HexCell : Node3D {
         return _neighbors[(int)direction];
     }
 
+    public int GetElevationDifference(HexDirection direction) {
+        int difference = Elevation - GetNeighbor(direction).Elevation;
+        return difference >= 0 ? difference : -difference;
+    }
+
     public void SetNeighbor(HexDirection direction, HexCell cell) {
         _neighbors[(int)direction] = cell;
         cell._neighbors[(int)direction.Opposite()] = this;
@@ -239,13 +244,27 @@ public sealed partial class HexCell : Node3D {
         RemoveIncomingRiver();
     }
 
+    public void AddRoad(HexDirection direction) {
+        if (!_roads[(int)direction] 
+            && !HasRiverThroughEdge(direction) 
+            && GetElevationDifference(direction) <= 1
+        ) {
+            SetRoad((int)direction, true);
+        }
+    }
 
     public void RemoveRoads() {
         for (int i = 0; i < _neighbors.Length; i++) {
             if (_roads[i]) {
-                _roads[i] = false;
-                _neighbors[i]._roads[(int)((HexDirection)i).Opposite()] = false;
+                SetRoad(i, false);
             }
         }
+    }
+
+    private void SetRoad(int index, bool state) {
+        _roads[index] = state;
+        _neighbors[index]._roads[(int)((HexDirection)index).Opposite()] = state;
+        _neighbors[index].RefreshSelfOnly();
+        RefreshSelfOnly();
     }
 }
