@@ -11,9 +11,13 @@ public sealed partial class HexMesh : MeshInstance3D {
     // private List<int> _triangles = new();
     private CollisionShape3D _activeShape;
     private CollisionShape3D _inactiveShape;
+    private List<Vector2> _uvs;
 
     [Export] public CollisionShape3D CollisionShape { get; set; }
     [Export] public CollisionShape3D AltShape { get; set; }
+    [Export] public bool UseCollider { get; set; } = true;
+    [Export] public bool UseColors { get; set; } = true;
+    [Export] public bool UseUVCoordinates { get; set; } = false;
 
     public override void _Ready() {
         _mesh = Mesh as ArrayMesh;
@@ -27,8 +31,15 @@ public sealed partial class HexMesh : MeshInstance3D {
     public void Clear() {
         _mesh.ClearSurfaces();
         _vertices = ListPool<Vector3>.Get();
-        _colors = ListPool<Color>.Get();
         _normals = ListPool<Vector3>.Get();
+
+        if (UseUVCoordinates) {
+            _uvs = ListPool<Vector2>.Get();
+        }
+
+        if (UseColors) {
+            _colors = ListPool<Color>.Get();
+        }
     }
 
     public void Apply() {
@@ -40,17 +51,29 @@ public sealed partial class HexMesh : MeshInstance3D {
         for (var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
             surfaceTool.SetNormal(_normals[n]);
-            surfaceTool.SetColor(_colors[n]);
+            if (UseUVCoordinates) {
+                surfaceTool.SetUV(_uvs[n]);
+            }
+            if (UseColors) {
+                surfaceTool.SetColor(_colors[n]);
+            }
             surfaceTool.AddVertex(vertex);
+            
         }
         surfaceTool.Commit(_mesh);
 
+        ListPool<Vector3>.Add(_vertices);
+        ListPool<Vector3>.Add(_normals);
+        if (UseColors) {
+            ListPool<Color>.Add(_colors);
+        }
+        if (UseUVCoordinates) {
+            ListPool<Vector2>.Add(_uvs);
+        }
+
+        if (!UseCollider) return;
         var shape = _mesh.CreateTrimeshShape();
         _inactiveShape.Shape = shape;
-
-        ListPool<Vector3>.Add(_vertices);
-        ListPool<Color>.Add(_colors);
-        ListPool<Vector3>.Add(_normals);
         CallDeferred("SwapCollisionShape");
     }
 
@@ -157,6 +180,32 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(color);
         _colors.Add(color);
         _colors.Add(color);
+    }
+
+    public void AddTriangleUV(Vector2 uv1, Vector2 uv2, Vector2 uv3) {
+        _uvs.Add(uv1);
+        _uvs.Add(uv2);
+        _uvs.Add(uv3);
+    }
+
+    public void AddQuadUV(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4) {
+        _uvs.Add(uv1);
+        _uvs.Add(uv2);
+        _uvs.Add(uv3);
+
+        _uvs.Add(uv2);
+        _uvs.Add(uv3);
+        _uvs.Add(uv4);
+    }
+
+    public void AddQuadUV(float uMin, float uMax, float vMin, float vMax) {
+        _uvs.Add(new Vector2(uMin, vMin));
+        _uvs.Add(new Vector2(uMax, vMin));
+        _uvs.Add(new Vector2(uMin, vMax));
+
+        _uvs.Add(new Vector2(uMax, vMin));
+        _uvs.Add(new Vector2(uMin, vMax));
+        _uvs.Add(new Vector2(uMax, vMax));
     }
 
     private void SwapCollisionShape() {
