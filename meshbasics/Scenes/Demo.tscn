@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=12 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapEditor.cs" id="4_fqh23"]
 [ext_resource type="ButtonGroup" uid="uid://c4mj36swn000w" path="res://Misc/RiverControlButtonGroup.tres" id="4_olliq"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
+[ext_resource type="ButtonGroup" uid="uid://13l07g23mpmk" path="res://Misc/RoadControlButtonGroup.tres" id="5_0l2ld"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
@@ -208,7 +209,7 @@ text = "N/A"
 [node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null"]
 layout_mode = 2
 button_pressed = true
-button_group = ExtResource("4_olliq")
+button_group = ExtResource("5_0l2ld")
 
 [node name="Add" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
 layout_mode = 2
@@ -220,7 +221,7 @@ text = "Add"
 
 [node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add"]
 layout_mode = 2
-button_group = ExtResource("4_olliq")
+button_group = ExtResource("5_0l2ld")
 
 [node name="Remove" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
 layout_mode = 2
@@ -232,7 +233,7 @@ text = "Remove"
 
 [node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove"]
 layout_mode = 2
-button_group = ExtResource("4_olliq")
+button_group = ExtResource("5_0l2ld")
 
 [node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("5_mpgou")

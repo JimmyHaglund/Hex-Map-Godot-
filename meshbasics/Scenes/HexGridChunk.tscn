@@ -11,10 +11,11 @@ resource_local_to_scene = true
 [sub_resource type="ArrayMesh" id="ArrayMesh_g5hd4"]
 resource_local_to_scene = true
 
-[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers")]
+[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers", "Roads")]
 script = ExtResource("1_hk31i")
 Terrain = NodePath("Terrain")
-Rivers = NodePath("River")
+Rivers = NodePath("Rivers")
+Roads = NodePath("Roads")
 
 [node name="Terrain" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
 material_override = ExtResource("5_a1qwg")
@@ -32,7 +33,17 @@ AltShape = NodePath("AltStaticBody/AltCollisionShape3D")
 
 [node name="AltCollisionShape3D" type="CollisionShape3D" parent="Terrain/AltStaticBody"]
 
-[node name="River" type="MeshInstance3D" parent="."]
+[node name="Rivers" type="MeshInstance3D" parent="."]
+material_override = ExtResource("4_usb5c")
+cast_shadow = 0
+gi_mode = 2
+mesh = SubResource("ArrayMesh_g5hd4")
+script = ExtResource("6_nfodi")
+UseCollider = false
+UseColors = false
+UseUVCoordinates = true
+
+[node name="Roads" type="MeshInstance3D" parent="."]
 material_override = ExtResource("4_usb5c")
 cast_shadow = 0
 gi_mode = 2
