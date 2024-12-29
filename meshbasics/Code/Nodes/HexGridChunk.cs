@@ -284,6 +284,10 @@ public sealed partial class HexGridChunk : Node3D {
             }
             roadCenter += corner * 0.5f;
             center += corner * 0.25f;
+        } else if (cell.IncomingRiver == cell.OutgoingRiver.Previous()) {
+            roadCenter -= HexMetrics.GetSecondCorner(cell.IncomingRiver) * 0.2f;
+        } else if (cell.IncomingRiver == cell.OutgoingRiver.Next()) {
+            roadCenter -= HexMetrics.GetFirstCorner(cell.IncomingRiver) * 0.2f;
         }
 
         Vector3 mL = roadCenter.Lerp(e.v1, interpolators.X);
