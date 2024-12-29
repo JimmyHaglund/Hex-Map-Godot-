@@ -1,9 +1,9 @@
 using Godot;
+using System.Collections.Generic;
 
 namespace JHM.MeshBasics;
 
 public sealed partial class HexCell : Node3D {
-
     private HexCell[] _neighbors = new HexCell[6];
     private int _elevation = int.MinValue;
     private Node3D _uiRect;
@@ -12,6 +12,7 @@ public sealed partial class HexCell : Node3D {
     private bool _hasOutgoingRiver;
     private HexDirection _incomingRiver;
     private HexDirection _outgoingRiver;
+    private bool[] _roads = new bool[6];
 
     public Color Color {
         get {
@@ -114,10 +115,25 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    public bool HasRoads {
+        get {
+            for (int i = 0; i < _roads.Length; i++) {
+                if (_roads[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public bool HasRiverThroughEdge(HexDirection direction) {
         return
             _hasIncomingRiver && _incomingRiver == direction ||
             _hasOutgoingRiver && _outgoingRiver == direction;
+    }
+
+    public bool HasRoadThroughEdge(HexDirection direction) {
+        return _roads[(int)direction];
     }
 
     private void UpdateUiAltitude() {
@@ -194,7 +210,6 @@ public sealed partial class HexCell : Node3D {
     }
 
 
-
     public void RemoveOutgoingRiver() {
         if (!_hasOutgoingRiver) {
             return;
@@ -225,4 +240,12 @@ public sealed partial class HexCell : Node3D {
     }
 
 
+    public void RemoveRoads() {
+        for (int i = 0; i < _neighbors.Length; i++) {
+            if (_roads[i]) {
+                _roads[i] = false;
+                _neighbors[i]._roads[(int)((HexDirection)i).Opposite()] = false;
+            }
+        }
+    }
 }
