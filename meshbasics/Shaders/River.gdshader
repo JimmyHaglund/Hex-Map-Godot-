@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "Water.gdshaderinc"
 
 uniform sampler2D _MainTex;
 uniform vec4 _Color : source_color = vec4(1, 1, 1, 1);
@@ -6,17 +7,8 @@ uniform float _Metallic;
 uniform float _Glossiness;
 
 void fragment() {
-    vec2 uv1 = UV;
-    uv1.x = uv1.x * 0.0625 + TIME * 0.005;
-    uv1.y -= TIME * 0.25;
-    vec4 noise1 = texture(_MainTex, uv1);
-    
-    vec2 uv2 = UV;
-    uv2.x = uv2.x * 0.0625 - TIME * 0.0052;
-    uv2.y -= TIME * 0.23;
-    vec4 noise2 = texture(_MainTex, uv2);
-    
-    vec4 c =  clamp	(_Color + (noise1.r * noise2.a), 0, 1);
+	float river = River(UV, _MainTex);
+    vec4 c =  clamp(_Color + river, 0.0, 1.0);
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
