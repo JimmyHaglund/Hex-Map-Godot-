@@ -168,10 +168,11 @@ public sealed partial class HexGridChunk : Node3D {
         TriangulateEdgeFan(center, e, cell.Color);
 
         if (cell.HasRoads) {
+            Vector2 interpolators = GetRoadInterpolators(direction, cell);
             TriangulateRoad(
                 center,
-                center.Lerp(e.v1, 0.5f),
-                center.Lerp(e.v5, 0.5f),
+                center.Lerp(e.v1, interpolators.X),
+                center.Lerp(e.v5, interpolators.Y),
                 e,
                 cell.HasRoadThroughEdge(direction)
             );
@@ -565,5 +566,18 @@ public sealed partial class HexGridChunk : Node3D {
         Roads.AddTriangleUV(
             new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f)
         );
+    }
+
+    private Vector2 GetRoadInterpolators(HexDirection direction, HexCell cell) {
+        Vector2 interpolators;
+        if (cell.HasRoadThroughEdge(direction)) {
+            interpolators.X = interpolators.Y = 0.5f;
+        } else {
+            interpolators.X =
+                cell.HasRoadThroughEdge(direction.Previous()) ? 0.5f : 0.25f;
+            interpolators.Y =
+                cell.HasRoadThroughEdge(direction.Next()) ? 0.5f : 0.25f;
+        }
+        return interpolators;
     }
 }

@@ -1,24 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://dacbihjsexuto"]
+[gd_scene load_steps=2 format=3 uid="uid://dacbihjsexuto"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexCell.cs" id="1_fwy77"]
-[ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="2_080vp"]
-
-[sub_resource type="Gradient" id="Gradient_odt12"]
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_cfy8a"]
-gradient = SubResource("Gradient_odt12")
-fill_to = Vector2(1, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ut3jk"]
-albedo_color = Color(0.278466, 0.198661, 0.197957, 1)
-albedo_texture = SubResource("GradientTexture2D_cfy8a")
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_gdc1h"]
 
 [node name="HexCell" type="Node3D"]
 script = ExtResource("1_fwy77")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_ut3jk")
-mesh = SubResource("ArrayMesh_gdc1h")
-script = ExtResource("2_080vp")

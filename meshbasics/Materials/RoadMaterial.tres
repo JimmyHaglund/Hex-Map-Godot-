@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://deb1ldds6tidn"]
+
+[ext_resource type="Shader" path="res://Shaders/Road.gdshader" id="1_phuv2"]
+[ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="2_c80gc"]
+
+[resource]
+render_priority = 2
+shader = ExtResource("1_phuv2")
+shader_parameter/_Color = Color(1, 1, 1, 1)
+shader_parameter/_Glossiness = 0.0
+shader_parameter/_Metallic = null
+shader_parameter/_MainTex = ExtResource("2_c80gc")
