@@ -167,12 +167,13 @@ public sealed partial class HexGridChunk : Node3D {
     ) {
         TriangulateEdgeFan(center, e, cell.Color);
 
-        if (cell.HasRoadThroughEdge(direction)) {
+        if (cell.HasRoads) {
             TriangulateRoad(
                 center,
                 center.Lerp(e.v1, 0.5f),
                 center.Lerp(e.v5, 0.5f),
-                e
+                e,
+                cell.HasRoadThroughEdge(direction)
             );
         }
     }
@@ -539,18 +540,30 @@ public sealed partial class HexGridChunk : Node3D {
         Vector3 center,
         Vector3 mL,
         Vector3 mR,
-        EdgeVertices e
+        EdgeVertices e,
+        bool hasRoadThroughCellEdge
     ) {
-        Vector3 mC = mL.Lerp(mR, 0.5f);
-        TriangulateRoadSegment(mL, mC, mR, e.v2, e.v3, e.v4);
-        Roads.AddTriangle(center, mL, mC);
-        Roads.AddTriangle(center, mC, mR);
+        if (hasRoadThroughCellEdge) {
+            Vector3 mC = mL.Lerp(mR, 0.5f);
+            TriangulateRoadSegment(mL, mC, mR, e.v2, e.v3, e.v4);
+            Roads.AddTriangle(center, mL, mC);
+            Roads.AddTriangle(center, mC, mR);
 
+            Roads.AddTriangleUV(
+                new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(1f, 0f)
+            );
+            Roads.AddTriangleUV(
+                new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f)
+            );
+        } else {
+            TriangulateRoadEdge(center, mL, mR);
+        }
+    }
+
+    private void TriangulateRoadEdge(Vector3 center, Vector3 mL, Vector3 mR) {
+        Roads.AddTriangle(center, mL, mR);
         Roads.AddTriangleUV(
-            new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(1f, 0f)
-        );
-        Roads.AddTriangleUV(
-            new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f)
+            new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f)
         );
     }
 }
