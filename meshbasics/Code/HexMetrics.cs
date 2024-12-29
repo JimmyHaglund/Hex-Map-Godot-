@@ -21,6 +21,9 @@ public static class HexMetrics {
     public const float HorizontalTerraceStepSize = 1.0f / TerraceSteps;
     public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
+    public const float OuterToInner = 0.866025404f;
+    public const float InnerToOuter = 1.0f / OuterToInner;
+
     public static Image NoiseSource { get; set; }
 
     public static Vector3[] Corners = {
@@ -92,5 +95,11 @@ public static class HexMetrics {
 
         var pixel = NoiseSource.GetPixel((int)position.X, (int)position.Z);
         return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
+    }
+
+    public static Vector3 GetSolidEdgeMiddle(HexDirection direction) {
+        return
+            (Corners[(int)direction] + Corners[(int)direction + 1]) *
+            (0.5f * SolidFactor);
     }
 }

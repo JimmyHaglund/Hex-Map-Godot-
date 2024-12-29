@@ -73,6 +73,9 @@ public sealed partial class HexMesh : MeshInstance3D {
                     TriangulateWithRiver(direction, cell, center, e);
                 }
             }
+            else {
+                TriangulateAdjacentToRiver(direction, cell, center, e);
+            }
         } else { 
             TriangulateEdgeFan(center, e, cell.Color);
         }
@@ -103,8 +106,17 @@ public sealed partial class HexMesh : MeshInstance3D {
             centerL = center.Lerp(e.v1, 2.0f / 3.0f);
             centerR = center;
         }
+        else if (cell.HasRiverThroughEdge(direction.Next2())) {
+            centerL = center;
+            centerR = center +
+                HexMetrics.GetSolidEdgeMiddle(direction.Next()) * 
+                (0.5f * HexMetrics.InnerToOuter);
+        }
         else {
-            centerL = centerR = center;
+            centerL = center +
+                HexMetrics.GetSolidEdgeMiddle(direction.Previous()) *
+                (0.5f * HexMetrics.InnerToOuter);
+            centerR = center;
         }
         center = centerL.Lerp(centerR, 0.5f);
 
@@ -136,6 +148,18 @@ public sealed partial class HexMesh : MeshInstance3D {
             center.Lerp(e.v5, 0.5f)
         );
         m.v3.Y = e.v3.Y;
+        TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+        TriangulateEdgeFan(center, m, cell.Color);
+    }
+
+    private void TriangulateAdjacentToRiver(
+        HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
+    ) {
+        EdgeVertices m = new EdgeVertices(
+            center.Lerp(e.v1, 0.5f),
+            center.Lerp(e.v5, 0.5f)
+        );
+
         TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
         TriangulateEdgeFan(center, m, cell.Color);
     }
