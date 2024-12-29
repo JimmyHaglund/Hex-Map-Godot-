@@ -132,6 +132,12 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    public HexDirection RiverBeginOrEndDirection {
+        get {
+            return HasIncomingRiver ? IncomingRiver : OutgoingRiver;
+        }
+    }
+
     public bool HasRiverThroughEdge(HexDirection direction) {
         return
             _hasIncomingRiver && _incomingRiver == direction ||

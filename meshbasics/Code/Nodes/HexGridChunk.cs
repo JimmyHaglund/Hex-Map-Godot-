@@ -255,9 +255,22 @@ public sealed partial class HexGridChunk : Node3D {
         bool hasRoadThroughEdge = cell.HasRoadThroughEdge(direction);
         Vector2 interpolators = GetRoadInterpolators(direction, cell);
         Vector3 roadCenter = center;
+
+        if (cell.HasRiverBeginOrEnd) {
+            roadCenter += HexMetrics.GetSolidEdgeMiddle(
+                cell.RiverBeginOrEndDirection.Opposite()
+            ) * (1.0f / 3.0f);
+        }
+
         Vector3 mL = roadCenter.Lerp(e.v1, interpolators.X);
         Vector3 mR = roadCenter.Lerp(e.v5, interpolators.Y);
         TriangulateRoad(roadCenter, mL, mR, e, hasRoadThroughEdge);
+        if (cell.HasRiverThroughEdge(direction.Previous())) {
+            TriangulateRoadEdge(roadCenter, center, mL);
+        }
+        if (cell.HasRiverThroughEdge(direction.Next())) {
+            TriangulateRoadEdge(roadCenter, mR, center);
+        }
     }
 
     private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1) {
