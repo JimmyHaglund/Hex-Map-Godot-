@@ -7,25 +7,23 @@ uniform float _Glossiness;
 
 
 void fragment() {
+	float shore = UV.y;
+	shore = sqrt(shore);
+	
 	vec3 world_vertex = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	vec2 uv1 = world_vertex.xz;
-	uv1.y += TIME;
-	vec4 noise1 = texture(_MainTex, uv1 * 0.025);
+	vec2 noiseUV = world_vertex.xz + TIME * 0.25;
+	vec4 noise = texture(_MainTex, noiseUV * 0.015);
 	
-	vec2 uv2 = world_vertex.xz;
-	uv2.x += TIME;
-	vec4 noise2 = texture(_MainTex, uv2 * 0.025);
+	float distortion1 = noise.x * (1.0 - shore);
+	float foam1 = sin((shore + distortion1) * 10.0 - TIME);
+	foam1 *= foam1;
 	
+	float distortion2 = noise.y * (1.0 - shore);
+	float foam2 = sin((shore + distortion2) * 10.0 + TIME + 2.0);
+	foam2 *= foam2 * 0.7;
 	
-    
-	float blendWave = sin((world_vertex.x + world_vertex.z) * 0.1 + (noise1.y + noise2.z) + TIME);
-	blendWave *= blendWave;
-	
-	float waves = mix(noise1.z, noise1.w, blendWave)
-	 + mix(noise2.x, noise2.y, blendWave);
-	waves = clamp(waves, 0.75, 2.0) - 1.0;
-	
-	vec4 c = vec4(UV.x, UV.y, 1, 1);
+	float foam = max(foam1, foam2) * shore;
+	vec4 c = clamp(_Color + foam, 0.0, 1.0);
 	
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
