@@ -67,7 +67,11 @@ public sealed partial class HexMesh : MeshInstance3D {
         if (cell.HasRiver) {
             if (cell.HasRiverThroughEdge(direction)) {
                 e.v3.Y = cell.StreamBedY;
-                TriangulateWithRiver(direction, cell, center, e);
+                if (cell.HasRiverBeginOrEnd) {
+                    TriangulateWithRiverBeginOrEnd(direction, cell, center, e);
+                } else { 
+                    TriangulateWithRiver(direction, cell, center, e);
+                }
             }
         } else { 
             TriangulateEdgeFan(center, e, cell.Color);
@@ -84,10 +88,26 @@ public sealed partial class HexMesh : MeshInstance3D {
         Vector3 center,
         EdgeVertices e
     ) {
-        Vector3 centerL = center +
+        Vector3 centerL, centerR;
+        if (cell.HasRiverThroughEdge(direction.Opposite())) {
+            centerL = center +
             HexMetrics.GetFirstSolidCorner(direction.Previous()) * 0.25f;
-        Vector3 centerR = center +
-            HexMetrics.GetSecondSolidCorner(direction.Next()) * 0.25f;
+            centerR = center +
+                HexMetrics.GetSecondSolidCorner(direction.Next()) * 0.25f;
+        }
+        else if (cell.HasRiverThroughEdge(direction.Next())) {
+            centerL = center;
+            centerR = center.Lerp(e.v5, 2.0f / 3.0f);
+        }
+        else if (cell.HasRiverThroughEdge(direction.Previous())) {
+            centerL = center.Lerp(e.v1, 2.0f / 3.0f);
+            centerR = center;
+        }
+        else {
+            centerL = centerR = center;
+        }
+        center = centerL.Lerp(centerR, 0.5f);
+
         EdgeVertices m = new EdgeVertices(
             centerL.Lerp(e.v1, 0.5f),
             centerR.Lerp(e.v5, 0.5f),
@@ -107,6 +127,19 @@ public sealed partial class HexMesh : MeshInstance3D {
         AddTriangle(centerR, m.v4, m.v5);
         AddTriangleColor(cell.Color);
     }
+
+    private void TriangulateWithRiverBeginOrEnd(
+        HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
+    ) {
+        EdgeVertices m = new EdgeVertices(
+            center.Lerp(e.v1, 0.5f),
+            center.Lerp(e.v5, 0.5f)
+        );
+        m.v3.Y = e.v3.Y;
+        TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+        TriangulateEdgeFan(center, m, cell.Color);
+    }
+
 
     private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1) {
         HexCell neighbor = cell.GetNeighbor(direction);
