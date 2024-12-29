@@ -52,7 +52,9 @@ public sealed partial class HexMesh : MeshInstance3D {
             var vertex = _vertices[n];
             surfaceTool.SetNormal(_normals[n]);
             if (UseUVCoordinates) {
-                surfaceTool.SetUV(_uvs[n]);
+                var uv = Vector2.Zero;
+                if (_uvs != null && n < _uvs.Count) uv = _uvs[n];
+                surfaceTool.SetUV(uv);
             }
             if (UseColors) {
                 surfaceTool.SetColor(_colors[n]);

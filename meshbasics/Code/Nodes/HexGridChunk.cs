@@ -13,6 +13,7 @@ public sealed partial class HexGridChunk : Node3D {
     [Export] public HexMesh Rivers { get; set; }
     [Export] public HexMesh Roads { get; set; }
     [Export] public HexMesh Water { get; set; }
+    [Export] public HexMesh WaterShore { get; set; }
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
@@ -59,6 +60,7 @@ public sealed partial class HexGridChunk : Node3D {
         Rivers.Clear();
         Roads.Clear();
         Water.Clear();
+        WaterShore.Clear();
         for (int i = 0; i < _cells.Length; i++) {
             Triangulate(_cells[i]);
         }
@@ -66,6 +68,7 @@ public sealed partial class HexGridChunk : Node3D {
         Rivers.Apply();
         Roads.Apply();
         Water.Apply();
+        WaterShore.Apply();
     }
 
     private void Triangulate(HexCell cell) {
@@ -169,15 +172,25 @@ public sealed partial class HexGridChunk : Node3D {
             e1.v1 + bridge,
             e1.v5 + bridge
         );
-        Water.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
-        Water.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
-        Water.AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
-        Water.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
+        WaterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
+        WaterShore.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
+        WaterShore.AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
+        WaterShore.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
+        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (nextNeighbor != null) {
-            Water.AddTriangle(
+            WaterShore.AddTriangle(
                 e1.v5, e2.v5, e1.v5 + HexMetrics.GetBridge(direction.Next())
+            );
+            WaterShore.AddTriangleUV(
+                new Vector2(0f, 0f),
+                new Vector2(0f, 1f),
+                new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f)
             );
         }
     }
