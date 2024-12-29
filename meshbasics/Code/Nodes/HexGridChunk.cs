@@ -249,7 +249,7 @@ public sealed partial class HexGridChunk : Node3D {
             center2 + HexMetrics.GetFirstSolidCorner(direction.Opposite())
         );
         if (cell.HasRiverThroughEdge(direction)) {
-            TriangulateEstuary(e1, e2);
+            TriangulateEstuary(e1, e2, cell.IncomingRiver == direction);
         }
         else {
             WaterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
@@ -281,7 +281,7 @@ public sealed partial class HexGridChunk : Node3D {
         }
     }
 
-    void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2) {
+    void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2, bool incomingRiver) {
         WaterShore.AddTriangle(e2.v1, e1.v2, e1.v1);
         WaterShore.AddTriangle(e2.v5, e1.v5, e1.v4);
         WaterShore.AddTriangleUV(
@@ -305,20 +305,35 @@ public sealed partial class HexGridChunk : Node3D {
             new Vector2(0f, 0f), new Vector2(0f, 0f),
             new Vector2(1f, 1f), new Vector2(0f, 1f)
         );
-
-        Estuaries.AddQuadUV2(
-            new Vector2(1.5f, 1.0f), new Vector2(0.7f, 1.15f),
-            new Vector2(1.0f, 0.8f), new Vector2(0.5f, 1.1f)
-        );
-        Estuaries.AddTriangleUV2(
-            new Vector2(0.5f, 1.1f),
-            new Vector2(1.0f, 0.8f),
-            new Vector2(0.0f, 0.8f)
-        );
-        Estuaries.AddQuadUV2(
-            new Vector2(0.5f, 1.1f), new Vector2(0.3f, 1.15f),
-            new Vector2(0.0f, 0.8f), new Vector2(-0.5f, 1.0f)
-        );
+        if (incomingRiver) {
+            Estuaries.AddQuadUV2(
+                new Vector2(1.5f, 1.0f), new Vector2(0.7f, 1.15f),
+                new Vector2(1.0f, 0.8f), new Vector2(0.5f, 1.1f)
+            );
+            Estuaries.AddTriangleUV2(
+                new Vector2(0.5f, 1.1f),
+                new Vector2(1.0f, 0.8f),
+                new Vector2(0.0f, 0.8f)
+            );
+            Estuaries.AddQuadUV2(
+                new Vector2(0.5f, 1.1f), new Vector2(0.3f, 1.15f),
+                new Vector2(0.0f, 0.8f), new Vector2(-0.5f, 1.0f)
+            );
+        } else {
+            Estuaries.AddQuadUV2(
+                    new Vector2(-0.5f, -0.2f), new Vector2(0.3f, -0.35f),
+                    new Vector2(0f, 0f), new Vector2(0.5f, -0.3f)
+                );
+            Estuaries.AddTriangleUV2(
+                new Vector2(0.5f, -0.3f),
+                new Vector2(0f, 0f),
+                new Vector2(1f, 0f)
+            );
+            Estuaries.AddQuadUV2(
+                new Vector2(0.5f, -0.3f), new Vector2(0.7f, -0.35f),
+                new Vector2(1f, 0f), new Vector2(1.5f, -0.2f)
+            );
+        }
     }
 
     void TriangulateWaterfallInWater(

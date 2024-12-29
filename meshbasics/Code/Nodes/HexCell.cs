@@ -16,6 +16,9 @@ public sealed partial class HexCell : Node3D {
     private int _waterLevel;
 
 
+    public HexCoordinates Coordinates { get; set; }
+    public HexGridChunk Chunk { get; set; }
+
     public Color Color {
         get {
             return _color;
@@ -26,8 +29,7 @@ public sealed partial class HexCell : Node3D {
             Refresh();
         }
     }
-    public HexCoordinates Coordinates { get; set; }
-    public HexGridChunk Chunk { get; set; }
+
     public Node3D UiRect {
         get => _uiRect;
         set {
@@ -35,6 +37,7 @@ public sealed partial class HexCell : Node3D {
             UpdateUiAltitude();
         }
     }
+
     public int Elevation {
         get => _elevation;
         set {
@@ -47,19 +50,7 @@ public sealed partial class HexCell : Node3D {
                 HexMetrics.ElevationPerturbStrength;
             Position = newPosition;
             UpdateUiAltitude();
-
-            if (
-                _hasOutgoingRiver &&
-                _elevation < GetNeighbor(_outgoingRiver)._elevation
-            ) {
-                RemoveOutgoingRiver();
-            }
-            if (
-                _hasIncomingRiver &&
-                _elevation > GetNeighbor(_incomingRiver)._elevation
-            ) {
-                RemoveIncomingRiver();
-            }
+            ValidateRivers();
 
             for (int i = 0; i < _roads.Length; i++) {
                 if (_roads[i] && GetElevationDifference((HexDirection)i) > 1) {
@@ -157,6 +148,7 @@ public sealed partial class HexCell : Node3D {
                 return;
             }
             _waterLevel = value;
+            ValidateRivers();
             Refresh();
         }
     }
@@ -175,6 +167,11 @@ public sealed partial class HexCell : Node3D {
 
     public bool HasRoadThroughEdge(HexDirection direction) {
         return _roads[(int)direction];
+    }
+
+    bool IsValidRiverDestination(HexCell neighbor) {
+        if (neighbor is null) return false;
+        return Elevation >= neighbor.Elevation || WaterLevel == neighbor.Elevation;
     }
 
     private void UpdateUiAltitude() {
@@ -236,7 +233,7 @@ public sealed partial class HexCell : Node3D {
         }
 
         HexCell neighbor = GetNeighbor(direction);
-        if (neighbor == null || _elevation < neighbor._elevation) {
+        if (!IsValidRiverDestination(neighbor)) {
             return;
         }
 
@@ -307,5 +304,20 @@ public sealed partial class HexCell : Node3D {
         _neighbors[index]._roads[(int)((HexDirection)index).Opposite()] = state;
         _neighbors[index].RefreshSelfOnly();
         RefreshSelfOnly();
+    }
+
+    private void ValidateRivers() {
+        if (
+            HasOutgoingRiver &&
+            !IsValidRiverDestination(GetNeighbor(OutgoingRiver))
+        ) {
+            RemoveOutgoingRiver();
+        }
+        if (
+            HasIncomingRiver &&
+            !GetNeighbor(IncomingRiver).IsValidRiverDestination(this)
+        ) {
+            RemoveIncomingRiver();
+        }
     }
 }
