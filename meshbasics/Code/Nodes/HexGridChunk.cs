@@ -111,6 +111,77 @@ public sealed partial class HexGridChunk : Node3D {
         }
     }
 
+    private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1) {
+        HexCell neighbor = cell.GetNeighbor(direction);
+        if (neighbor is null) return;
+        Vector3 bridge = HexMetrics.GetBridge(direction);
+        bridge.Y = neighbor.Position.Y - cell.Position.Y;
+        EdgeVertices e2 = new(e1.v1 + bridge, e1.v5 + bridge);
+
+        if (cell.HasRiverThroughEdge(direction)) {
+            e2.v3.Y = neighbor.StreamBedY;
+            if (!cell.IsUnderwater) {
+                if (!neighbor.IsUnderwater) {
+
+                    TriangulateRiverQuad(
+                        e1.v2, e1.v4, e2.v2, e2.v4,
+                        cell.RiverSurfaceY, neighbor.RiverSurfaceY, 0.8f,
+                        cell.HasIncomingRiver && cell.IncomingRiver == direction
+                    );
+                }
+                else if (cell.Elevation > neighbor.WaterLevel) {
+                    TriangulateWaterfallInWater(
+                        e1.v2, e1.v4, e2.v2, e2.v4,
+                        cell.RiverSurfaceY, neighbor.RiverSurfaceY,
+                        neighbor.WaterSurfaceY
+                    );
+                }
+            } else if (
+                !neighbor.IsUnderwater &&
+                neighbor.Elevation > cell.WaterLevel
+            ) {
+                TriangulateWaterfallInWater(
+                    e2.v4, e2.v2, e1.v4, e1.v2,
+                    neighbor.RiverSurfaceY, cell.RiverSurfaceY,
+                    cell.WaterSurfaceY
+                );
+            }
+        }
+
+        if (cell.GetEdgeType(direction) == HexEdgeType.Slope) {
+            TriangulateEdgeTerraces(e1, cell, e2, neighbor, cell.HasRoadThroughEdge(direction));
+        }
+        else {
+            TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color, cell.HasRoadThroughEdge(direction));
+        }
+
+        HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
+        if (direction <= HexDirection.E && nextNeighbor is not null) {
+            Vector3 v5 = e1.v5 + HexMetrics.GetBridge(direction.Next());
+            v5.Y = nextNeighbor.Position.Y;
+
+            if (cell.Elevation <= neighbor.Elevation) {
+                if (cell.Elevation <= nextNeighbor.Elevation) {
+                    // If the cell is the lowest (or tied for lowest) of its neighbors, use it as the bottom one.
+                    TriangulateCorner(e1.v5, cell, e2.v5, neighbor, v5, nextNeighbor);
+                }
+                else {
+                    // If nextNeighbor is lowest...
+                    TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
+                }
+            }
+            else if (neighbor.Elevation <= nextNeighbor.Elevation) {
+                TriangulateCorner(e2.v5, neighbor, v5, nextNeighbor, e1.v5, cell);
+            }
+            else {
+                TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
+            }
+
+            // AddTriangle(v2, v4, v5);
+            // AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
+        }
+    }
+
     private void TriangulateWater(
         HexDirection direction, HexCell cell, Vector3 center
     ) {
@@ -201,6 +272,26 @@ public sealed partial class HexGridChunk : Node3D {
                 new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f)
             );
         }
+    }
+
+    void TriangulateWaterfallInWater(
+        Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
+        float y1, float y2, float waterY
+    ) {
+        v1.Y = v2.Y = y1;
+        v3.Y = v4.Y = y2;
+
+        v1 = HexMetrics.Perturb(v1);
+        v2 = HexMetrics.Perturb(v2);
+        v3 = HexMetrics.Perturb(v3);
+        v4 = HexMetrics.Perturb(v4);
+
+        float t = (waterY - y2) / (y1 - y2);
+        v3 = v3.Lerp(v1, t);
+        v4 = v4.Lerp(v2, t);
+
+        Rivers.AddQuadUnperturbed(v1, v2, v3, v4);
+        Rivers.AddQuadUV(0f, 1f, 0.8f, 1f);
     }
 
     private void TriangulateWithRiver(
@@ -433,58 +524,7 @@ public sealed partial class HexGridChunk : Node3D {
         }
     }
 
-    private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1) {
-        HexCell neighbor = cell.GetNeighbor(direction);
-        if (neighbor is null) return;
-        Vector3 bridge = HexMetrics.GetBridge(direction);
-        bridge.Y = neighbor.Position.Y - cell.Position.Y;
-        EdgeVertices e2 = new(e1.v1 + bridge, e1.v5 + bridge);
-
-        if (cell.HasRiverThroughEdge(direction)) {
-            e2.v3.Y = neighbor.StreamBedY;
-            if (!cell.IsUnderwater && !neighbor.IsUnderwater) { 
-                TriangulateRiverQuad(
-                    e1.v2, e1.v4, e2.v2, e2.v4,
-                    cell.RiverSurfaceY, neighbor.RiverSurfaceY, 0.8f,
-                    cell.HasIncomingRiver && cell.IncomingRiver == direction
-                );
-            }
-        }
-
-        if (cell.GetEdgeType(direction) == HexEdgeType.Slope) {
-            TriangulateEdgeTerraces(e1, cell, e2, neighbor, cell.HasRoadThroughEdge(direction));
-        }
-        else {
-            TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color, cell.HasRoadThroughEdge(direction));
-        }
-
-        HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
-        if (direction <= HexDirection.E && nextNeighbor is not null) {
-            Vector3 v5 = e1.v5 + HexMetrics.GetBridge(direction.Next());
-            v5.Y = nextNeighbor.Position.Y;
-
-            if (cell.Elevation <= neighbor.Elevation) {
-                if (cell.Elevation <= nextNeighbor.Elevation) {
-                    // If the cell is the lowest (or tied for lowest) of its neighbors, use it as the bottom one.
-                    TriangulateCorner(e1.v5, cell, e2.v5, neighbor, v5, nextNeighbor);
-                }
-                else {
-                    // If nextNeighbor is lowest...
-                    TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
-                }
-            }
-            else if (neighbor.Elevation <= nextNeighbor.Elevation) {
-                TriangulateCorner(e2.v5, neighbor, v5, nextNeighbor, e1.v5, cell);
-            }
-            else {
-                TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
-            }
-
-            // AddTriangle(v2, v4, v5);
-            // AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
-        }
-    }
-
+    
     private void TriangulateEdgeTerraces(
         EdgeVertices begin, HexCell beginCell,
         EdgeVertices end, HexCell endCell,

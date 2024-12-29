@@ -155,6 +155,35 @@ public sealed partial class HexMesh : MeshInstance3D {
 
     }
 
+    public void AddQuadUnperturbed(
+        Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4
+    ) {
+        var normal = (v2 - v1).Cross(v2 - v3);
+        _vertices.Add(v2);
+        _vertices.Add(v1);
+        _vertices.Add(v3);
+
+        _vertices.Add(v2);
+        _vertices.Add(v3);
+        _vertices.Add(v4);
+
+        _normals.Add(normal);
+        _normals.Add(normal);
+        _normals.Add(normal);
+
+        _normals.Add(normal);
+        _normals.Add(normal);
+        _normals.Add(normal);
+
+        // int vertexIndex = _vertices.Count;
+        // _triangles.Add(vertexIndex);
+        // _triangles.Add(vertexIndex + 2);
+        // _triangles.Add(vertexIndex + 1);
+        // _triangles.Add(vertexIndex + 1);
+        // _triangles.Add(vertexIndex + 2);
+        // _triangles.Add(vertexIndex + 3);
+    }
+
     public void AddQuadColor(Color c1, Color c2, Color c3, Color c4) {
         _colors.Add(c1);
         _colors.Add(c2);
