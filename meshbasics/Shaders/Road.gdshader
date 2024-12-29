@@ -4,6 +4,7 @@ uniform vec4 _Color : source_color = vec4(1, 1, 1, 1);
 uniform sampler2D _MainTex;
 uniform float _Glossiness;
 uniform float _Metallic;
+render_mode depth_draw_opaque;
 
 void fragment() {
     vec2 modified_uv = UV;
@@ -13,4 +14,5 @@ void fragment() {
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
     ALPHA = c.a;
+	DEPTH = 1.0;
 }
