@@ -59,6 +59,12 @@ public sealed partial class HexCell : Node3D {
                 RemoveIncomingRiver();
             }
 
+            for (int i = 0; i < _roads.Length; i++) {
+                if (_roads[i] && GetElevationDifference((HexDirection)i) > 1) {
+                    SetRoad(i, false);
+                }
+            }
+
             Refresh();
         }
     }
@@ -206,12 +212,12 @@ public sealed partial class HexCell : Node3D {
 
         _hasOutgoingRiver = true;
         _outgoingRiver = direction;
-        RefreshSelfOnly();
-
+        
         neighbor.RemoveIncomingRiver();
         neighbor._hasIncomingRiver = true;
         neighbor._incomingRiver = direction.Opposite();
-        neighbor.RefreshSelfOnly();
+
+        SetRoad((int)direction, false);
     }
 
 
