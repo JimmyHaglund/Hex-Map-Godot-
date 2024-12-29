@@ -225,6 +225,11 @@ public sealed partial class HexGridChunk : Node3D {
 
         if (cell.HasRiverThroughEdge(direction)) {
             e2.v3.Y = neighbor.StreamBedY;
+            TriangulateRiverQuad(
+                e1.v2, e1.v4, e2.v2, e2.v4,
+                cell.RiverSurfaceY, neighbor.RiverSurfaceY,
+                cell.HasIncomingRiver && cell.IncomingRiver == direction
+            );
         }
 
         if (cell.GetEdgeType(direction) == HexEdgeType.Slope) {
@@ -469,14 +474,22 @@ public sealed partial class HexGridChunk : Node3D {
 
     private void TriangulateRiverQuad(
         Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
-        float y, bool reversed
+        float y1, float y2, bool reversed
     ) {
-        v1.Y = v2.Y = v3.Y = v4.Y = y;
+        v1.Y = v2.Y = y1;
+        v3.Y = v4.Y = y2;
         Rivers.AddQuad(v1, v2, v3, v4);
         if (reversed) {
             Rivers.AddQuadUV(1.0f, 0.0f, 1.0f, 0.0f);
         } else { 
             Rivers.AddQuadUV(0f, 1f, 0f, 1f);
         }
+    }
+
+    private void TriangulateRiverQuad(
+        Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
+        float y, bool reversed
+    ) {
+        TriangulateRiverQuad(v1, v2, v3, v4, y, y, reversed);
     }
 }
