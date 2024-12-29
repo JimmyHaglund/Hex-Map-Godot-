@@ -1,7 +1,7 @@
 shader_type spatial;
 
 uniform sampler2D _MainTex;
-uniform vec4 _Color;
+uniform vec4 _Color : source_color = vec4(1, 1, 1, 1);
 uniform float _Metallic;
 uniform float _Glossiness;
 
@@ -16,7 +16,7 @@ void fragment() {
     uv2.y -= TIME * 0.23;
     vec4 noise2 = texture(_MainTex, uv2);
     
-    vec4 c = _Color * (noise1.r * noise2.a);
+    vec4 c =  clamp	(_Color + (noise1.r * noise2.a), 0, 1);
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
