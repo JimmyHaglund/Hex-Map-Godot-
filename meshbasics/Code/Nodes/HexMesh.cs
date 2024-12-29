@@ -12,12 +12,14 @@ public sealed partial class HexMesh : MeshInstance3D {
     private CollisionShape3D _activeShape;
     private CollisionShape3D _inactiveShape;
     private List<Vector2> _uvs;
+    private List<Vector2> _uv2s;
 
     [Export] public CollisionShape3D CollisionShape { get; set; }
     [Export] public CollisionShape3D AltShape { get; set; }
     [Export] public bool UseCollider { get; set; } = true;
     [Export] public bool UseColors { get; set; } = true;
     [Export] public bool UseUVCoordinates { get; set; } = false;
+    [Export] public bool UseUV2Coordinates { get; set; } = false;
 
     public override void _Ready() {
         _mesh = Mesh as ArrayMesh;
@@ -35,6 +37,9 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         if (UseUVCoordinates) {
             _uvs = ListPool<Vector2>.Get();
+        }
+        if (UseUV2Coordinates) {
+            _uv2s = ListPool<Vector2>.Get();
         }
 
         if (UseColors) {
@@ -55,6 +60,11 @@ public sealed partial class HexMesh : MeshInstance3D {
                 var uv = Vector2.Zero;
                 if (_uvs != null && n < _uvs.Count) uv = _uvs[n];
                 surfaceTool.SetUV(uv);
+            }
+            if (UseUV2Coordinates) {
+                var uv = Vector2.Zero;
+                if (_uvs != null && n < _uvs.Count) uv = _uvs[n];
+                surfaceTool.SetUV2(uv);
             }
             if (UseColors) {
                 surfaceTool.SetColor(_colors[n]);
@@ -237,6 +247,32 @@ public sealed partial class HexMesh : MeshInstance3D {
         _uvs.Add(new Vector2(uMax, vMin));
         _uvs.Add(new Vector2(uMin, vMax));
         _uvs.Add(new Vector2(uMax, vMax));
+    }
+
+    public void AddTriangleUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3) {
+        _uv2s.Add(uv1);
+        _uv2s.Add(uv2);
+        _uv2s.Add(uv3);
+    }
+
+    public void AddQuadUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4) {
+        _uv2s.Add(uv2);
+        _uv2s.Add(uv1);
+        _uv2s.Add(uv3);
+
+        _uv2s.Add(uv2);
+        _uv2s.Add(uv3);
+        _uv2s.Add(uv4);
+    }
+
+    public void AddQuadUV2(float uMin, float uMax, float vMin, float vMax) {
+        _uv2s.Add(new Vector2(uMax, vMin));
+        _uv2s.Add(new Vector2(uMin, vMin));
+        _uv2s.Add(new Vector2(uMin, vMax));
+
+        _uv2s.Add(new Vector2(uMax, vMin));
+        _uv2s.Add(new Vector2(uMin, vMax));
+        _uv2s.Add(new Vector2(uMax, vMax));
     }
 
     private void SwapCollisionShape() {
