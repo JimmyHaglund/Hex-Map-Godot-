@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using Godot;
 
 namespace JHM.MeshBasics;
@@ -253,6 +254,8 @@ public sealed partial class HexGridChunk : Node3D {
         HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
     ) {
         bool hasRoadThroughEdge = cell.HasRoadThroughEdge(direction);
+        bool previousHasRiver = cell.HasRiverThroughEdge(direction.Previous());
+        bool nextHasRiver = cell.HasRiverThroughEdge(direction.Next());
         Vector2 interpolators = GetRoadInterpolators(direction, cell);
         Vector3 roadCenter = center;
 
@@ -260,15 +263,37 @@ public sealed partial class HexGridChunk : Node3D {
             roadCenter += HexMetrics.GetSolidEdgeMiddle(
                 cell.RiverBeginOrEndDirection.Opposite()
             ) * (1.0f / 3.0f);
+        } else if (cell.IncomingRiver == cell.OutgoingRiver.Opposite()) {
+            Vector3 corner;
+            if (previousHasRiver) {
+                if (
+                    !hasRoadThroughEdge &&
+                    !cell.HasRoadThroughEdge(direction.Next())
+                ) {
+                    return;
+                }
+                corner = HexMetrics.GetSecondSolidCorner(direction);
+            } else {
+                if (
+                    !hasRoadThroughEdge &&
+                    !cell.HasRoadThroughEdge(direction.Previous())
+                ) {
+                    return;
+                }
+                corner = HexMetrics.GetFirstSolidCorner(direction);
+            }
+            roadCenter += corner * 0.5f;
+            center += corner * 0.25f;
         }
 
         Vector3 mL = roadCenter.Lerp(e.v1, interpolators.X);
         Vector3 mR = roadCenter.Lerp(e.v5, interpolators.Y);
         TriangulateRoad(roadCenter, mL, mR, e, hasRoadThroughEdge);
-        if (cell.HasRiverThroughEdge(direction.Previous())) {
+
+        if (previousHasRiver) {
             TriangulateRoadEdge(roadCenter, center, mL);
         }
-        if (cell.HasRiverThroughEdge(direction.Next())) {
+        if (nextHasRiver) {
             TriangulateRoadEdge(roadCenter, mR, center);
         }
     }
