@@ -182,6 +182,8 @@ public sealed partial class HexGridChunk : Node3D {
     private void TriangulateWithRiverBeginOrEnd(
         HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
     ) {
+        
+
         EdgeVertices m = new EdgeVertices(
             center.Lerp(e.v1, 0.5f),
             center.Lerp(e.v5, 0.5f)
@@ -216,6 +218,10 @@ public sealed partial class HexGridChunk : Node3D {
     private void TriangulateAdjacentToRiver(
         HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
     ) {
+        if (cell.HasRoads) {
+            TriangulateRoadAdjacentToRiver(direction, cell, center, e);
+        }
+
         if (cell.HasRiverThroughEdge(direction.Next())) {
             if (cell.HasRiverThroughEdge(direction.Previous())) {
                 center += HexMetrics.GetSolidEdgeMiddle(direction) *
@@ -241,6 +247,17 @@ public sealed partial class HexGridChunk : Node3D {
 
         TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
         TriangulateEdgeFan(center, m, cell.Color);
+    }
+
+    private void TriangulateRoadAdjacentToRiver(
+        HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
+    ) {
+        bool hasRoadThroughEdge = cell.HasRoadThroughEdge(direction);
+        Vector2 interpolators = GetRoadInterpolators(direction, cell);
+        Vector3 roadCenter = center;
+        Vector3 mL = roadCenter.Lerp(e.v1, interpolators.X);
+        Vector3 mR = roadCenter.Lerp(e.v5, interpolators.Y);
+        TriangulateRoad(roadCenter, mL, mR, e, hasRoadThroughEdge);
     }
 
     private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1) {
