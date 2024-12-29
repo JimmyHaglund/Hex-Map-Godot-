@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cw84703hyjufd"]
+
+[ext_resource type="Shader" path="res://Shaders/River.gdshader" id="1_p5dps"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_p5dps")
+shader_parameter/_Color = null
+shader_parameter/_Metallic = null
+shader_parameter/_Glossiness = null

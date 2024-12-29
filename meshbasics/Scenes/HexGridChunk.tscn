@@ -1,17 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=7 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
+[ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
 [ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/VertexColorMaterial.tres" id="5_a1qwg"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="6_nfodi"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 resource_local_to_scene = true
 
-[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain")]
-script = ExtResource("1_hk31i")
-Terrain = NodePath("HexMesh")
+[sub_resource type="CylinderMesh" id="CylinderMesh_dhpg2"]
 
-[node name="HexMesh" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
+[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers")]
+script = ExtResource("1_hk31i")
+Terrain = NodePath("Terrain")
+Rivers = NodePath("River")
+
+[node name="Terrain" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
 material_override = ExtResource("5_a1qwg")
 gi_mode = 2
 mesh = SubResource("ArrayMesh_0fglf")
@@ -19,10 +23,19 @@ script = ExtResource("6_nfodi")
 CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
 AltShape = NodePath("AltStaticBody/AltCollisionShape3D")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="HexMesh"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Terrain"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HexMesh/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain/StaticBody3D"]
 
-[node name="AltStaticBody" type="StaticBody3D" parent="HexMesh"]
+[node name="AltStaticBody" type="StaticBody3D" parent="Terrain"]
 
-[node name="AltCollisionShape3D" type="CollisionShape3D" parent="HexMesh/AltStaticBody"]
+[node name="AltCollisionShape3D" type="CollisionShape3D" parent="Terrain/AltStaticBody"]
+
+[node name="River" type="MeshInstance3D" parent="."]
+material_override = ExtResource("4_usb5c")
+gi_mode = 2
+mesh = SubResource("CylinderMesh_dhpg2")
+script = ExtResource("6_nfodi")
+UseCollider = false
+UseColors = false
+UseUVCoordinates = true
