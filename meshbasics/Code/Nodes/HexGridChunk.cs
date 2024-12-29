@@ -245,15 +245,19 @@ public sealed partial class HexGridChunk : Node3D {
             center2 + HexMetrics.GetSecondSolidCorner(direction.Opposite()),
             center2 + HexMetrics.GetFirstSolidCorner(direction.Opposite())
         );
-        WaterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
-        WaterShore.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
-        WaterShore.AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
-        WaterShore.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
-        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
-        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
-        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
-        WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
-
+        if (cell.HasRiverThroughEdge(direction)) {
+            TriangulateEstuary(e1, e2);
+        }
+        else {
+            WaterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
+            WaterShore.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
+            WaterShore.AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
+            WaterShore.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
+            WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+            WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+            WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+            WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+        }
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (nextNeighbor != null) {
@@ -272,6 +276,17 @@ public sealed partial class HexGridChunk : Node3D {
                 new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f)
             );
         }
+    }
+
+    void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2) {
+        WaterShore.AddTriangle(e2.v1, e1.v2, e1.v1);
+        WaterShore.AddTriangle(e2.v5, e1.v5, e1.v4);
+        WaterShore.AddTriangleUV(
+            new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f)
+        );
+        WaterShore.AddTriangleUV(
+            new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f)
+        );
     }
 
     void TriangulateWaterfallInWater(
