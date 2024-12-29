@@ -166,6 +166,24 @@ public sealed partial class HexGridChunk : Node3D {
         m.v3.Y = e.v3.Y;
         TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
         TriangulateEdgeFan(center, m, cell.Color);
+
+        bool reversed = cell.HasIncomingRiver;
+        TriangulateRiverQuad(
+            m.v2, m.v4, e.v2, e.v4, cell.RiverSurfaceY, reversed
+        );
+
+        center.Y = m.v2.Y = m.v4.Y = cell.RiverSurfaceY;
+        Rivers.AddTriangle(center, m.v2, m.v4);
+        if (reversed) {
+            Rivers.AddTriangleUV(
+                new Vector2(0.5f, 1f), new Vector2(1f, 0f), new Vector2(0f, 0f)
+            );
+        }
+        else {
+            Rivers.AddTriangleUV(
+                new Vector2(0.5f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f)
+            );
+        }
     }
 
     private void TriangulateAdjacentToRiver(
