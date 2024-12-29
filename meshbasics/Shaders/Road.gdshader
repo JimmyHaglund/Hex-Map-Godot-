@@ -8,11 +8,15 @@ render_mode depth_draw_opaque;
 
 void fragment() {
     vec2 modified_uv = UV;
-    vec4 c = vec4(modified_uv, 1.0, 1.0);
-
+    vec4 c = _Color;
+	
+	float blend = modified_uv.x;
+	blend = smoothstep(0.4, 0.7, blend);
+	
+	
     ALBEDO = c.rgb;
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
-    ALPHA = c.a;
+    ALPHA = blend;
 	DEPTH = 1.0;
 }
