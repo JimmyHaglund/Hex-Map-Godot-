@@ -70,7 +70,10 @@ public sealed partial class HexFeatureManager : Node3D {
         HexCell farCell
     ) {
         if (nearCell.Walled != farCell.Walled) {
-            AddWallSegment(near.v1, far.v1, near.v5, far.v5);
+            AddWallSegment(near.v1, far.v1, near.v2, far.v2);
+            AddWallSegment(near.v2, far.v2, near.v3, far.v3);
+            AddWallSegment(near.v3, far.v3, near.v4, far.v4);
+            AddWallSegment(near.v4, far.v4, near.v5, far.v5);
         }
     }
 
