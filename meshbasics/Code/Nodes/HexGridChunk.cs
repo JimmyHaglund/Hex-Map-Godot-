@@ -307,7 +307,7 @@ public sealed partial class HexGridChunk : Node3D {
             );
         }
         else {
-            Terrain.AddTriangleUnPerturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
+            Terrain.AddTriangleUnperturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
             Terrain.AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
@@ -332,7 +332,7 @@ public sealed partial class HexGridChunk : Node3D {
             );
         }
         else {
-            Terrain.AddTriangleUnPerturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
+            Terrain.AddTriangleUnperturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
             Terrain.AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
         }
     }
@@ -773,7 +773,7 @@ public sealed partial class HexGridChunk : Node3D {
         Color c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, 1);
 
 
-        Terrain.AddTriangleUnPerturbed(HexMetrics.Perturb(begin), v2, boundary);
+        Terrain.AddTriangleUnperturbed(HexMetrics.Perturb(begin), v2, boundary);
         Terrain.AddTriangleColor(beginCell.Color, c2, boundaryColor);
 
         for (int i = 2; i < HexMetrics.TerraceSteps; i++) {
@@ -781,11 +781,11 @@ public sealed partial class HexGridChunk : Node3D {
             Color c1 = c2;
             v2 = HexMetrics.Perturb(HexMetrics.TerraceLerp(begin, left, i));
             c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, i);
-            Terrain.AddTriangleUnPerturbed(v1, v2, boundary);
+            Terrain.AddTriangleUnperturbed(v1, v2, boundary);
             Terrain.AddTriangleColor(c1, c2, boundaryColor);
         }
 
-        Terrain.AddTriangleUnPerturbed(v2, HexMetrics.Perturb(left), boundary);
+        Terrain.AddTriangleUnperturbed(v2, HexMetrics.Perturb(left), boundary);
         Terrain.AddTriangleColor(c2, leftCell.Color, boundaryColor);
     }
 

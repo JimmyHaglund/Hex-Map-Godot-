@@ -108,7 +108,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         // _triangles.Add(vertexIndex + 2);
     }
 
-    public void AddTriangleUnPerturbed(Vector3 v1, Vector3 v2, Vector3 v3) {
+    public void AddTriangleUnperturbed(Vector3 v1, Vector3 v2, Vector3 v3) {
         var normal = (v2 - v1).Cross(v3 - v2);
         _vertices.Add(v1);
         _vertices.Add(v2);
