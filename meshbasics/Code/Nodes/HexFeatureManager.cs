@@ -191,8 +191,12 @@ public sealed partial class HexFeatureManager : Node3D {
                 HexHash hash = HexMetrics.SampleHashGrid(
                     (pivot + left + right) * (1f / 3f)
                 );
-                bool hasTower = hash.E < HexMetrics.WallTowerThreshold;
+                bool hasTower = false;
+                if (leftCell.Elevation == rightCell.Elevation) { 
+                    hasTower = hash.E < HexMetrics.WallTowerThreshold;
+                }
                 AddWallSegment(pivot, left, pivot, right, hasTower);
+
             } else if (leftCell.Elevation < rightCell.Elevation) {
                 AddWallWedge(pivot, left, right);
             }
