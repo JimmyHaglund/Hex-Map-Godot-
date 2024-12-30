@@ -212,7 +212,8 @@ public sealed partial class HexMapEditor : Control {
         var filePath = Path.Combine(OS.GetUserDataDir(), "test.map");
         GD.Print(filePath);
         using var fileStream = File.OpenWrite(filePath);
-
+        using var writer = new BinaryWriter(fileStream);
+        writer.Write(123);
     }
 
     public void Load() { 
