@@ -74,7 +74,7 @@ layout_mode = 2
 offset_left = 44.0
 offset_top = 1.0
 offset_right = 359.435
-offset_bottom = 901.0
+offset_bottom = 1036.62
 scale = Vector2(0.6, 0.6)
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
@@ -138,6 +138,22 @@ alignment = 2
 [node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/WaterLevelControls"]
 layout_mode = 2
 max_value = 4.0
+tick_count = 5
+
+[node name="UrbanLevelControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="EnableUrbanLevel" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls"]
+layout_direction = 3
+layout_mode = 2
+text = "Edit Urban Level"
+alignment = 2
+
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls"]
+layout_mode = 2
+max_value = 4.0
+value = 1.0
 tick_count = 5
 
 [node name="BrushSizeControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
@@ -277,6 +293,8 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/ElevationControls/HSlider" to="HexMapEditor" method="SetElevation"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/WaterLevelControls/EnableElevationCheck" to="HexMapEditor" method="SetApplyWaterLevel"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/WaterLevelControls/HSlider" to="HexMapEditor" method="SetWaterLevel"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls/EnableUrbanLevel" to="HexMapEditor" method="SetApplyUrbanLevel"]
+[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls/HSlider" to="HexMapEditor" method="SetUrbanLevel"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/BrushSizeControls/HSlider" to="HexMapEditor" method="SetBrushSize"]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [1]]

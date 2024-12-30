@@ -14,10 +14,11 @@ public sealed partial class HexCell : Node3D {
     private HexDirection _outgoingRiver;
     private bool[] _roads = new bool[6];
     private int _waterLevel;
-
+    private int _urbanLevel;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
+    
 
     public Color Color {
         get {
@@ -156,6 +157,18 @@ public sealed partial class HexCell : Node3D {
     public bool IsUnderwater {
         get {
             return _waterLevel > _elevation;
+        }
+    }
+
+    public int UrbanLevel {
+        get {
+            return _urbanLevel;
+        }
+        set {
+            if (_urbanLevel != value) {
+                _urbanLevel = value;
+                RefreshSelfOnly();
+            }
         }
     }
 
