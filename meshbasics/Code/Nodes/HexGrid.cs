@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using Godot;
 
@@ -30,7 +31,7 @@ public sealed partial class HexGrid : Node3D {
         HexMetrics.InitializeHashGrid(Seed);
         HexMetrics.Colors = Colors;
 
-        CreateMap();
+        CreateMap(CellCountX, CellCountZ);
     }
 
     public HexCell GetCell(Vector3 position) {
@@ -57,12 +58,23 @@ public sealed partial class HexGrid : Node3D {
         foreach (var chunk in _chunks) chunk.SetUIVisible(visible);
     }
 
-    public void CreateMap() {
+    public void CreateMap(int cellCountX, int cellCountZ) {
+        if (
+            cellCountX <= 0 || cellCountX % HexMetrics.ChunkSizeX != 0 ||
+            cellCountZ <= 0 || cellCountZ % HexMetrics.ChunkSizeZ != 0
+        ) {
+            GD.PrintErr("Unsupported map size.");
+            return;
+        }
+
         if (_chunks != null) {
             for (int i = 0; i < _chunks.Length; i++) {
                 _chunks[i].QueueFree();
             }
         }
+
+        CellCountX = cellCountX;
+        CellCountZ = cellCountZ;
 
         _chunkCountX = CellCountX / HexMetrics.ChunkSizeX;
         _chunkCountZ = CellCountZ / HexMetrics.ChunkSizeZ;
