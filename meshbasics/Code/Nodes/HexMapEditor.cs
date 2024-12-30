@@ -13,6 +13,8 @@ public sealed partial class HexMapEditor : Control {
     private bool _applyElevation = true;
     private bool _applyWaterLevel = false;
     private bool _applyUrbanLevel;
+    private bool _applyFarmLevel;
+    private bool _applyPlantLevel;
     private int _brushSize;
     private OptionalToggle _riverMode;
     private OptionalToggle _roadMode;
@@ -20,7 +22,9 @@ public sealed partial class HexMapEditor : Control {
     private HexDirection _dragDirection;
     private HexCell _previousCell;
     private int _activeWaterLevel;
-    private int _activeUrbanLevel;
+    private int _activeUrbanLevel = 1;
+    private int _activeFarmLevel = 1;
+    private int _activePlantLevel = 1;
 
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
@@ -113,6 +117,12 @@ public sealed partial class HexMapEditor : Control {
         if (_applyUrbanLevel) {
             cell.UrbanLevel = _activeUrbanLevel;
         }
+        if (_applyFarmLevel) {
+            cell.FarmLevel = _activeFarmLevel;
+        }
+        if (_applyPlantLevel) {
+            cell.PlantLevel = _activePlantLevel;
+        }
     }
 
     public void SetElevation(float elevationStep) {
@@ -165,6 +175,22 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetUrbanLevel(float level) {
         _activeUrbanLevel = (int)level;
+    }
+
+    public void SetApplyFarmLevel(bool toggle) {
+        _applyFarmLevel = toggle;
+    }
+
+    public void SetFarmLevel(float level) {
+        _activeFarmLevel = (int)level;
+    }
+
+    public void SetApplyPlantLevel(bool toggle) {
+        _applyPlantLevel = toggle;
+    }
+
+    public void SetPlantLevel(float level) {
+        _activePlantLevel = (int)level;
     }
 
     #region Definitions

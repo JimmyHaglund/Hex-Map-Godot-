@@ -65,6 +65,7 @@ offset_left = 916.0
 offset_top = 12.0
 offset_right = 956.0
 offset_bottom = 52.0
+scale = Vector2(0.81, 0.81)
 script = ExtResource("4_fqh23")
 Colors = PackedColorArray(0.905049, 0.848337, 0.424126, 1, 0.259905, 0.630793, 0.479689, 1, 0.108825, 0.339266, 0.971792, 1, 0.838877, 0.111098, 0.348332, 1)
 HexGrid = NodePath("../HexGrid")
@@ -74,7 +75,7 @@ layout_mode = 2
 offset_left = 44.0
 offset_top = 1.0
 offset_right = 359.435
-offset_bottom = 1036.62
+offset_bottom = 1167.53
 scale = Vector2(0.6, 0.6)
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
@@ -151,6 +152,38 @@ text = "Edit Urban Level"
 alignment = 2
 
 [node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls"]
+layout_mode = 2
+max_value = 3.0
+value = 1.0
+tick_count = 4
+
+[node name="FarmControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="EnableFarmLevel" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/FarmControls"]
+layout_direction = 3
+layout_mode = 2
+text = "Edit Farm Level"
+alignment = 2
+
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/FarmControls"]
+layout_mode = 2
+max_value = 3.0
+value = 1.0
+tick_count = 4
+
+[node name="PlantControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="EnablePlantLevel" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/PlantControls"]
+layout_direction = 3
+layout_mode = 2
+text = "Edit Plant Level"
+alignment = 2
+
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/PlantControls"]
 layout_mode = 2
 max_value = 3.0
 value = 1.0
@@ -295,6 +328,10 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/WaterLevelControls/HSlider" to="HexMapEditor" method="SetWaterLevel"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls/EnableUrbanLevel" to="HexMapEditor" method="SetApplyUrbanLevel"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls/HSlider" to="HexMapEditor" method="SetUrbanLevel"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/FarmControls/EnableFarmLevel" to="HexMapEditor" method="SetApplyFarmLevel"]
+[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/FarmControls/HSlider" to="HexMapEditor" method="SetFarmLevel"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/PlantControls/EnablePlantLevel" to="HexMapEditor" method="SetApplyPlantLevel"]
+[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/PlantControls/HSlider" to="HexMapEditor" method="SetPlantLevel"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/BrushSizeControls/HSlider" to="HexMapEditor" method="SetBrushSize"]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [1]]

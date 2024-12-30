@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=23 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
@@ -9,9 +9,13 @@
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="6_nfodi"]
 [ext_resource type="Material" uid="uid://c506dce10lnjn" path="res://Materials/EstuaryMaterial.tres" id="7_000k3"]
 [ext_resource type="Script" path="res://Code/Nodes/HexFeatureManager.cs" id="9_wnj8p"]
-[ext_resource type="PackedScene" uid="uid://cv765j8v1gixn" path="res://Scenes/Urban1.tscn" id="10_6pi2n"]
-[ext_resource type="PackedScene" uid="uid://bwph5ffhpx74v" path="res://Scenes/Urban2.tscn" id="11_qj5vq"]
-[ext_resource type="PackedScene" uid="uid://0dmhwjyfsi5x" path="res://Scenes/Urban3.tscn" id="12_gtsq6"]
+[ext_resource type="PackedScene" uid="uid://hmcjbr4x4lc3" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh2.tscn" id="12_ef7r1"]
+[ext_resource type="PackedScene" uid="uid://0dmhwjyfsi5x" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh1.tscn" id="12_gtsq6"]
+[ext_resource type="PackedScene" uid="uid://bwph5ffhpx74v" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium1.tscn" id="13_1dvnm"]
+[ext_resource type="Script" path="res://Code/Nodes/PackedSceneContainer.cs" id="13_apxms"]
+[ext_resource type="PackedScene" uid="uid://bjy5eh7sxerhe" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium2.tscn" id="14_ceung"]
+[ext_resource type="PackedScene" uid="uid://cv765j8v1gixn" path="res://Scenes/TerrainFeatures/Urban/UrbanLow1.tscn" id="15_q64pu"]
+[ext_resource type="PackedScene" uid="uid://tkltneqplada" path="res://Scenes/TerrainFeatures/Urban/UrbanLow2.tscn" id="16_wxuhe"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 resource_local_to_scene = true
@@ -107,6 +111,44 @@ UseCollider = false
 UseColors = false
 UseUVCoordinates = true
 
-[node name="Features" type="Node3D" parent="."]
+[node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs")]
 script = ExtResource("9_wnj8p")
-UrbanPrefabs = Array[PackedScene]([ExtResource("12_gtsq6"), ExtResource("11_qj5vq"), ExtResource("10_6pi2n")])
+UrbanPrefabs = [NodePath("UrbanHigh"), NodePath("UrbanMedium"), NodePath("UrbanLow")]
+FarmPrefabs = []
+PlantPrefabs = []
+
+[node name="UrbanHigh" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("12_gtsq6"), ExtResource("12_ef7r1")])
+
+[node name="UrbanMedium" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("13_1dvnm"), ExtResource("14_ceung")])
+
+[node name="UrbanLow" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("15_q64pu"), ExtResource("16_wxuhe")])
+
+[node name="FarmHigh" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("12_gtsq6"), ExtResource("12_ef7r1")])
+
+[node name="FarmMedium" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("13_1dvnm"), ExtResource("14_ceung")])
+
+[node name="FarmLow" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("15_q64pu"), ExtResource("16_wxuhe")])
+
+[node name="PlantHigh" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("12_gtsq6"), ExtResource("12_ef7r1")])
+
+[node name="PlantMedium" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("13_1dvnm"), ExtResource("14_ceung")])
+
+[node name="PlantLow" type="Node" parent="Features"]
+script = ExtResource("13_apxms")
+Scenes = Array[PackedScene]([ExtResource("15_q64pu"), ExtResource("16_wxuhe")])

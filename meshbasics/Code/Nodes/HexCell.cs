@@ -15,10 +15,11 @@ public sealed partial class HexCell : Node3D {
     private bool[] _roads = new bool[6];
     private int _waterLevel;
     private int _urbanLevel;
+    private int _farmLevel;
+    private int _plantLevel;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
-    
 
     public Color Color {
         get {
@@ -167,6 +168,30 @@ public sealed partial class HexCell : Node3D {
         set {
             if (_urbanLevel != value) {
                 _urbanLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int FarmLevel {
+        get {
+            return _farmLevel;
+        }
+        set {
+            if (_farmLevel != value) {
+                _farmLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int PlantLevel {
+        get {
+            return _plantLevel;
+        }
+        set {
+            if (_plantLevel != value) {
+                _plantLevel = value;
                 RefreshSelfOnly();
             }
         }
