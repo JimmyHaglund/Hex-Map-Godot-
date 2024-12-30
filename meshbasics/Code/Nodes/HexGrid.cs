@@ -92,8 +92,13 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    public void Load(BinaryReader reader) {
-        CreateMap(reader.ReadInt32(), reader.ReadInt32());
+    public void Load(BinaryReader reader, int header) {
+        int x = 20, z = 15;
+        if (header >= 1) {
+            x = reader.ReadInt32();
+            z = reader.ReadInt32();
+        }
+        CreateMap(x, z);
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Load(reader);
         }

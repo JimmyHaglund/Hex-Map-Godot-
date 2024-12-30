@@ -226,11 +226,11 @@ public sealed partial class HexMapEditor : Control {
         using var fileStream = File.OpenRead(filePath);
         using var reader = new BinaryReader(fileStream);
         int header = reader.ReadInt32();
-        if (header != MapVersion) {
+        if (header > MapVersion || header < 0) {
             GD.PrintErr($"Unknown map format {header}");
             return;
         }
-        HexGrid.Load(reader);
+        HexGrid.Load(reader, header);
     }
 
     private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);
