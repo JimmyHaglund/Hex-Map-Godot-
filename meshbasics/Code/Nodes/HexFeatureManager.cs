@@ -119,18 +119,22 @@ public sealed partial class HexFeatureManager : Node3D {
         Vector3 rightThicknessOffset =
             HexMetrics.GetWallThicknessOffset(nearRight, farRight);
 
+        float leftTop = left.Y + HexMetrics.WallHeight;
+        float rightTop = right.Y + HexMetrics.WallHeight;
+
         Vector3 v1, v2, v3, v4;
         v1 = v3 = left - leftThicknessOffset; ;
         v2 = v4 = right - rightThicknessOffset;
-        v3.Y = v4.Y = left.Y + HexMetrics.WallHeight;
+        v3.Y = leftTop;
+        v4.Y = rightTop; 
         Walls.AddQuad(v1, v2, v3, v4);
 
         Vector3 t1 = v3, t2 = v4;
 
         v1 = v3 = left + leftThicknessOffset;
         v2 = v4 = right + rightThicknessOffset;
-
-        v3.Y = v4.Y = left.Y + HexMetrics.WallHeight;
+        v3.Y = leftTop;
+        v4.Y = rightTop;
         Walls.AddQuad(v2, v1, v4, v3);
 
         Walls.AddQuad(t1, t2, v3, v4);

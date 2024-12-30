@@ -172,6 +172,7 @@ Scenes = Array[PackedScene]([ExtResource("27_4puub"), ExtResource("28_wumkn")])
 
 [node name="Walls" type="MeshInstance3D" parent="Features"]
 material_override = ExtResource("9_c5j6k")
+cast_shadow = 2
 gi_mode = 2
 mesh = SubResource("ArrayMesh_wltgt")
 skeleton = NodePath("../..")

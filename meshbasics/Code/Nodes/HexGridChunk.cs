@@ -761,11 +761,6 @@ public sealed partial class HexGridChunk : Node3D {
         TriangulateEdgeStrip(e2, c2, end, c2, hasRoad);
     }
 
-    
-
-    
-
-
     private void TriangulateBoundaryTriangle(
         Vector3 begin, HexCell beginCell,
         Vector3 left, HexCell leftCell,
