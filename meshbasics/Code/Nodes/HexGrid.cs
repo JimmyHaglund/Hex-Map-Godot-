@@ -40,7 +40,7 @@ public sealed partial class HexGrid : Node3D {
 
         for (int z = 0, i = 0; z < ChunkCountZ; z++) {
             for (int x = 0; x < ChunkCountX; x++) {
-                var chunk = InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
+                var chunk = this.InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
                 _chunks[i++] = chunk;
                 chunk.RefreshStarted += () => _refreshStack++;
                 chunk.RefreshCompleted += () => _refreshStack--;
@@ -88,7 +88,7 @@ public sealed partial class HexGrid : Node3D {
         position.Y = 0f;
         position.Z = z * HexMetrics.OuterRadius * 1.5f;
 
-        HexCell cell = _cells[i] = InstantiateOrphan<HexCell>(HexCellPrefab, $"HexCell_{i}");
+        HexCell cell = _cells[i] = this.InstantiateOrphan<HexCell>(HexCellPrefab, $"HexCell_{i}");
         cell.Position = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Color = DefaultColor;
@@ -112,7 +112,7 @@ public sealed partial class HexGrid : Node3D {
         }
 
 
-        Label3D label = InstantiateOrphan<Label3D>(CellLabelPrefab);
+        Label3D label = this.InstantiateOrphan<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
         label.Text = cell.Coordinates.ToStringOnSeparateLines();
         cell.Elevation = 0;
@@ -132,20 +132,20 @@ public sealed partial class HexGrid : Node3D {
 
     }
 
-    private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{
-        T result = scene.Instantiate<T>();
-        this.AddChild(result);
-        if (name is not null) {
-            result.Name = name;
-        }
-        return result;
-    }
-
-    private T InstantiateOrphan<T>(PackedScene scene, string name = null) where T : Node {
-        T result = scene.Instantiate<T>();
-        if (name is not null) {
-            result.Name = name;
-        }
-        return result;
-    }
+    // private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{
+    //     T result = scene.Instantiate<T>();
+    //     this.AddChild(result);
+    //     if (name is not null) {
+    //         result.Name = name;
+    //     }
+    //     return result;
+    // }
+    // 
+    // private T InstantiateOrphan<T>(PackedScene scene, string name = null) where T : Node {
+    //     T result = scene.Instantiate<T>();
+    //     if (name is not null) {
+    //         result.Name = name;
+    //     }
+    //     return result;
+    // }
 }

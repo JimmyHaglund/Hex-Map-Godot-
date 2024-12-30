@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=17 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="6_nfodi"]
 [ext_resource type="Material" uid="uid://c506dce10lnjn" path="res://Materials/EstuaryMaterial.tres" id="7_000k3"]
 [ext_resource type="Script" path="res://Code/Nodes/HexFeatureManager.cs" id="9_wnj8p"]
+[ext_resource type="PackedScene" uid="uid://cv765j8v1gixn" path="res://Scenes/CubeFeature.tscn" id="10_04j0e"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 resource_local_to_scene = true
@@ -106,3 +107,4 @@ UseUVCoordinates = true
 
 [node name="Features" type="Node3D" parent="."]
 script = ExtResource("9_wnj8p")
+FeaturePrefab = ExtResource("10_04j0e")
