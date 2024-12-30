@@ -215,14 +215,14 @@ public sealed partial class HexMapEditor : Control {
         GD.Print(filePath);
         using var fileStream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(fileStream);
-        writer.Write(123);
+        HexGrid.Save(writer);
     }
 
     public void Load() {
         var filePath = GetFilePath("test.map");
         using var fileStream = File.OpenRead(filePath);
         using var reader = new BinaryReader(fileStream);
-        GD.Print(reader.ReadInt32());
+        HexGrid.Load(reader);
     }
 
     private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);

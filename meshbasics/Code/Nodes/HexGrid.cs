@@ -1,3 +1,4 @@
+using System.IO;
 using Godot;
 
 namespace JHM.MeshBasics;
@@ -23,7 +24,6 @@ public sealed partial class HexGrid : Node3D {
 
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
-    
 
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
@@ -35,28 +35,6 @@ public sealed partial class HexGrid : Node3D {
 
         CreateChunks();
         CreateCells();
-    }
-
-    private void CreateChunks() {
-        _chunks = new HexGridChunk[ChunkCountX * ChunkCountZ];
-
-        for (int z = 0, i = 0; z < ChunkCountZ; z++) {
-            for (int x = 0; x < ChunkCountX; x++) {
-                var chunk = this.InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
-                _chunks[i++] = chunk;
-                chunk.RefreshStarted += () => _refreshStack++;
-                chunk.RefreshCompleted += () => _refreshStack--;
-            }
-        }
-    }
-
-    private void CreateCells() {
-        _cells = new HexCell[_cellCountZ * _cellCountX];
-        for (int z = 0, i = 0; z < _cellCountZ; z++) {
-            for (int x = 0; x < _cellCountX; x++) {
-                CreateCell(x, z, i++);
-            }
-        }
     }
 
     public HexCell GetCell(Vector3 position) {
@@ -83,6 +61,42 @@ public sealed partial class HexGrid : Node3D {
         foreach (var chunk in _chunks) chunk.SetUIVisible(visible);
     }
 
+    public void Save(BinaryWriter writer) {
+        for (int i = 0; i < _cells.Length; i++) {
+            _cells[i].Save(writer);
+        }
+    }
+
+    public void Load(BinaryReader reader) {
+        for (int i = 0; i < _cells.Length; i++) {
+            _cells[i].Load(reader);
+        }
+        for (int i = 0; i < _chunks.Length; i++) {
+            _chunks[i].Refresh();
+        }
+    }
+
+    private void CreateChunks() {
+        _chunks = new HexGridChunk[ChunkCountX * ChunkCountZ];
+
+        for (int z = 0, i = 0; z < ChunkCountZ; z++) {
+            for (int x = 0; x < ChunkCountX; x++) {
+                var chunk = this.InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
+                _chunks[i++] = chunk;
+                chunk.RefreshStarted += () => _refreshStack++;
+                chunk.RefreshCompleted += () => _refreshStack--;
+            }
+        }
+    }
+
+    private void CreateCells() {
+        _cells = new HexCell[_cellCountZ * _cellCountX];
+        for (int z = 0, i = 0; z < _cellCountZ; z++) {
+            for (int x = 0; x < _cellCountX; x++) {
+                CreateCell(x, z, i++);
+            }
+        }
+    }
 
     private void CreateCell(int x, int z, int i) {
         Vector3 position;

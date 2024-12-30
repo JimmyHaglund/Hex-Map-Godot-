@@ -1,5 +1,5 @@
+using System.IO;
 using Godot;
-using System.Collections.Generic;
 
 namespace JHM.MeshBasics;
 
@@ -243,7 +243,13 @@ public sealed partial class HexCell : Node3D {
         return _roads[(int)direction];
     }
 
-    bool IsValidRiverDestination(HexCell neighbor) {
+    public void SetShowLabel(bool visible) {
+        if (UiRect is null) return;
+        UiRect.Visible = visible;
+    }
+
+
+    private bool IsValidRiverDestination(HexCell neighbor) {
         if (neighbor is null) return false;
         return Elevation >= neighbor.Elevation || WaterLevel == neighbor.Elevation;
     }
@@ -280,54 +286,6 @@ public sealed partial class HexCell : Node3D {
             Elevation, otherCell.Elevation
         );
     }
-
-    public void SetShowLabel(bool visible) {
-        if (UiRect is null) return;
-        UiRect.Visible = visible;
-    }
-
-    private void Refresh() {
-        if (Chunk is null) return;
-        Chunk.Refresh();
-
-        for (int i = 0; i < _neighbors.Length; i++) {
-            HexCell neighbor = _neighbors[i];
-            if (neighbor is null || neighbor.Chunk == Chunk) continue;
-            neighbor.Chunk.Refresh();
-        }
-    }
-
-    private void RefreshSelfOnly() {
-        Chunk.Refresh();
-    }
-
-    public void SetOutgoingRiver(HexDirection direction) {
-        if (_hasOutgoingRiver && _outgoingRiver == direction) {
-            return;
-        }
-
-        HexCell neighbor = GetNeighbor(direction);
-        if (!IsValidRiverDestination(neighbor)) {
-            return;
-        }
-
-        RemoveOutgoingRiver();
-        if (_hasIncomingRiver && _incomingRiver == direction) {
-            RemoveIncomingRiver();
-        }
-
-        _hasOutgoingRiver = true;
-        _outgoingRiver = direction;
-        _specialIndex = 0;
-
-        neighbor.RemoveIncomingRiver();
-        neighbor._hasIncomingRiver = true;
-        neighbor._incomingRiver = direction.Opposite();
-        neighbor._specialIndex = 0;
-
-        SetRoad((int)direction, false);
-    }
-
 
     public void RemoveOutgoingRiver() {
         if (!_hasOutgoingRiver) {
@@ -377,6 +335,14 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    public void Save(BinaryWriter writer) { 
+    
+    }
+
+    public void Load(BinaryReader reader) { 
+    
+    }
+
     private void SetRoad(int index, bool state) {
         _roads[index] = state;
         _neighbors[index]._roads[(int)((HexDirection)index).Opposite()] = state;
@@ -398,4 +364,48 @@ public sealed partial class HexCell : Node3D {
             RemoveIncomingRiver();
         }
     }
+
+    private void Refresh() {
+        if (Chunk is null) return;
+        Chunk.Refresh();
+
+        for (int i = 0; i < _neighbors.Length; i++) {
+            HexCell neighbor = _neighbors[i];
+            if (neighbor is null || neighbor.Chunk == Chunk) continue;
+            neighbor.Chunk.Refresh();
+        }
+    }
+
+    private void RefreshSelfOnly() {
+        Chunk.Refresh();
+    }
+
+    public void SetOutgoingRiver(HexDirection direction) {
+        if (_hasOutgoingRiver && _outgoingRiver == direction) {
+            return;
+        }
+
+        HexCell neighbor = GetNeighbor(direction);
+        if (!IsValidRiverDestination(neighbor)) {
+            return;
+        }
+
+        RemoveOutgoingRiver();
+        if (_hasIncomingRiver && _incomingRiver == direction) {
+            RemoveIncomingRiver();
+        }
+
+        _hasOutgoingRiver = true;
+        _outgoingRiver = direction;
+        _specialIndex = 0;
+
+        neighbor.RemoveIncomingRiver();
+        neighbor._hasIncomingRiver = true;
+        neighbor._incomingRiver = direction.Opposite();
+        neighbor._specialIndex = 0;
+
+        SetRoad((int)direction, false);
+    }
+
+
 }
