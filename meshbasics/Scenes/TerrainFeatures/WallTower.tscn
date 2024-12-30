@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://da1c8mo0xdw41"]
+[gd_scene load_steps=5 format=3 uid="uid://da1c8mo0xdw41"]
 
 [ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="1_ng344"]
 
@@ -9,6 +9,8 @@ size = Vector3(2, 4, 2)
 [sub_resource type="BoxMesh" id="BoxMesh_13pek"]
 material = ExtResource("1_ng344")
 
+[sub_resource type="PrismMesh" id="PrismMesh_ur5j8"]
+
 [node name="WallTower" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -18,3 +20,8 @@ mesh = SubResource("BoxMesh_tnf4y")
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
 mesh = SubResource("BoxMesh_13pek")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.94135, 0, 0, 0, -1.64835e-07, -0.540981, 0, 3.77098, -2.3647e-08, 0, 4.41317, 1.45888)
+visible = false
+mesh = SubResource("PrismMesh_ur5j8")

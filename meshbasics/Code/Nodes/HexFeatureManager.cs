@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.ComponentModel;
 
 namespace JHM.MeshBasics;
 
@@ -160,6 +161,13 @@ public sealed partial class HexFeatureManager : Node3D {
         Walls.AddQuadUnperturbed(v2, v1, v4, v3);
 
         Walls.AddQuadUnperturbed(t1, t2, v3, v4);
+
+        var towerInstance = _container.InstantiateOrphan<Node3D>(WallTower);
+        towerInstance.Position = (left + right) * 0.5f;
+        Vector3 rightDirection = right - left;
+        rightDirection.Y = 0.0f;
+        _container.AddChild(towerInstance);
+        towerInstance.LookAt(towerInstance.GlobalPosition + rightDirection.Rotated(Vector3.Up, Mathf.Pi / 2));
     }
 
     private void AddWallSegment(

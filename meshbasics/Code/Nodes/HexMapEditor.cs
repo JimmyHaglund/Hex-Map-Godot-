@@ -10,7 +10,7 @@ public sealed partial class HexMapEditor : Control {
     private Color _activeColor;
     private int _activeElevation = 1;
     private bool _applyColor = false;
-    private bool _applyElevation = true;
+    private bool _applyElevation = false;
     private bool _applyWaterLevel = false;
     private bool _applyUrbanLevel;
     private bool _applyFarmLevel;
