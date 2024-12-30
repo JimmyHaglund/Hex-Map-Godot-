@@ -378,6 +378,10 @@ text = "Save"
 layout_mode = 2
 text = "Load"
 
+[node name="Button" type="Button" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_mode = 2
+text = "New Map"
+
 [node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("5_mpgou")
 Grid = NodePath("../HexGrid")
@@ -426,3 +430,4 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [2]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/SaveButton" to="HexMapEditor" method="Save"]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/LoadButton" to="HexMapEditor" method="Load"]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/Button" to="HexGrid" method="CreateMap"]
