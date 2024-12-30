@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=16 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 [ext_resource type="ButtonGroup" uid="uid://dpb8786r04y0a" path="res://Misc/WallControlButtonGroup.tres" id="6_26ap1"]
 [ext_resource type="Script" path="res://Code/Nodes/SaveLoadMenu.cs" id="9_dqswk"]
+[ext_resource type="PackedScene" uid="uid://dxitv45u170cv" path="res://Scenes/SaveLoadItem.tscn" id="10_4ppnm"]
 [ext_resource type="Script" path="res://Code/Nodes/FileNameTextEdit.cs" id="10_ip72k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
@@ -445,7 +446,7 @@ text = "Large"
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveLoadMenu" type="Control" parent="." node_paths=PackedStringArray("HexGrid", "Title", "ActionButton", "NameInput")]
+[node name="SaveLoadMenu" type="Control" parent="." node_paths=PackedStringArray("_listContentParent", "HexGrid", "Title", "ActionButton", "NameInput")]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -454,6 +455,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_dqswk")
+_listContentParent = NodePath("Menu/FileListContainer/FileList")
+_saveLoadItemPrefab = ExtResource("10_4ppnm")
 HexGrid = NodePath("../HexGrid")
 Title = NodePath("Menu/Title")
 ActionButton = NodePath("Menu/ActionButtonsContainer/ActionButton")
@@ -488,6 +491,11 @@ custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="MapNameButton" type="Button" parent="SaveLoadMenu/Menu/FileListContainer/FileList"]
+visible = false
+layout_mode = 2
+text = "Map abc"
 
 [node name="FileNameEdit" type="TextEdit" parent="SaveLoadMenu/Menu"]
 custom_minimum_size = Vector2(0, 35.605)
@@ -540,20 +548,20 @@ text = "Cancel"
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/LoadButton" to="SaveLoadMenu" method="Open" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="NewMapMenu" method="set_visible" binds= [true]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexGrid" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexGrid" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexGrid" method="CreateMap" binds= [80, 60]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexGrid" method="CreateMap" binds= [80, 60]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="SaveLoadMenu" method="PerformAction"]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="SaveLoadMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="SaveLoadMenu" method="set_visible" binds= [false]]

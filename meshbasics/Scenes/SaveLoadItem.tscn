@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxitv45u170cv"]
+
+[ext_resource type="Script" path="res://Code/Nodes/SaveLoadItem.cs" id="1_hfeas"]
+
+[node name="SaveLoadItem" type="Button"]
+text = "MapNameHere"
+script = ExtResource("1_hfeas")
+
+[connection signal="pressed" from="." to="." method="Select"]

@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Godot;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace JHM.MeshBasics;
 
 public sealed partial class SaveLoadMenu : Control {
+    [Export] private Node _listContentParent;
+    [Export] private PackedScene _saveLoadItemPrefab { get; set; }
     private bool _saveMode;
     private const int _mapVersion = 1;
 
@@ -12,9 +14,7 @@ public sealed partial class SaveLoadMenu : Control {
     [Export] public Label Title { get; set; }
     [Export] public Button ActionButton { get; set; }
     [Export] public TextEdit NameInput { get; set; }
-
-
-
+    
     public void Open(bool saveMode) {
         _saveMode = saveMode;
         if (saveMode) {
@@ -25,6 +25,7 @@ public sealed partial class SaveLoadMenu : Control {
             ActionButton.Text = "Load";
         }
 
+        FillFileList();
         Visible = true;
         HexMapCamera.SetInstanceLocked(true);
     }
@@ -46,6 +47,10 @@ public sealed partial class SaveLoadMenu : Control {
             Load(path);
         }
         Close();
+    }
+
+    public void SelectItem(string name) {
+        NameInput.Text = name;
     }
 
     private string GetSelectedPath() {
@@ -79,7 +84,20 @@ public sealed partial class SaveLoadMenu : Control {
         HexGrid.Load(reader, header);
     }
 
+    private void FillFileList() {
+        string[] paths = Directory.GetFiles(OS.GetUserDataDir(), "*.map");
+        Array.Sort(paths);
+
+        for (int i = 0; i < _listContentParent.GetChildCount(); i++) {
+            _listContentParent.GetChild(i).QueueFree();
+        }
+
+        for (int i = 0; i < paths.Length; i++) {
+            SaveLoadItem item = _listContentParent.InstantiateChild<SaveLoadItem>(_saveLoadItemPrefab);
+            item.Menu = this;
+            item.MapName = Path.GetFileNameWithoutExtension(paths[i]);
+        }
+    }
+
     private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);
-
-
 }
