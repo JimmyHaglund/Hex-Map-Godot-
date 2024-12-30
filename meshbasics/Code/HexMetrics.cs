@@ -19,6 +19,7 @@ public static class HexMetrics {
     public const float StreamBedElevationOffset = -1.75f;
     public const float WaterElevationOffset = -0.5f;
     public const int HashGridSize = 256;
+    public const float HashGridScale = 0.25f;
     public const float WaterFactor = 0.6f;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
@@ -109,6 +110,18 @@ public static class HexMetrics {
 
         var pixel = NoiseSource.GetPixel((int)position.X, (int)position.Z);
         return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
+    }
+
+    public static float SampleHashGrid(Vector3 position) {
+        int x = (int)(position.X * HashGridScale) % HashGridSize;
+        if (x < 0) {
+            x += HashGridSize;
+        }
+        int z = (int)(position.X * HashGridScale) % HashGridSize;
+        if (z < 0) {
+            z += HashGridSize;
+        }
+        return _hashGrid[x + z * HashGridSize];
     }
 
     public static Vector3 GetSolidEdgeMiddle(HexDirection direction) {
