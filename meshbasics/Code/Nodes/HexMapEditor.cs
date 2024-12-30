@@ -207,8 +207,8 @@ public sealed partial class HexMapEditor : Control {
         _activeSpecialIndex = (int)index;
     }
 
-    public void Save() { 
-        
+    public void Save() {
+        GD.Print(OS.GetUserDataDir());
     }
 
     public void Load() { 
