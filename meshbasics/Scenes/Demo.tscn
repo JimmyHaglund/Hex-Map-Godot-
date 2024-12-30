@@ -76,7 +76,7 @@ layout_mode = 2
 offset_left = 44.0
 offset_top = 1.0
 offset_right = 359.435
-offset_bottom = 1198.63
+offset_bottom = 1257.19
 scale = Vector2(0.6, 0.6)
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
@@ -184,6 +184,22 @@ text = "Edit Plant Level"
 alignment = 2
 
 [node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/PlantControls"]
+layout_mode = 2
+max_value = 3.0
+value = 1.0
+tick_count = 4
+
+[node name="SpecialFeatureControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="Enable" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls"]
+layout_direction = 3
+layout_mode = 2
+text = "Edit Special Features"
+alignment = 2
+
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls"]
 layout_mode = 2
 max_value = 3.0
 value = 1.0
@@ -380,6 +396,8 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/FarmControls/HSlider" to="HexMapEditor" method="SetFarmLevel"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/PlantControls/EnablePlantLevel" to="HexMapEditor" method="SetApplyPlantLevel"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/PlantControls/HSlider" to="HexMapEditor" method="SetPlantLevel"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls/Enable" to="HexMapEditor" method="SetApplySpecialIndex"]
+[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls/HSlider" to="HexMapEditor" method="SetSpecialIndex"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/BrushSizeControls/HSlider" to="HexMapEditor" method="SetBrushSize"]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [1]]

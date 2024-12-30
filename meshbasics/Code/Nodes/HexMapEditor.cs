@@ -15,6 +15,7 @@ public sealed partial class HexMapEditor : Control {
     private bool _applyUrbanLevel;
     private bool _applyFarmLevel;
     private bool _applyPlantLevel;
+    private bool _applySpecialIndex;
     private int _brushSize;
     private OptionalToggle _riverMode;
     private OptionalToggle _roadMode;
@@ -26,6 +27,7 @@ public sealed partial class HexMapEditor : Control {
     private int _activeUrbanLevel = 1;
     private int _activeFarmLevel = 1;
     private int _activePlantLevel = 1;
+    private int _activeSpecialIndex = 1;
 
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
@@ -119,6 +121,9 @@ public sealed partial class HexMapEditor : Control {
                 }
             }
         }
+        if (_applySpecialIndex) {
+            cell.SpecialIndex = _activeSpecialIndex;
+        }
         if (_applyUrbanLevel) {
             cell.UrbanLevel = _activeUrbanLevel;
         }
@@ -200,6 +205,14 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetPlantLevel(float level) {
         _activePlantLevel = (int)level;
+    }
+
+    public void SetApplySpecialIndex(bool toggle) {
+        _applySpecialIndex = toggle;
+    }
+
+    public void SetSpecialIndex(float index) {
+        _activeSpecialIndex = (int)index;
     }
 
     #region Definitions

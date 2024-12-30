@@ -18,6 +18,7 @@ public sealed partial class HexCell : Node3D {
     private int _urbanLevel;
     private int _farmLevel;
     private int _plantLevel;
+    private int _specialIndex;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
@@ -206,6 +207,24 @@ public sealed partial class HexCell : Node3D {
                 _plantLevel = value;
                 RefreshSelfOnly();
             }
+        }
+    }
+
+    public int SpecialIndex {
+        get {
+            return _specialIndex;
+        }
+        set {
+            if (_specialIndex != value) {
+                _specialIndex = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public bool IsSpecial {
+        get {
+            return _specialIndex > 0;
         }
     }
 
