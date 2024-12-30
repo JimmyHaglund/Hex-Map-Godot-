@@ -81,6 +81,7 @@ public sealed partial class HexGrid : Node3D {
 
         CreateChunks();
         CreateCells();
+        HexMapCamera.ValidatePosition();
     }
 
     public void Save(BinaryWriter writer) {

@@ -3,6 +3,7 @@
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMapCamera : Node3D {
+    private static HexMapCamera _instance;
     private float _zoomedInPercentage = 0.5f;
     private float _rotationAngle = 0.0f;
     private Node3D _swivel;
@@ -25,11 +26,20 @@ public sealed partial class HexMapCamera : Node3D {
     [ExportCategory("Rotation Settings")]
     [Export] public float RotationSpeed { get; set; } = 5.0f;
 
+    public static void ValidatePosition() {
+        _instance?.AdjustPosition(0.0f, 0.0f, 0.0f);
+    }
+
     public bool Locked { get; set; } = false;
 
     public override void _EnterTree() {
         _swivel = GetChild<Node3D>(0);
         _stick = _swivel.GetChild<Node3D>(0);
+        _instance = this;
+    }
+
+    public override void _ExitTree() {
+        if (_instance == this) _instance = null;
     }
 
     public void SetLocked(bool value) => Locked = value;
