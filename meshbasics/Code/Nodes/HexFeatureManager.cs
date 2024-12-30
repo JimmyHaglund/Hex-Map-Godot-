@@ -259,5 +259,4 @@ public sealed partial class HexFeatureManager : Node3D {
         instance.LookAt(instance.Position + (roadCenter2 - roadCenter1));
         instance.Position = (roadCenter1 + roadCenter2) * 0.5f;
     }
-
 }
