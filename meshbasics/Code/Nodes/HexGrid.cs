@@ -85,12 +85,15 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void Save(BinaryWriter writer) {
+        writer.Write(CellCountX);
+        writer.Write(CellCountZ);
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Save(writer);
         }
     }
 
     public void Load(BinaryReader reader) {
+        CreateMap(reader.ReadInt32(), reader.ReadInt32());
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Load(reader);
         }

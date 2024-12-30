@@ -210,12 +210,14 @@ public sealed partial class HexMapEditor : Control {
         _activeSpecialIndex = (int)index;
     }
 
+    private const int MapVersion = 1;
+
     public void Save() {
         var filePath = GetFilePath("test.map");
         GD.Print(filePath);
         using var fileStream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(fileStream);
-        writer.Write(0);
+        writer.Write(MapVersion);
         HexGrid.Save(writer);
     }
 
@@ -224,12 +226,11 @@ public sealed partial class HexMapEditor : Control {
         using var fileStream = File.OpenRead(filePath);
         using var reader = new BinaryReader(fileStream);
         int header = reader.ReadInt32();
-        if (header == 0) {
-            HexGrid.Load(reader);
-        }
-        else {
+        if (header != MapVersion) {
             GD.PrintErr($"Unknown map format {header}");
+            return;
         }
+        HexGrid.Load(reader);
     }
 
     private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);
