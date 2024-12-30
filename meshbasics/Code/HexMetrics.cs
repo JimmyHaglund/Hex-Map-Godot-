@@ -38,9 +38,7 @@ public static class HexMetrics {
     public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
     public const float OuterToInner = 0.866025404f;
     public const float InnerToOuter = 1.0f / OuterToInner;
-    
-
-   
+    public const float WallElevationOffset = VerticalTerraceStepSize;
 
     public static Image NoiseSource { get; set; }
 
@@ -53,8 +51,6 @@ public static class HexMetrics {
         new (-InnerRadius, 0.0f, 0.5f * OuterRadius),
         new (0.0f, 0.0f, OuterRadius)
     };
-
-
 
     public static Vector3 GetFirstCorner(HexDirection direction) {
         return Corners[(int)direction];
@@ -87,6 +83,15 @@ public static class HexMetrics {
         offset.Y = 0f;
         offset.Z = far.Z - near.Z;
         return offset.Normalized() * (WallThickness * 0.5f); ;
+    }
+
+    public static Vector3 WallLerp(Vector3 near, Vector3 far) {
+        near.X += (far.X - near.X) * 0.5f;
+        near.Z += (far.Z - near.Z) * 0.5f;
+        float v =
+            near.Y < far.Y ? WallElevationOffset : (1.0f - WallElevationOffset);
+        near.Y += (far.Y - near.Y) * v;
+        return near;
     }
 
     public static Vector3 TerraceLerp(Vector3 a, Vector3 b, int step) {

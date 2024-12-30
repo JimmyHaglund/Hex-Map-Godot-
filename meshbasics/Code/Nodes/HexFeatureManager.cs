@@ -114,8 +114,8 @@ public sealed partial class HexFeatureManager : Node3D {
         Vector3 nearRight,
         Vector3 farRight
     ) {
-        Vector3 left = nearLeft.Lerp(farLeft, 0.5f);
-        Vector3 right = nearRight.Lerp(farRight, 0.5f);
+        Vector3 left = HexMetrics.WallLerp(nearLeft, farLeft);
+        Vector3 right = HexMetrics.WallLerp(nearRight, farRight);
 
         Vector3 leftThicknessOffset =
             HexMetrics.GetWallThicknessOffset(nearLeft, farLeft);
