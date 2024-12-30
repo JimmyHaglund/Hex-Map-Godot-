@@ -58,13 +58,13 @@ public sealed partial class HexGrid : Node3D {
         foreach (var chunk in _chunks) chunk.SetUIVisible(visible);
     }
 
-    public void CreateMap(int cellCountX, int cellCountZ) {
+    public bool CreateMap(int cellCountX, int cellCountZ) {
         if (
             cellCountX <= 0 || cellCountX % HexMetrics.ChunkSizeX != 0 ||
             cellCountZ <= 0 || cellCountZ % HexMetrics.ChunkSizeZ != 0
         ) {
             GD.PrintErr("Unsupported map size.");
-            return;
+            return false;
         }
 
         if (_chunks != null) {
@@ -82,6 +82,7 @@ public sealed partial class HexGrid : Node3D {
         CreateChunks();
         CreateCells();
         HexMapCamera.ValidatePosition();
+        return true;
     }
 
     public void Save(BinaryWriter writer) {
@@ -98,7 +99,11 @@ public sealed partial class HexGrid : Node3D {
             x = reader.ReadInt32();
             z = reader.ReadInt32();
         }
-        CreateMap(x, z);
+        if (x != CellCountX && z != CellCountZ) { 
+            if (!CreateMap(x, z)) {
+                return;
+            }
+        }
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Load(reader);
         }
