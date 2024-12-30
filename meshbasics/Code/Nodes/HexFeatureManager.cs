@@ -71,18 +71,23 @@ public sealed partial class HexFeatureManager : Node3D {
         bool hasRiver,
         bool hasRoad
     ) {
-        if (nearCell.Walled != farCell.Walled) {
-            AddWallSegment(near.v1, far.v1, near.v2, far.v2);
-            if (hasRiver || hasRoad) {
-                AddWallCap(near.v2, far.v2);
-                AddWallCap(far.v4, near.v4);
-            }
-            else {
-                AddWallSegment(near.v2, far.v2, near.v3, far.v3);
-                AddWallSegment(near.v3, far.v3, near.v4, far.v4);
-            }
-            AddWallSegment(near.v4, far.v4, near.v5, far.v5);
+        if (nearCell.Walled == farCell.Walled
+            || nearCell.IsUnderwater
+            || farCell.IsUnderwater
+            || nearCell.GetEdgeType(farCell) == HexEdgeType.Cliff
+        ) {
+            return;
         }
+        AddWallSegment(near.v1, far.v1, near.v2, far.v2);
+        if (hasRiver || hasRoad) {
+            AddWallCap(near.v2, far.v2);
+            AddWallCap(far.v4, near.v4);
+        }
+        else {
+            AddWallSegment(near.v2, far.v2, near.v3, far.v3);
+            AddWallSegment(near.v3, far.v3, near.v4, far.v4);
+        }
+        AddWallSegment(near.v4, far.v4, near.v5, far.v5);
     }
 
     public void AddWall(
