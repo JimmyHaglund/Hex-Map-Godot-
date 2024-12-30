@@ -26,11 +26,11 @@ public static class HexMetrics {
     public const int HashGridSize = 256;
     public const float HashGridScale = 0.25f;
     public const float WaterFactor = 0.6f;
-
     public const float WallHeight = 4.0f;
     public const float WallYOffset = -1.0f;
     public const float WallThickness = 0.75f;
     public const float WallTowerThreshold = 0.5f;
+    public const float BridgeDesignLength = 7.0f;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
     public const float BlendFactor = 1.0f - SolidFactor;

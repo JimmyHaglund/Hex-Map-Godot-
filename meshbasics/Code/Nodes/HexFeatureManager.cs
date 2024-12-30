@@ -258,5 +258,9 @@ public sealed partial class HexFeatureManager : Node3D {
         var instance = _container.InstantiateChild<Node3D>(Bridge);
         instance.LookAt(instance.Position + (roadCenter2 - roadCenter1));
         instance.Position = (roadCenter1 + roadCenter2) * 0.5f;
+        float length = roadCenter1.DistanceTo(roadCenter2);
+        instance.Scale = new Vector3(
+            1.0f, 1.0f, length * (1.0f / HexMetrics.BridgeDesignLength)
+        );
     }
 }
