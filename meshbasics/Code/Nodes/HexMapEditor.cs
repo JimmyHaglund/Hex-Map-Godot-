@@ -207,6 +207,14 @@ public sealed partial class HexMapEditor : Control {
         _activeSpecialIndex = (int)index;
     }
 
+    public void Save() { 
+        
+    }
+
+    public void Load() { 
+        
+    }
+
     #region Definitions
     private enum OptionalToggle {
         Disable = 0, On = 1, Off = 2
