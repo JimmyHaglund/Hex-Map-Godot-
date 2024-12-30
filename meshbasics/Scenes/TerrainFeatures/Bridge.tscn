@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dj6g4poa7ij1d"]
+
+[ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="1_4dcm8"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cyq54"]
+material = ExtResource("1_4dcm8")
+size = Vector3(3, 1, 7)
+
+[node name="Bridge" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_cyq54")

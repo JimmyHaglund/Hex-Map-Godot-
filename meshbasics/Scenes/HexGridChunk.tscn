@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=39 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
@@ -11,6 +11,7 @@
 [ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="9_c5j6k"]
 [ext_resource type="Script" path="res://Code/Nodes/HexFeatureManager.cs" id="9_wnj8p"]
 [ext_resource type="PackedScene" uid="uid://da1c8mo0xdw41" path="res://Scenes/TerrainFeatures/WallTower.tscn" id="10_4qouq"]
+[ext_resource type="PackedScene" uid="uid://dj6g4poa7ij1d" path="res://Scenes/TerrainFeatures/Bridge.tscn" id="11_dgxli"]
 [ext_resource type="PackedScene" uid="uid://hmcjbr4x4lc3" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh2.tscn" id="12_ef7r1"]
 [ext_resource type="PackedScene" uid="uid://0dmhwjyfsi5x" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh1.tscn" id="12_gtsq6"]
 [ext_resource type="PackedScene" uid="uid://bwph5ffhpx74v" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium1.tscn" id="13_1dvnm"]
@@ -135,6 +136,7 @@ FarmPrefabs = [NodePath("FarmHigh"), NodePath("FarmMedium"), NodePath("FarmLow")
 PlantPrefabs = [NodePath("PlantHigh"), NodePath("PlantMedium"), NodePath("PlantLow")]
 Walls = NodePath("Walls")
 WallTower = ExtResource("10_4qouq")
+Bridge = ExtResource("11_dgxli")
 
 [node name="UrbanHigh" type="Node" parent="Features"]
 script = ExtResource("13_apxms")

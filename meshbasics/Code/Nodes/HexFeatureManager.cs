@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace JHM.MeshBasics;
 
@@ -9,6 +10,7 @@ public sealed partial class HexFeatureManager : Node3D {
     [Export] public PackedSceneContainer[] PlantPrefabs { get; set; }
     [Export] public HexMesh Walls { get; set; }
     [Export] public PackedScene WallTower { get; set; }
+    [Export] public PackedScene Bridge { get; set; }
 
     private Node3D _container;
 
@@ -248,6 +250,14 @@ public sealed partial class HexFeatureManager : Node3D {
         Walls.AddQuadUnperturbed(v1, point, v3, pointTop);
         Walls.AddQuadUnperturbed(point, v2, pointTop, v4);
         Walls.AddTriangleUnperturbed(pointTop, v3, v4);
+    }
+
+    public void AddBridge(Vector3 roadCenter1, Vector3 roadCenter2) {
+        roadCenter1 = HexMetrics.Perturb(roadCenter1);
+        roadCenter2 = HexMetrics.Perturb(roadCenter2);
+        var instance = _container.InstantiateChild<Node3D>(Bridge);
+        instance.LookAt(instance.Position + (roadCenter2 - roadCenter1));
+        instance.Position = (roadCenter1 + roadCenter2) * 0.5f;
     }
 
 }
