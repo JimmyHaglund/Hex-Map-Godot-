@@ -37,13 +37,7 @@ public sealed partial class HexCell : Node3D {
         set {
             if (_elevation == value) return;
             _elevation = value;
-            var newPosition = Position;
-            newPosition.Y = value * HexMetrics.ElevationStep;
-            newPosition.Y +=
-                (HexMetrics.SampleNoise(newPosition).Y * 2f - 1f) *
-                HexMetrics.ElevationPerturbStrength;
-            Position = newPosition;
-            UpdateUiAltitude();
+            RefreshPosition();
             ValidateRivers();
 
             for (int i = 0; i < _roads.Length; i++) {
@@ -335,12 +329,54 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
-    public void Save(BinaryWriter writer) { 
-    
+    public void RefreshPosition() {
+        var newPosition = Position;
+        newPosition.Y = _elevation * HexMetrics.ElevationStep;
+        newPosition.Y +=
+            (HexMetrics.SampleNoise(newPosition).Y * 2f - 1f) *
+            HexMetrics.ElevationPerturbStrength;
+        Position = newPosition;
+        UpdateUiAltitude();
     }
 
-    public void Load(BinaryReader reader) { 
-    
+    public void Save(BinaryWriter writer) {
+        writer.Write((byte)_terrainTypeIndex);
+        writer.Write((byte)_elevation);
+        writer.Write((byte)_waterLevel);
+        writer.Write((byte)_urbanLevel);
+        writer.Write((byte)_farmLevel);
+        writer.Write((byte)_plantLevel);
+        writer.Write((byte)_specialIndex);
+        writer.Write(_walled);
+        writer.Write(_hasIncomingRiver);
+        writer.Write((byte)_incomingRiver);
+        writer.Write(_hasOutgoingRiver);
+        writer.Write((byte)_outgoingRiver);
+
+        for (int i = 0; i < _roads.Length; i++) {
+            writer.Write(_roads[i]);
+        }
+    }
+
+    public void Load(BinaryReader reader) {
+        _terrainTypeIndex = reader.ReadByte();
+        _elevation = reader.ReadByte();
+        _waterLevel = reader.ReadByte();
+        _urbanLevel = reader.ReadByte();
+        _farmLevel = reader.ReadByte();
+        _plantLevel = reader.ReadByte();
+        _specialIndex = reader.ReadByte();
+        _walled = reader.ReadBoolean();
+        _hasIncomingRiver = reader.ReadBoolean();
+        _incomingRiver = (HexDirection)reader.ReadInt32();
+        _hasOutgoingRiver = reader.ReadBoolean();
+        _outgoingRiver = (HexDirection)reader.ReadInt32();
+
+        for (int i = 0; i < _roads.Length; i++) {
+            _roads[i] = reader.ReadBoolean();
+        }
+
+        RefreshPosition();
     }
 
     private void SetRoad(int index, bool state) {
