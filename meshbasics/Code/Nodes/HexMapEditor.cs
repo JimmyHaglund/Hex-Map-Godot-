@@ -1,5 +1,7 @@
 ﻿using Godot;
+using System.Diagnostics;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace JHM.MeshBasics;
 
@@ -209,16 +211,21 @@ public sealed partial class HexMapEditor : Control {
     }
 
     public void Save() {
-        var filePath = Path.Combine(OS.GetUserDataDir(), "test.map");
+        var filePath = GetFilePath("test.map");
         GD.Print(filePath);
-        using var fileStream = File.OpenWrite(filePath);
+        using var fileStream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(fileStream);
         writer.Write(123);
     }
 
-    public void Load() { 
-        
+    public void Load() {
+        var filePath = GetFilePath("test.map");
+        using var fileStream = File.OpenRead(filePath);
+        using var reader = new BinaryReader(fileStream);
+        GD.Print(reader.ReadInt32());
     }
+
+    private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);
 
     #region Definitions
     private enum OptionalToggle {
