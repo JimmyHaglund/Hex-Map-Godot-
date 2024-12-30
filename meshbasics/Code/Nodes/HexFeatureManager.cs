@@ -127,7 +127,8 @@ public sealed partial class HexFeatureManager : Node3D {
         Vector3 nearLeft,
         Vector3 farLeft,
         Vector3 nearRight,
-        Vector3 farRight
+        Vector3 farRight,
+        bool addTower = false
     ) {
         nearLeft = HexMetrics.Perturb(nearLeft);
         farLeft = HexMetrics.Perturb(farLeft);
@@ -162,12 +163,14 @@ public sealed partial class HexFeatureManager : Node3D {
 
         Walls.AddQuadUnperturbed(t1, t2, v3, v4);
 
-        var towerInstance = _container.InstantiateOrphan<Node3D>(WallTower);
-        towerInstance.Position = (left + right) * 0.5f;
-        Vector3 rightDirection = right - left;
-        rightDirection.Y = 0.0f;
-        _container.AddChild(towerInstance);
-        towerInstance.LookAt(towerInstance.GlobalPosition + rightDirection.Rotated(Vector3.Up, Mathf.Pi / 2));
+        if (addTower) {
+            var towerInstance = _container.InstantiateOrphan<Node3D>(WallTower);
+            towerInstance.Position = (left + right) * 0.5f;
+            Vector3 rightDirection = right - left;
+            rightDirection.Y = 0.0f;
+            _container.AddChild(towerInstance);
+            towerInstance.LookAt(towerInstance.GlobalPosition + rightDirection.Rotated(Vector3.Up, Mathf.Pi / 2));
+        }
     }
 
     private void AddWallSegment(
@@ -185,7 +188,11 @@ public sealed partial class HexFeatureManager : Node3D {
 
         if (hasLeftWall) {
             if (hasRighWall) {
-                AddWallSegment(pivot, left, pivot, right);
+                HexHash hash = HexMetrics.SampleHashGrid(
+                    (pivot + left + right) * (1f / 3f)
+                );
+                bool hasTower = hash.E < HexMetrics.WallTowerThreshold;
+                AddWallSegment(pivot, left, pivot, right, hasTower);
             } else if (leftCell.Elevation < rightCell.Elevation) {
                 AddWallWedge(pivot, left, right);
             }

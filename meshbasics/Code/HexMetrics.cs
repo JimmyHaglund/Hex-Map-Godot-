@@ -29,6 +29,7 @@ public static class HexMetrics {
 
     public const float WallHeight = 3.0f;
     public const float WallThickness = 0.75f;
+    public const float WallTowerThreshold = 0.5f;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
     public const float BlendFactor = 1.0f - SolidFactor;
