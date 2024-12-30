@@ -43,6 +43,9 @@ public sealed partial class HexFeatureManager : Node3D {
     }
 
     public void AddFeature(HexCell cell, Vector3 position) {
+        if (cell.IsSpecial) {
+            return;
+        }
         HexHash hash = HexMetrics.SampleHashGrid(position);
         var prefab = PickPrefab(UrbanPrefabs, cell.UrbanLevel, hash.A, hash.D);
         var otherPrefab = PickPrefab(FarmPrefabs, cell.FarmLevel, hash.B, hash.D);

@@ -217,6 +217,7 @@ public sealed partial class HexCell : Node3D {
         set {
             if (_specialIndex != value && !HasRiver) {
                 _specialIndex = value;
+                RemoveRoads();
                 RefreshSelfOnly();
             }
         }
@@ -355,7 +356,9 @@ public sealed partial class HexCell : Node3D {
 
     public void AddRoad(HexDirection direction) {
         if (!_roads[(int)direction] 
-            && !HasRiverThroughEdge(direction) 
+            && !HasRiverThroughEdge(direction)
+            && !IsSpecial 
+            && !GetNeighbor(direction).IsSpecial
             && GetElevationDifference(direction) <= 1
         ) {
             SetRoad((int)direction, true);
