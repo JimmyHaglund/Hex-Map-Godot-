@@ -168,6 +168,8 @@ public sealed partial class HexGridChunk : Node3D {
             TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color, cell.HasRoadThroughEdge(direction));
         }
 
+        Features.AddWall(e1, cell, e2, neighbor);
+
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (direction <= HexDirection.E && nextNeighbor is not null) {
             Vector3 v5 = e1.v5 + HexMetrics.GetBridge(direction.Next());

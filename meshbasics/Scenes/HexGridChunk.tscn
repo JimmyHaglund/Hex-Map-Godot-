@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=37 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
@@ -8,6 +8,7 @@
 [ext_resource type="Material" uid="uid://deb1ldds6tidn" path="res://Materials/RoadMaterial.tres" id="6_n8kls"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMesh.cs" id="6_nfodi"]
 [ext_resource type="Material" uid="uid://c506dce10lnjn" path="res://Materials/EstuaryMaterial.tres" id="7_000k3"]
+[ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="9_c5j6k"]
 [ext_resource type="Script" path="res://Code/Nodes/HexFeatureManager.cs" id="9_wnj8p"]
 [ext_resource type="PackedScene" uid="uid://hmcjbr4x4lc3" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh2.tscn" id="12_ef7r1"]
 [ext_resource type="PackedScene" uid="uid://0dmhwjyfsi5x" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh1.tscn" id="12_gtsq6"]
@@ -45,6 +46,9 @@ resource_local_to_scene = true
 resource_local_to_scene = true
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_kd5wo"]
+resource_local_to_scene = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wltgt"]
 resource_local_to_scene = true
 
 [node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers", "Roads", "Water", "WaterShore", "Estuaries", "Features")]
@@ -123,11 +127,12 @@ UseCollider = false
 UseColors = false
 UseUVCoordinates = true
 
-[node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs")]
+[node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs", "Walls")]
 script = ExtResource("9_wnj8p")
 UrbanPrefabs = [NodePath("UrbanHigh"), NodePath("UrbanMedium"), NodePath("UrbanLow")]
 FarmPrefabs = [NodePath("FarmHigh"), NodePath("FarmMedium"), NodePath("FarmLow")]
 PlantPrefabs = [NodePath("PlantHigh"), NodePath("PlantMedium"), NodePath("PlantLow")]
+Walls = NodePath("Walls")
 
 [node name="UrbanHigh" type="Node" parent="Features"]
 script = ExtResource("13_apxms")
@@ -164,3 +169,14 @@ Scenes = Array[PackedScene]([ExtResource("25_ret5k"), ExtResource("26_tu2f6")])
 [node name="PlantLow" type="Node" parent="Features"]
 script = ExtResource("13_apxms")
 Scenes = Array[PackedScene]([ExtResource("27_4puub"), ExtResource("28_wumkn")])
+
+[node name="Walls" type="MeshInstance3D" parent="Features"]
+material_override = ExtResource("9_c5j6k")
+cast_shadow = 0
+gi_mode = 2
+mesh = SubResource("ArrayMesh_wltgt")
+skeleton = NodePath("../..")
+script = ExtResource("6_nfodi")
+UseCollider = false
+UseColors = false
+UseUVCoordinates = true

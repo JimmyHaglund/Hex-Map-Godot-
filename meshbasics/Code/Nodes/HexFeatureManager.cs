@@ -6,6 +6,7 @@ public sealed partial class HexFeatureManager : Node3D {
     [Export] public PackedSceneContainer[] UrbanPrefabs { get; set; }
     [Export] public PackedSceneContainer[] FarmPrefabs { get; set; }
     [Export] public PackedSceneContainer[] PlantPrefabs { get; set; }
+    [Export] public HexMesh Walls { get; set; }
 
     private Node3D _container;
 
@@ -29,9 +30,12 @@ public sealed partial class HexFeatureManager : Node3D {
         this.AddChild(_container);
         _container.Position = Position;
         _container.Name = "FeatureContainer";
+        Walls.Clear();
     }
 
-    public void Apply() { }
+    public void Apply() {
+        Walls.Apply();
+    }
 
     public void AddFeature(HexCell cell, Vector3 position) {
         HexHash hash = HexMetrics.SampleHashGrid(position);
@@ -59,4 +63,10 @@ public sealed partial class HexFeatureManager : Node3D {
         instance.Position = HexMetrics.Perturb(position);
         instance.Rotation = new(0.0f, 2 * Mathf.Pi * hash.E, 0.0f);
     }
+    public void AddWall(
+        EdgeVertices near, HexCell nearCell,
+        EdgeVertices far, HexCell farCell
+    ) {
+    }
+
 }
