@@ -18,6 +18,7 @@ public sealed partial class HexMapEditor : Control {
     private int _brushSize;
     private OptionalToggle _riverMode;
     private OptionalToggle _roadMode;
+    private OptionalToggle _wallMode;
     private bool _isDrag;
     private HexDirection _dragDirection;
     private HexCell _previousCell;
@@ -103,6 +104,10 @@ public sealed partial class HexMapEditor : Control {
         if (_roadMode == OptionalToggle.Off) {
             cell.RemoveRoads();
         }
+        if (_wallMode != OptionalToggle.Disable) {
+            cell.Walled = _wallMode == OptionalToggle.On;
+        }
+
         if (_isDrag) {
             HexCell otherCell = cell.GetNeighbor(_dragDirection.Opposite());
             if (otherCell is not null) { 
@@ -159,6 +164,10 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetRoadMode(int mode) {
         _roadMode = (OptionalToggle)mode;
+    }
+
+    public void SetWalledMode(int mode) {
+        _wallMode = (OptionalToggle)mode;
     }
 
     public void SetApplyWaterLevel(bool toggle) {
