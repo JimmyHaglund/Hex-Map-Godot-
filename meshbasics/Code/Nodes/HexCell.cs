@@ -348,14 +348,14 @@ public sealed partial class HexCell : Node3D {
         writer.Write((byte)_plantLevel);
         writer.Write((byte)_specialIndex);
         writer.Write(_walled);
+
+        // Use the eight bit to store the bool _hasIncomingRiver. The 8th bit corresponds to 128.
         if (_hasIncomingRiver) {
-            // Use the eight bit to store the bool _hasIncomingRiver. The 8th bit corresponds to 128.
             writer.Write((byte)(_incomingRiver + 128));
         }
         else {
             writer.Write((byte)0);
         }
-
         if (_hasOutgoingRiver) {
             writer.Write((byte)(_outgoingRiver + 128));
         }
@@ -363,9 +363,13 @@ public sealed partial class HexCell : Node3D {
             writer.Write((byte)0);
         }
 
+        int roadFlags = 0;
         for (int i = 0; i < _roads.Length; i++) {
-            writer.Write(_roads[i]);
+            if (_roads[i]) {
+                roadFlags |= 1 << i;
+            }
         }
+        writer.Write((byte)roadFlags);
     }
 
     public void Load(BinaryReader reader) {
@@ -394,9 +398,10 @@ public sealed partial class HexCell : Node3D {
         else {
             _hasOutgoingRiver = false;
         }
-        
+
+        int roadFlags = reader.ReadByte();
         for (int i = 0; i < _roads.Length; i++) {
-            _roads[i] = reader.ReadBoolean();
+            _roads[i] = (roadFlags & (1 << i)) != 0;
         }
 
         RefreshPosition();
