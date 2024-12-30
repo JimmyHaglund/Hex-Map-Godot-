@@ -174,8 +174,16 @@ public sealed partial class HexFeatureManager : Node3D {
         bool hasRighWall = !rightCell.IsUnderwater &&
             pivotCell.GetEdgeType(rightCell) != HexEdgeType.Cliff;
 
-        if (hasLeftWall && hasRighWall) {
-            AddWallSegment(pivot, left, pivot, right);
+        if (hasLeftWall) {
+            if (hasRighWall) {
+                AddWallSegment(pivot, left, pivot, right);
+            }
+            else {
+                AddWallCap(pivot, left);
+            }
+        }
+        else if (hasRighWall) {
+            AddWallCap(right, pivot);
         }
     }
 
