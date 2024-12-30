@@ -733,7 +733,16 @@ public sealed partial class HexGridChunk : Node3D {
             ) {
                 return;
             }
-            roadCenter += HexMetrics.GetSolidEdgeMiddle(middle) * 0.25f;
+            Vector3 offset = HexMetrics.GetSolidEdgeMiddle(middle);
+            roadCenter += offset * 0.25f;
+            if (direction == middle &&
+                cell.HasRoadThroughEdge(direction.Opposite())
+            ) {
+                    Features.AddBridge(
+                    roadCenter,
+                    center - offset * (HexMetrics.InnerToOuter * 0.7f)
+                );
+            }
         }
 
         Vector3 mL = roadCenter.Lerp(e.v1, interpolators.X);

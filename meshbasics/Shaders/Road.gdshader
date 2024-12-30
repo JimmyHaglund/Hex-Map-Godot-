@@ -21,5 +21,4 @@ void fragment() {
     METALLIC = _Metallic;
     ROUGHNESS = 1.0 - _Glossiness;
     ALPHA = blend;
-	DEPTH = 1.0;
 }

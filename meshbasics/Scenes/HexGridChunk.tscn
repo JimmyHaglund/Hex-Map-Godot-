@@ -120,6 +120,7 @@ UseUVCoordinates = true
 UseUV2Coordinates = true
 
 [node name="Roads" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001, 0)
 material_override = ExtResource("6_n8kls")
 cast_shadow = 0
 gi_mode = 2
