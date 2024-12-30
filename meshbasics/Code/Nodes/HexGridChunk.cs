@@ -15,6 +15,7 @@ public sealed partial class HexGridChunk : Node3D {
     [Export] public HexMesh Water { get; set; }
     [Export] public HexMesh WaterShore { get; set; }
     [Export] public HexMesh Estuaries { get; set; }
+    [Export] public HexFeatureManager Features { get; set; }
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
@@ -63,6 +64,7 @@ public sealed partial class HexGridChunk : Node3D {
         Water.Clear();
         WaterShore.Clear();
         Estuaries.Clear();
+        Features.Clear();
         for (int i = 0; i < _cells.Length; i++) {
             Triangulate(_cells[i]);
         }
@@ -72,12 +74,14 @@ public sealed partial class HexGridChunk : Node3D {
         Water.Apply();
         WaterShore.Apply();
         Estuaries.Apply();
+        Features.Apply();
     }
 
     private void Triangulate(HexCell cell) {
         for (HexDirection direction = HexDirection.NE; direction <= HexDirection.NW; direction++) {
             Triangulate(direction, cell);
         }
+        Features.AddFeature(cell.Position);
     }
 
     private void Triangulate(HexDirection direction, HexCell cell) {
