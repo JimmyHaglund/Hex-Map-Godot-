@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=42 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
@@ -14,9 +14,12 @@
 [ext_resource type="PackedScene" uid="uid://dj6g4poa7ij1d" path="res://Scenes/TerrainFeatures/Bridge.tscn" id="11_dgxli"]
 [ext_resource type="PackedScene" uid="uid://hmcjbr4x4lc3" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh2.tscn" id="12_ef7r1"]
 [ext_resource type="PackedScene" uid="uid://0dmhwjyfsi5x" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh1.tscn" id="12_gtsq6"]
+[ext_resource type="PackedScene" uid="uid://bmq2iyxklminq" path="res://Scenes/TerrainFeatures/Castle.tscn" id="12_qmqmb"]
 [ext_resource type="PackedScene" uid="uid://bwph5ffhpx74v" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium1.tscn" id="13_1dvnm"]
+[ext_resource type="PackedScene" uid="uid://b0vwtb8twgfrx" path="res://Scenes/TerrainFeatures/Ziggurat.tscn" id="13_18gre"]
 [ext_resource type="Script" path="res://Code/Nodes/PackedSceneContainer.cs" id="13_apxms"]
 [ext_resource type="PackedScene" uid="uid://bjy5eh7sxerhe" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium2.tscn" id="14_ceung"]
+[ext_resource type="PackedScene" uid="uid://6a6amfhtgleh" path="res://Scenes/TerrainFeatures/MegaFlora.tscn" id="14_tencd"]
 [ext_resource type="PackedScene" uid="uid://cv765j8v1gixn" path="res://Scenes/TerrainFeatures/Urban/UrbanLow1.tscn" id="15_q64pu"]
 [ext_resource type="PackedScene" uid="uid://tkltneqplada" path="res://Scenes/TerrainFeatures/Urban/UrbanLow2.tscn" id="16_wxuhe"]
 [ext_resource type="PackedScene" uid="uid://cgu77gaaa30f5" path="res://Scenes/TerrainFeatures/Farm/FarmHigh1.tscn" id="17_nchub"]
@@ -138,6 +141,7 @@ PlantPrefabs = [NodePath("PlantHigh"), NodePath("PlantMedium"), NodePath("PlantL
 Walls = NodePath("Walls")
 WallTower = ExtResource("10_4qouq")
 Bridge = ExtResource("11_dgxli")
+SpecialFeatures = Array[PackedScene]([ExtResource("12_qmqmb"), ExtResource("13_18gre"), ExtResource("14_tencd")])
 
 [node name="UrbanHigh" type="Node" parent="Features"]
 script = ExtResource("13_apxms")

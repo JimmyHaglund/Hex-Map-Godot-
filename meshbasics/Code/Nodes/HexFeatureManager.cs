@@ -11,6 +11,7 @@ public sealed partial class HexFeatureManager : Node3D {
     [Export] public HexMesh Walls { get; set; }
     [Export] public PackedScene WallTower { get; set; }
     [Export] public PackedScene Bridge { get; set; }
+    [Export] public PackedScene[] SpecialFeatures { get; set; }
 
     private Node3D _container;
 

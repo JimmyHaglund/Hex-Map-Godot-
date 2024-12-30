@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0vwtb8twgfrx"]
+
+[ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="1_881ot"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2rs8n"]
+material = ExtResource("1_881ot")
+size = Vector3(8, 2.5, 8)
+
+[node name="Zuggurat" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21269, 0)
+mesh = SubResource("BoxMesh_2rs8n")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.725756, 0, 0, 0, 0.725756, 0, 0, 0, 0.725756, 0, 3.21431, 0)
+mesh = SubResource("BoxMesh_2rs8n")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.280923, 0, 0, 0, 0.423692, 0, 0, 0, 0.280923, 0, 4.52227, 0)
+mesh = SubResource("BoxMesh_2rs8n")
