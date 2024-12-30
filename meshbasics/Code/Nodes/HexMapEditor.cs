@@ -215,6 +215,7 @@ public sealed partial class HexMapEditor : Control {
         GD.Print(filePath);
         using var fileStream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(fileStream);
+        writer.Write(0);
         HexGrid.Save(writer);
     }
 
@@ -222,7 +223,13 @@ public sealed partial class HexMapEditor : Control {
         var filePath = GetFilePath("test.map");
         using var fileStream = File.OpenRead(filePath);
         using var reader = new BinaryReader(fileStream);
-        HexGrid.Load(reader);
+        int header = reader.ReadInt32();
+        if (header == 0) {
+            HexGrid.Load(reader);
+        }
+        else {
+            GD.PrintErr($"Unknown map format {header}");
+        }
     }
 
     private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);
