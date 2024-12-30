@@ -94,11 +94,15 @@ public sealed partial class HexFeatureManager : Node3D {
         v3.Y = v4.Y = left.Y + HexMetrics.WallHeight;
         Walls.AddQuad(v1, v2, v3, v4);
 
+        Vector3 t1 = v3, t2 = v4;
+
         v1 = v3 = left + leftThicknessOffset;
         v2 = v4 = right + rightThicknessOffset;
 
         v3.Y = v4.Y = left.Y + HexMetrics.WallHeight;
         Walls.AddQuad(v2, v1, v4, v3);
+
+        Walls.AddQuad(t1, t2, v3, v4);
     }
 
 }
