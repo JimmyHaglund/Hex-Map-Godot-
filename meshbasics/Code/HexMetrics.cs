@@ -1,8 +1,11 @@
 using Godot;
+using System;
 
 namespace JHM.MeshBasics;
 
 public static class HexMetrics {
+    private static float[] _hashGrid;
+
     public const float OuterRadius = 10.0f;
     public const float SolidFactor = 0.80f;
     public const float ElevationStep = 3.0f;
@@ -15,10 +18,8 @@ public static class HexMetrics {
     public const int ChunkSizeZ = 5;
     public const float StreamBedElevationOffset = -1.75f;
     public const float WaterElevationOffset = -0.5f;
-
+    public const int HashGridSize = 256;
     public const float WaterFactor = 0.6f;
-
-    
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
     public const float BlendFactor = 1.0f - SolidFactor;
@@ -129,5 +130,13 @@ public static class HexMetrics {
 
     public static Vector3 GetSecondWaterCorner(HexDirection direction) {
         return Corners[(int)direction + 1] * WaterFactor;
+    }
+
+    public static void InitializeHashGrid(int seed) {
+        var rng = new Random(seed);
+        _hashGrid = new float[HashGridSize * HashGridSize];
+        for (int i = 0; i < _hashGrid.Length; i++) {
+            _hashGrid[i] = (float)rng.NextDouble();
+        }
     }
 }

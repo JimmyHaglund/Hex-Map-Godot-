@@ -19,7 +19,7 @@ public sealed partial class HexGrid : Node3D {
     [Export] public int ChunkCountX { get; set; } = 6;
     [Export] public int ChunkCountZ { get; set; } = 6;
     [Export] public Color DefaultColor { get; set; } = new(1, 1, 1);
-
+    [Export] public int Seed { get; set; } = 1234;
 
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
@@ -27,6 +27,7 @@ public sealed partial class HexGrid : Node3D {
 
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
+        HexMetrics.InitializeHashGrid(Seed);
 
         _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
         _cellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
@@ -110,7 +111,6 @@ public sealed partial class HexGrid : Node3D {
                 }
             }
         }
-
 
         Label3D label = this.InstantiateOrphan<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
