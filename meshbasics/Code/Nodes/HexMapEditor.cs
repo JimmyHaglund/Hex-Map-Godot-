@@ -91,7 +91,7 @@ public sealed partial class HexMapEditor : Control {
     private void EditCell(HexCell cell) {
         if (cell is null) return;
         if (_applyColor) {
-            cell.Color = _activeColor;
+            // cell.Color = _activeColor;
         }
         if (_applyElevation) {
             cell.Elevation = _activeElevation;

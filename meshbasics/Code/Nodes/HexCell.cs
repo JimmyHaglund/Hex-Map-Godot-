@@ -19,20 +19,10 @@ public sealed partial class HexCell : Node3D {
     private int _farmLevel;
     private int _plantLevel;
     private int _specialIndex;
+    private int _terrainTypeIndex;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
-
-    public Color Color {
-        get {
-            return _color;
-        }
-        set {
-            if (_color == value) return;
-            _color = value;
-            Refresh();
-        }
-    }
 
     public Node3D UiRect {
         get => _uiRect;
@@ -65,6 +55,20 @@ public sealed partial class HexCell : Node3D {
             Refresh();
         }
     }
+
+    public int TerrainTypeIndex {
+        get {
+            return _terrainTypeIndex;
+        }
+        set {
+            if (_terrainTypeIndex != value) {
+                _terrainTypeIndex = value;
+                Refresh();
+            }
+        }
+    }
+
+    public Color Color => HexMetrics.Colors[_terrainTypeIndex];
 
     public bool HasIncomingRiver {
         get {
