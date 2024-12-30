@@ -114,6 +114,11 @@ public sealed partial class HexFeatureManager : Node3D {
         Vector3 nearRight,
         Vector3 farRight
     ) {
+        nearLeft = HexMetrics.Perturb(nearLeft);
+        farLeft = HexMetrics.Perturb(farLeft);
+        nearRight = HexMetrics.Perturb(nearRight);
+        farRight = HexMetrics.Perturb(farRight);
+
         Vector3 left = HexMetrics.WallLerp(nearLeft, farLeft);
         Vector3 right = HexMetrics.WallLerp(nearRight, farRight);
 
@@ -130,7 +135,7 @@ public sealed partial class HexFeatureManager : Node3D {
         v2 = v4 = right - rightThicknessOffset;
         v3.Y = leftTop;
         v4.Y = rightTop; 
-        Walls.AddQuad(v1, v2, v3, v4);
+        Walls.AddQuadUnperturbed(v1, v2, v3, v4);
 
         Vector3 t1 = v3, t2 = v4;
 
@@ -138,9 +143,9 @@ public sealed partial class HexFeatureManager : Node3D {
         v2 = v4 = right + rightThicknessOffset;
         v3.Y = leftTop;
         v4.Y = rightTop;
-        Walls.AddQuad(v2, v1, v4, v3);
+        Walls.AddQuadUnperturbed(v2, v1, v4, v3);
 
-        Walls.AddQuad(t1, t2, v3, v4);
+        Walls.AddQuadUnperturbed(t1, t2, v3, v4);
     }
 
     private void AddWallSegment(
