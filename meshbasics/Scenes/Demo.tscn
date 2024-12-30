@@ -152,9 +152,9 @@ alignment = 2
 
 [node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls"]
 layout_mode = 2
-max_value = 4.0
+max_value = 3.0
 value = 1.0
-tick_count = 5
+tick_count = 4
 
 [node name="BrushSizeControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
 layout_mode = 2

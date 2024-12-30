@@ -5,7 +5,7 @@ using static Godot.HttpRequest;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexFeatureManager : Node3D {
-    [Export] public PackedScene FeaturePrefab { get; set; }
+    [Export] public PackedScene[] UrbanPrefabs { get; set; }
     private Node3D _container;
 
     public void Clear() {
@@ -24,7 +24,7 @@ public sealed partial class HexFeatureManager : Node3D {
         HexHash hash = HexMetrics.SampleHashGrid(position);
         if (hash.A >= cell.UrbanLevel * 0.25f) return;
 
-        var instance = _container.InstantiateChild<Node3D>(FeaturePrefab);
+        var instance = _container.InstantiateChild<Node3D>(UrbanPrefabs[cell.UrbanLevel - 1]);
         instance.Position = HexMetrics.Perturb(position);
         instance.Rotation = new(0.0f, 2 * Mathf.Pi * hash.B, 0.0f);
     }
