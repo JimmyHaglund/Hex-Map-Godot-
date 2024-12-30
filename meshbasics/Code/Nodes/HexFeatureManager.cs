@@ -67,12 +67,19 @@ public sealed partial class HexFeatureManager : Node3D {
         EdgeVertices near,
         HexCell nearCell,
         EdgeVertices far,
-        HexCell farCell
+        HexCell farCell,
+        bool hasRiver,
+        bool hasRoad
     ) {
         if (nearCell.Walled != farCell.Walled) {
             AddWallSegment(near.v1, far.v1, near.v2, far.v2);
-            AddWallSegment(near.v2, far.v2, near.v3, far.v3);
-            AddWallSegment(near.v3, far.v3, near.v4, far.v4);
+            if (hasRiver || hasRoad) {
+                // Leave a gap.
+            }
+            else {
+                AddWallSegment(near.v2, far.v2, near.v3, far.v3);
+                AddWallSegment(near.v3, far.v3, near.v4, far.v4);
+            }
             AddWallSegment(near.v4, far.v4, near.v5, far.v5);
         }
     }
