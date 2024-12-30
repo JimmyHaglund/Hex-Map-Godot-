@@ -79,6 +79,7 @@ public sealed partial class HexGridChunk : Node3D {
     }
 
     private void Triangulate(HexCell cell) {
+        if (cell is null || cell.IsQueuedForDeletion()) return;
         for (HexDirection direction = HexDirection.NE; direction <= HexDirection.NW; direction++) {
             Triangulate(direction, cell);
         }

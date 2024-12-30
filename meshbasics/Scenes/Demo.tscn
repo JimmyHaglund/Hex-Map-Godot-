@@ -24,6 +24,26 @@ albedo_color = Color(0.321569, 1, 0.686275, 1)
 [node name="Demo" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
 
+[node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
+script = ExtResource("5_mpgou")
+Grid = NodePath("../HexGrid")
+ZoomedInMovementSpeed = 150.0
+ZoomedOutMovementSpeed = 600.0
+
+[node name="CameraSwivel" type="Node3D" parent="HexMapCamera"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
+
+[node name="CameraStick" type="Node3D" parent="HexMapCamera/CameraSwivel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -45)
+
+[node name="Camera3D" type="Camera3D" parent="HexMapCamera/CameraSwivel/CameraStick"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0318947, -0.00157738, -0.00157928)
+
+[node name="Node3D" type="Node3D" parent="HexMapCamera" node_paths=PackedStringArray("Camera")]
+transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.5)
+script = ExtResource("1_qmp3k")
+Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, 0, 0)
 visible = false
@@ -47,8 +67,6 @@ shadow_opacity = 0.0
 shadow_blur = 0.0
 
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
-ChunkCountX = 4
-ChunkCountZ = 3
 Colors = PackedColorArray(0.741531, 0.696732, 0.348844, 1, 0.294634, 0.540796, 0.262349, 1, 0.227451, 0.294118, 0.894118, 1, 0.835294, 0.337255, 0.27451, 1, 0.837469, 0.837469, 0.837469, 1)
 
 [node name="MousePointer" type="Node3D" parent="."]
@@ -378,29 +396,52 @@ text = "Save"
 layout_mode = 2
 text = "Load"
 
-[node name="Button" type="Button" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="NewMapButton" type="Button" parent="HexMapEditor/Background2/VBoxContainer"]
 layout_mode = 2
 text = "New Map"
 
-[node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
-script = ExtResource("5_mpgou")
-Grid = NodePath("../HexGrid")
-ZoomedInMovementSpeed = 150.0
-ZoomedOutMovementSpeed = 600.0
+[node name="NewMapMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="CameraSwivel" type="Node3D" parent="HexMapCamera"]
-transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
+[node name="ColorRect" type="ColorRect" parent="NewMapMenu"]
+layout_mode = 0
+offset_right = 1164.0
+offset_bottom = 649.0
+color = Color(0.211765, 0.211765, 0.211765, 0.8)
 
-[node name="CameraStick" type="Node3D" parent="HexMapCamera/CameraSwivel"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -45)
+[node name="BoxContainer" type="BoxContainer" parent="NewMapMenu"]
+layout_mode = 0
+offset_left = 422.0
+offset_top = 156.0
+offset_right = 462.0
+offset_bottom = 196.0
+vertical = true
 
-[node name="Camera3D" type="Camera3D" parent="HexMapCamera/CameraSwivel/CameraStick"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0318947, -0.00157738, -0.00157928)
+[node name="Label" type="Label" parent="NewMapMenu/BoxContainer"]
+layout_mode = 2
+text = "Create New Map"
 
-[node name="Node3D" type="Node3D" parent="HexMapCamera" node_paths=PackedStringArray("Camera")]
-transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.5)
-script = ExtResource("1_qmp3k")
-Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
+[node name="CreateSmallMapButton" type="Button" parent="NewMapMenu/BoxContainer"]
+layout_mode = 2
+text = "Small"
+
+[node name="CreateMediumMapButton" type="Button" parent="NewMapMenu/BoxContainer"]
+layout_mode = 2
+text = "Medium"
+
+[node name="CreateLargeMapButton" type="Button" parent="NewMapMenu/BoxContainer"]
+layout_mode = 2
+text = "Large"
+
+[node name="Cancel" type="Button" parent="NewMapMenu/BoxContainer"]
+layout_mode = 2
+text = "Cancel"
 
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
@@ -430,4 +471,16 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [2]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/SaveButton" to="HexMapEditor" method="Save"]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/LoadButton" to="HexMapEditor" method="Load"]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/Button" to="HexGrid" method="CreateMap"]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="NewMapMenu" method="set_visible" binds= [true]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexGrid" method="CreateMap" binds= [40, 30]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexGrid" method="CreateMap" binds= [80, 60]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="NewMapMenu" method="set_visible" binds= [false]]

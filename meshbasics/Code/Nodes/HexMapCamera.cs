@@ -25,12 +25,18 @@ public sealed partial class HexMapCamera : Node3D {
     [ExportCategory("Rotation Settings")]
     [Export] public float RotationSpeed { get; set; } = 5.0f;
 
+    public bool Locked { get; set; } = false;
+
     public override void _EnterTree() {
         _swivel = GetChild<Node3D>(0);
         _stick = _swivel.GetChild<Node3D>(0);
     }
 
+    public void SetLocked(bool value) => Locked = value;
+
     public override void _Process(double delta) {
+        if (Locked) return;
+
         var fDeltaTime = (float)delta;
         float zoomDelta = fDeltaTime * ZoomFactor * (
             Input.IsActionJustPressed("ZoomIn") ? 1.0f 
