@@ -27,7 +27,8 @@ public static class HexMetrics {
     public const float HashGridScale = 0.25f;
     public const float WaterFactor = 0.6f;
 
-    public const float WallHeight = 3.0f;
+    public const float WallHeight = 4.0f;
+    public const float WallYOffset = -1.0f;
     public const float WallThickness = 0.75f;
     public const float WallTowerThreshold = 0.5f;
 
@@ -91,7 +92,7 @@ public static class HexMetrics {
         near.Z += (far.Z - near.Z) * 0.5f;
         float v =
             near.Y < far.Y ? WallElevationOffset : (1.0f - WallElevationOffset);
-        near.Y += (far.Y - near.Y) * v;
+        near.Y += (far.Y - near.Y) * v + WallYOffset;
         return near;
     }
 
