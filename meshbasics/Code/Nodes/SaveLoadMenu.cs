@@ -61,7 +61,7 @@ public sealed partial class SaveLoadMenu : Control {
         return Path.Combine(GetFilePath(mapName + ".map"));
     }
 
-    private void Save(string filePath) {
+    public void Save(string filePath) {
         GD.Print(filePath);
         using var fileStream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(fileStream);
@@ -69,7 +69,7 @@ public sealed partial class SaveLoadMenu : Control {
         HexGrid.Save(writer);
     }
 
-    private void Load(string filePath) {
+    public void Load(string filePath) {
         if (!File.Exists(filePath)) {
             GD.PrintErr($"File does not exist at path: {filePath}");
             return;
@@ -82,6 +82,17 @@ public sealed partial class SaveLoadMenu : Control {
             return;
         }
         HexGrid.Load(reader, header);
+    }
+
+    public void Delete() {
+        string path = GetSelectedPath();
+        if (path == null) {
+            return;
+        }
+        if (File.Exists(path)) return;
+        File.Delete(path);
+        NameInput.Text = "";
+        FillFileList();
     }
 
     private void FillFileList() {
