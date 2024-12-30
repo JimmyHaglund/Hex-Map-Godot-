@@ -9,5 +9,13 @@ size = Vector3(3, 1, 7)
 [node name="Bridge" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 0.590913, 0, 0, 0, 0.412357, 0.00143957, 0.754036, -6.24657e-05)
+mesh = SubResource("BoxMesh_cyq54")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.61337, 0.150059, 0, -0.164352, 0.560027, 0, 0.24131, -3.31323)
+mesh = SubResource("BoxMesh_cyq54")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.606986, -0.150059, 0, 0.162641, 0.560027, 0, 0.241839, 3.25436)
 mesh = SubResource("BoxMesh_cyq54")
