@@ -4,7 +4,7 @@ using System;
 namespace JHM.MeshBasics;
 
 public static class HexMetrics {
-    private static float[] _hashGrid;
+    private static HexHash[] _hashGrid;
 
     public const float OuterRadius = 10.0f;
     public const float SolidFactor = 0.80f;
@@ -112,12 +112,12 @@ public static class HexMetrics {
         return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
     }
 
-    public static float SampleHashGrid(Vector3 position) {
+    public static HexHash SampleHashGrid(Vector3 position) {
         int x = (int)(position.X * HashGridScale) % HashGridSize;
         if (x < 0) {
             x += HashGridSize;
         }
-        int z = (int)(position.X * HashGridScale) % HashGridSize;
+        int z = (int)(position.Z * HashGridScale) % HashGridSize;
         if (z < 0) {
             z += HashGridSize;
         }
@@ -146,10 +146,10 @@ public static class HexMetrics {
     }
 
     public static void InitializeHashGrid(int seed) {
-        var rng = new Random(seed);
-        _hashGrid = new float[HashGridSize * HashGridSize];
+        Random rng = new(seed);
+        _hashGrid = new HexHash[HashGridSize * HashGridSize];
         for (int i = 0; i < _hashGrid.Length; i++) {
-            _hashGrid[i] = (float)rng.NextDouble();
+            _hashGrid[i] = HexHash.Create(rng);
         }
     }
 }
