@@ -210,31 +210,6 @@ public sealed partial class HexMapEditor : Control {
         _activeSpecialIndex = (int)index;
     }
 
-    private const int MapVersion = 1;
-
-    public void Save() {
-        var filePath = GetFilePath("test.map");
-        GD.Print(filePath);
-        using var fileStream = File.Open(filePath, FileMode.Create);
-        using var writer = new BinaryWriter(fileStream);
-        writer.Write(MapVersion);
-        HexGrid.Save(writer);
-    }
-
-    public void Load() {
-        var filePath = GetFilePath("test.map");
-        using var fileStream = File.OpenRead(filePath);
-        using var reader = new BinaryReader(fileStream);
-        int header = reader.ReadInt32();
-        if (header > MapVersion || header < 0) {
-            GD.PrintErr($"Unknown map format {header}");
-            return;
-        }
-        HexGrid.Load(reader, header);
-    }
-
-    private string GetFilePath(string fileName) => Path.Combine(OS.GetUserDataDir(), fileName);
-
     #region Definitions
     private enum OptionalToggle {
         Disable = 0, On = 1, Off = 2

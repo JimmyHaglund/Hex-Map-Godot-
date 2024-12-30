@@ -446,6 +446,7 @@ layout_mode = 2
 text = "Cancel"
 
 [node name="SaveLoadMenu" type="Control" parent="." node_paths=PackedStringArray("HexGrid", "Title", "ActionButton", "NameInput")]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -550,9 +551,7 @@ text = "Cancel"
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="SaveLoadMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="SaveLoadMenu" method="PerformAction"]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="SaveLoadMenu" method="set_visible" binds= [false]]
