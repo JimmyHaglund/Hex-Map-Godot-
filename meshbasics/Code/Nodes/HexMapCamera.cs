@@ -32,6 +32,7 @@ public sealed partial class HexMapCamera : Node3D {
 
     public bool Locked { get; set; } = false;
 
+
     public override void _EnterTree() {
         _swivel = GetChild<Node3D>(0);
         _stick = _swivel.GetChild<Node3D>(0);
@@ -43,6 +44,8 @@ public sealed partial class HexMapCamera : Node3D {
     }
 
     public void SetLocked(bool value) => Locked = value;
+
+    public static void SetInstanceLocked(bool value) => _instance?.SetLocked(value);
 
     public override void _Process(double delta) {
         if (Locked) return;

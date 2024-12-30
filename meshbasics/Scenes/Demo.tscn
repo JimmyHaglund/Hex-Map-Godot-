@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=14 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -8,6 +8,7 @@
 [ext_resource type="ButtonGroup" uid="uid://13l07g23mpmk" path="res://Misc/RoadControlButtonGroup.tres" id="5_0l2ld"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 [ext_resource type="ButtonGroup" uid="uid://dpb8786r04y0a" path="res://Misc/WallControlButtonGroup.tres" id="6_26ap1"]
+[ext_resource type="Script" path="res://Code/Nodes/SaveLoadMenu.cs" id="9_dqswk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
 albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
@@ -443,6 +444,63 @@ text = "Large"
 layout_mode = 2
 text = "Cancel"
 
+[node name="SaveLoadMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_dqswk")
+
+[node name="Background" type="ColorRect" parent="SaveLoadMenu"]
+layout_mode = 0
+offset_right = 1164.0
+offset_bottom = 649.0
+color = Color(0.211765, 0.211765, 0.211765, 0.8)
+
+[node name="Menu" type="BoxContainer" parent="SaveLoadMenu"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 357.0
+offset_top = 139.0
+offset_right = 607.0
+offset_bottom = 389.0
+vertical = true
+
+[node name="Save Map" type="Label" parent="SaveLoadMenu/Menu"]
+layout_mode = 2
+text = "Save Map"
+
+[node name="FileListContainer" type="ScrollContainer" parent="SaveLoadMenu/Menu"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="FileList" type="VBoxContainer" parent="SaveLoadMenu/Menu/FileListContainer"]
+layout_mode = 2
+
+[node name="TextEdit" type="TextEdit" parent="SaveLoadMenu/Menu"]
+custom_minimum_size = Vector2(0, 34.72)
+layout_mode = 2
+placeholder_text = "Enter File Name..."
+
+[node name="ActionButtonsContainer" type="BoxContainer" parent="SaveLoadMenu/Menu"]
+layout_mode = 2
+
+[node name="Save" type="Button" parent="SaveLoadMenu/Menu/ActionButtonsContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="Delete" type="Button" parent="SaveLoadMenu/Menu/ActionButtonsContainer"]
+layout_mode = 2
+text = "Delete"
+
+[node name="Cancel" type="Button" parent="SaveLoadMenu/Menu/ActionButtonsContainer"]
+layout_mode = 2
+text = "Cancel"
+
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor/Background2/VBoxContainer/Color/HSlider" method="set_editable"]
@@ -469,8 +527,8 @@ text = "Cancel"
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [0]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [1]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [2]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/SaveButton" to="HexMapEditor" method="Save"]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/LoadButton" to="HexMapEditor" method="Load"]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/SaveButton" to="SaveLoadMenu" method="Open" binds= [true]]
+[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/LoadButton" to="SaveLoadMenu" method="Open" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
 [connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="NewMapMenu" method="set_visible" binds= [true]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
@@ -484,3 +542,11 @@ text = "Cancel"
 [connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Save" to="HexGrid" method="CreateMap" binds= [20, 15]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Save" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Save" to="SaveLoadMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="SaveLoadMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="SaveLoadMenu" method="set_visible" binds= [false]]
