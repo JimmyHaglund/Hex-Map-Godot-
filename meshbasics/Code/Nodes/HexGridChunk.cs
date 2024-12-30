@@ -696,6 +696,12 @@ public sealed partial class HexGridChunk : Node3D {
                 corner = HexMetrics.GetFirstSolidCorner(direction);
             }
             roadCenter += corner * 0.5f;
+            if (cell.IncomingRiver == direction.Next() && (
+                cell.HasRoadThroughEdge(direction.Next2()) ||
+                cell.HasRoadThroughEdge(direction.Opposite()))
+            ) {
+                Features.AddBridge(roadCenter, center - corner * 0.5f);
+            }
             center += corner * 0.25f;
         } else if (cell.IncomingRiver == cell.OutgoingRiver.Previous()) {
             roadCenter -= HexMetrics.GetSecondCorner(cell.IncomingRiver) * 0.2f;
