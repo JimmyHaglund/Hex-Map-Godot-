@@ -74,7 +74,8 @@ public sealed partial class HexFeatureManager : Node3D {
         if (nearCell.Walled != farCell.Walled) {
             AddWallSegment(near.v1, far.v1, near.v2, far.v2);
             if (hasRiver || hasRoad) {
-                // Leave a gap.
+                AddWallCap(near.v2, far.v2);
+                AddWallCap(far.v4, near.v4);
             }
             else {
                 AddWallSegment(near.v2, far.v2, near.v3, far.v3);
@@ -161,6 +162,21 @@ public sealed partial class HexFeatureManager : Node3D {
         Vector3 right, HexCell rightCell
     ) {
         AddWallSegment(pivot, left, pivot, right);
+    }
+
+    private void AddWallCap(Vector3 near, Vector3 far) {
+        near = HexMetrics.Perturb(near);
+        far = HexMetrics.Perturb(far);
+
+        Vector3 center = HexMetrics.WallLerp(near, far);
+        Vector3 thickness = HexMetrics.GetWallThicknessOffset(near, far);
+
+        Vector3 v1, v2, v3, v4;
+
+        v1 = v3 = center - thickness;
+        v2 = v4 = center + thickness;
+        v3.Y = v4.Y = center.Y + HexMetrics.WallHeight;
+        Walls.AddQuadUnperturbed(v1, v2, v3, v4);
     }
 
 }
