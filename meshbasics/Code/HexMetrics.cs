@@ -5,6 +5,11 @@ namespace JHM.MeshBasics;
 
 public static class HexMetrics {
     private static HexHash[] _hashGrid;
+    private static float[][] _featureThresholds = {
+        new float[] {0.0f, 0.0f, 0.4f},
+        new float[] {0.0f, 0.4f, 0.6f},
+        new float[] {0.4f, 0.6f, 0.8f}
+    };
 
     public const float OuterRadius = 10.0f;
     public const float SolidFactor = 0.80f;
@@ -30,6 +35,9 @@ public static class HexMetrics {
     public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
     public const float OuterToInner = 0.866025404f;
     public const float InnerToOuter = 1.0f / OuterToInner;
+    
+
+   
 
     public static Image NoiseSource { get; set; }
 
@@ -151,5 +159,9 @@ public static class HexMetrics {
         for (int i = 0; i < _hashGrid.Length; i++) {
             _hashGrid[i] = HexHash.Create(rng);
         }
+    }
+
+    public static float[] GetFeatureThresholds(int level) {
+        return _featureThresholds[level];
     }
 }

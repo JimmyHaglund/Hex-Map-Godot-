@@ -109,4 +109,4 @@ UseUVCoordinates = true
 
 [node name="Features" type="Node3D" parent="."]
 script = ExtResource("9_wnj8p")
-UrbanPrefabs = Array[PackedScene]([ExtResource("10_6pi2n"), ExtResource("11_qj5vq"), ExtResource("12_gtsq6")])
+UrbanPrefabs = Array[PackedScene]([ExtResource("12_gtsq6"), ExtResource("11_qj5vq"), ExtResource("10_6pi2n")])
