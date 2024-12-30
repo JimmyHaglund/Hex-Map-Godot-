@@ -215,7 +215,7 @@ public sealed partial class HexCell : Node3D {
             return _specialIndex;
         }
         set {
-            if (_specialIndex != value) {
+            if (_specialIndex != value && !HasRiver) {
                 _specialIndex = value;
                 RefreshSelfOnly();
             }
@@ -313,10 +313,12 @@ public sealed partial class HexCell : Node3D {
 
         _hasOutgoingRiver = true;
         _outgoingRiver = direction;
-        
+        _specialIndex = 0;
+
         neighbor.RemoveIncomingRiver();
         neighbor._hasIncomingRiver = true;
         neighbor._incomingRiver = direction.Opposite();
+        neighbor._specialIndex = 0;
 
         SetRoad((int)direction, false);
     }
