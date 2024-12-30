@@ -348,10 +348,20 @@ public sealed partial class HexCell : Node3D {
         writer.Write((byte)_plantLevel);
         writer.Write((byte)_specialIndex);
         writer.Write(_walled);
-        writer.Write(_hasIncomingRiver);
-        writer.Write((byte)_incomingRiver);
-        writer.Write(_hasOutgoingRiver);
-        writer.Write((byte)_outgoingRiver);
+        if (_hasIncomingRiver) {
+            // Use the eight bit to store the bool _hasIncomingRiver. The 8th bit corresponds to 128.
+            writer.Write((byte)(_incomingRiver + 128));
+        }
+        else {
+            writer.Write((byte)0);
+        }
+
+        if (_hasOutgoingRiver) {
+            writer.Write((byte)(_outgoingRiver + 128));
+        }
+        else {
+            writer.Write((byte)0);
+        }
 
         for (int i = 0; i < _roads.Length; i++) {
             writer.Write(_roads[i]);
@@ -367,11 +377,24 @@ public sealed partial class HexCell : Node3D {
         _plantLevel = reader.ReadByte();
         _specialIndex = reader.ReadByte();
         _walled = reader.ReadBoolean();
-        _hasIncomingRiver = reader.ReadBoolean();
-        _incomingRiver = (HexDirection)reader.ReadInt32();
-        _hasOutgoingRiver = reader.ReadBoolean();
-        _outgoingRiver = (HexDirection)reader.ReadInt32();
 
+        byte riverData = reader.ReadByte();
+        if (riverData >= 128) {
+            _hasIncomingRiver = true;
+            _incomingRiver = (HexDirection)(riverData - 128);
+        }
+        else {
+            _hasIncomingRiver = false;
+        }
+        riverData = reader.ReadByte();
+        if (riverData >= 128) {
+            _hasOutgoingRiver = true;
+            _outgoingRiver = (HexDirection)(riverData - 128);
+        }
+        else {
+            _hasOutgoingRiver = false;
+        }
+        
         for (int i = 0; i < _roads.Length; i++) {
             _roads[i] = reader.ReadBoolean();
         }
