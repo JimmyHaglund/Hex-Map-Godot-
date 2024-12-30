@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
 using Godot;
+using static Godot.RenderingServer;
 
 namespace JHM.MeshBasics;
 
@@ -109,6 +110,9 @@ public sealed partial class HexGridChunk : Node3D {
         }
         else {
             TriangulateWithoutRiver(direction, cell, center, e);
+            if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction)) {
+                Features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
+            }
         }
 
         if (direction <= HexDirection.SE) {
@@ -511,6 +515,10 @@ public sealed partial class HexGridChunk : Node3D {
 
         TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
         TriangulateEdgeFan(center, m, cell.Color);
+
+        if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction)) {
+            Features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
+        }
     }
 
     private void TriangulateRoadAdjacentToRiver(
