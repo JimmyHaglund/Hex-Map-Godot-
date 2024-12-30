@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=15 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 [ext_resource type="ButtonGroup" uid="uid://dpb8786r04y0a" path="res://Misc/WallControlButtonGroup.tres" id="6_26ap1"]
 [ext_resource type="Script" path="res://Code/Nodes/SaveLoadMenu.cs" id="9_dqswk"]
+[ext_resource type="Script" path="res://Code/Nodes/FileNameTextEdit.cs" id="10_ip72k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
 albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
@@ -444,7 +445,7 @@ text = "Large"
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveLoadMenu" type="Control" parent="." node_paths=PackedStringArray("HexGrid", "Title", "ActionButton")]
+[node name="SaveLoadMenu" type="Control" parent="." node_paths=PackedStringArray("HexGrid", "Title", "ActionButton", "NameInput")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -455,6 +456,7 @@ script = ExtResource("9_dqswk")
 HexGrid = NodePath("../HexGrid")
 Title = NodePath("Menu/Title")
 ActionButton = NodePath("Menu/ActionButtonsContainer/ActionButton")
+NameInput = NodePath("Menu/FileNameEdit")
 
 [node name="Background" type="ColorRect" parent="SaveLoadMenu"]
 layout_mode = 0
@@ -486,10 +488,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TextEdit" type="TextEdit" parent="SaveLoadMenu/Menu"]
-custom_minimum_size = Vector2(0, 34.72)
+[node name="FileNameEdit" type="TextEdit" parent="SaveLoadMenu/Menu"]
+custom_minimum_size = Vector2(0, 35.605)
 layout_mode = 2
 placeholder_text = "Enter File Name..."
+script = ExtResource("10_ip72k")
 
 [node name="ActionButtonsContainer" type="BoxContainer" parent="SaveLoadMenu/Menu"]
 layout_mode = 2
