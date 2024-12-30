@@ -85,6 +85,9 @@ public sealed partial class HexGridChunk : Node3D {
         if (!cell.IsUnderwater && !cell.HasRiver && !cell.HasRoads) {
             Features.AddFeature(cell, cell.Position);
         }
+        if (cell.IsSpecial) {
+            Features.AddSpecialFeature(cell, cell.Position);
+        }
     }
 
     private void Triangulate(HexDirection direction, HexCell cell) {

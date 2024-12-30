@@ -264,4 +264,11 @@ public sealed partial class HexFeatureManager : Node3D {
             1.0f, 1.0f, length * (1.0f / HexMetrics.BridgeDesignLength)
         );
     }
+
+    public void AddSpecialFeature(HexCell cell, Vector3 position) {
+        var instance = _container.InstantiateChild<Node3D>(SpecialFeatures[cell.SpecialIndex - 1]);
+        instance.Position = HexMetrics.Perturb(position);
+        HexHash hash = HexMetrics.SampleHashGrid(position);
+        instance.Rotation = new(0f, 2* Mathf.Pi * hash.E, 0f);
+    }
 }
