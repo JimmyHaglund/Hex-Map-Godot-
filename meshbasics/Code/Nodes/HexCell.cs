@@ -10,6 +10,7 @@ public sealed partial class HexCell : Node3D {
     private Color _color;
     private bool _hasIncomingRiver;
     private bool _hasOutgoingRiver;
+    private bool _walled;
     private HexDirection _incomingRiver;
     private HexDirection _outgoingRiver;
     private bool[] _roads = new bool[6];
@@ -73,6 +74,17 @@ public sealed partial class HexCell : Node3D {
     public bool HasOutgoingRiver {
         get {
             return _hasOutgoingRiver;
+        }
+    }
+
+    public bool Walled {
+        get {
+            return _walled;
+        }
+        set {
+            if (_walled == value) return;
+            _walled = value;
+            Refresh();
         }
     }
 
