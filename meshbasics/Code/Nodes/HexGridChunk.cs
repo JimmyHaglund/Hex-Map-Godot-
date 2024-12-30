@@ -83,7 +83,7 @@ public sealed partial class HexGridChunk : Node3D {
             Triangulate(direction, cell);
         }
         if (!cell.IsUnderwater && !cell.HasRiver && !cell.HasRoads) {
-            Features.AddFeature(cell.Position);
+            Features.AddFeature(cell, cell.Position);
         }
     }
 
@@ -111,7 +111,7 @@ public sealed partial class HexGridChunk : Node3D {
         else {
             TriangulateWithoutRiver(direction, cell, center, e);
             if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction)) {
-                Features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
+                Features.AddFeature(cell, (center + e.v1 + e.v5) * (1f / 3f));
             }
         }
 
@@ -517,7 +517,7 @@ public sealed partial class HexGridChunk : Node3D {
         TriangulateEdgeFan(center, m, cell.Color);
 
         if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction)) {
-            Features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
+            Features.AddFeature(cell, (center + e.v1 + e.v5) * (1f / 3f));
         }
     }
 

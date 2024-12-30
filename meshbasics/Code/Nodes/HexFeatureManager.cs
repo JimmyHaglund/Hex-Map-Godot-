@@ -20,9 +20,9 @@ public sealed partial class HexFeatureManager : Node3D {
 
     public void Apply() { }
 
-    public void AddFeature(Vector3 position) {
+    public void AddFeature(HexCell cell, Vector3 position) {
         HexHash hash = HexMetrics.SampleHashGrid(position);
-        if (hash.A >= 0.5f) return;
+        if (hash.A >= cell.UrbanLevel * 0.25f) return;
 
         var instance = _container.InstantiateChild<Node3D>(FeaturePrefab);
         instance.Position = HexMetrics.Perturb(position);
