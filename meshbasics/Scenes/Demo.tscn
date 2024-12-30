@@ -98,12 +98,15 @@ layout_mode = 2
 [node name="CheckButton" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/Color"]
 layout_direction = 3
 layout_mode = 2
-text = "Apply Color"
+text = "Apply Terrain Type"
 alignment = 2
 
-[node name="ColorPicker2" type="ColorPicker" parent="HexMapEditor/Background2/VBoxContainer/Color"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/Color"]
 layout_mode = 2
-edit_alpha = false
+max_value = 4.0
+editable = false
+scrollable = false
+tick_count = 5
 
 [node name="ColorRect" type="ColorRect" parent="HexMapEditor/Background2/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
@@ -385,8 +388,9 @@ script = ExtResource("1_qmp3k")
 Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyColor"]
-[connection signal="color_changed" from="HexMapEditor/Background2/VBoxContainer/Color/ColorPicker2" to="HexMapEditor" method="SetColor"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor/Background2/VBoxContainer/Color/HSlider" method="set_editable"]
+[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/Color/HSlider" to="HexMapEditor" method="SetTerrainTypeIndex"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ElevationControls/EnableElevationCheck" to="HexMapEditor" method="ToggleElevationEnabled"]
 [connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/ElevationControls/HSlider" to="HexMapEditor" method="SetElevation"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/WaterLevelControls/EnableElevationCheck" to="HexMapEditor" method="SetApplyWaterLevel"]

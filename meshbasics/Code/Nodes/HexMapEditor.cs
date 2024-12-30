@@ -7,15 +7,15 @@ public sealed partial class HexMapEditor : Control {
     public Color[] Colors { get; set; }
     [Export] public HexGrid HexGrid { get; set; }
 
-    private Color _activeColor;
     private int _activeElevation = 1;
-    private bool _applyColor = false;
+    private int _activeTerrainTypeIndex = 0;
     private bool _applyElevation = false;
     private bool _applyWaterLevel = false;
     private bool _applyUrbanLevel;
     private bool _applyFarmLevel;
     private bool _applyPlantLevel;
     private bool _applySpecialIndex;
+    private bool _applyTerrainType = false;
     private int _brushSize;
     private OptionalToggle _riverMode;
     private OptionalToggle _roadMode;
@@ -90,9 +90,11 @@ public sealed partial class HexMapEditor : Control {
 
     private void EditCell(HexCell cell) {
         if (cell is null) return;
-        if (_applyColor) {
-            // cell.Color = _activeColor;
+
+        if (_applyTerrainType) {
+            cell.TerrainTypeIndex = _activeTerrainTypeIndex;
         }
+
         if (_applyElevation) {
             cell.Elevation = _activeElevation;
         }
@@ -140,21 +142,9 @@ public sealed partial class HexMapEditor : Control {
         _activeElevation = (int)elevationStep;
     }
 
-    public void SelectColor(int index) {
-        if (index < 0 || index >= Colors.Length) {
-            _applyColor = false;
-            return;
-        }
-        _activeColor = Colors[index];
-        _applyColor = true;
+    public void SetTerrainTypeIndex(float index) {
+        _activeTerrainTypeIndex = (int)index;
     }
-
-    public void SetColor(Color color) {
-        _activeColor = color;
-    }
-
-    public void SetApplyColor(bool value) => _applyColor = value;
-
     public void ToggleElevationEnabled(bool value) {
         _applyElevation = value;
     }
@@ -162,6 +152,8 @@ public sealed partial class HexMapEditor : Control {
     public void SetBrushSize(float size) {
         _brushSize = (int)size;
     }
+
+    public void SetApplyTerrainType(bool value) => _applyTerrainType = value;
 
     public void SetRiverMode(int mode) {
         _riverMode = (OptionalToggle)mode;
