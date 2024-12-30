@@ -26,7 +26,9 @@ public static class HexMetrics {
     public const int HashGridSize = 256;
     public const float HashGridScale = 0.25f;
     public const float WaterFactor = 0.6f;
-    public const float wallHeight = 3.0f;
+
+    public const float WallHeight = 3.0f;
+    public const float WallThickness = 0.75f;
 
     public const float InnerRadius = OuterRadius * 0.866025404f;
     public const float BlendFactor = 1.0f - SolidFactor;
@@ -52,6 +54,8 @@ public static class HexMetrics {
         new (0.0f, 0.0f, OuterRadius)
     };
 
+
+
     public static Vector3 GetFirstCorner(HexDirection direction) {
         return Corners[(int)direction];
     }
@@ -75,6 +79,14 @@ public static class HexMetrics {
     public static Vector3 GetWaterBridge(HexDirection direction) {
         return (Corners[(int)direction] + Corners[(int)direction + 1]) *
             WaterBlendFactor;
+    }
+
+    public static Vector3 GetWallThicknessOffset(Vector3 near, Vector3 far) {
+        Vector3 offset;
+        offset.X = far.X - near.X;
+        offset.Y = 0f;
+        offset.Z = far.Z - near.Z;
+        return offset.Normalized() * (WallThickness * 0.5f); ;
     }
 
     public static Vector3 TerraceLerp(Vector3 a, Vector3 b, int step) {

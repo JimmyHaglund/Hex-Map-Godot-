@@ -25,7 +25,8 @@ albedo_color = Color(0.321569, 1, 0.686275, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, -184.599, 0)
+transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, 0, 0)
+visible = false
 gi_mode = 0
 mesh = SubResource("PlaneMesh_bnbs1")
 
@@ -33,15 +34,14 @@ mesh = SubResource("PlaneMesh_bnbs1")
 transform = Transform3D(0.692649, -0.362811, 0.623382, -0.311104, 0.629471, 0.712026, -0.650732, -0.687121, 0.32313, 0, 1.66242, 0)
 light_energy = 0.75
 shadow_enabled = true
-shadow_normal_bias = 4.022
-shadow_opacity = 0.0
-shadow_blur = 0.0
+shadow_opacity = 0.75
+directional_shadow_mode = 1
+sky_mode = 1
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="DirectionalLight3D"]
 transform = Transform3D(0.280508, -0.954978, -0.0966128, -0.185634, -0.152728, 0.970677, -0.94173, -0.254348, -0.220117, 0, 1.66242, 0)
 light_energy = 0.5
 light_indirect_energy = 0.2
-shadow_enabled = true
 shadow_normal_bias = 4.022
 shadow_opacity = 0.0
 shadow_blur = 0.0
