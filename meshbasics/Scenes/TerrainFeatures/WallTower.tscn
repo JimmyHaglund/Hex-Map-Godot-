@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://da1c8mo0xdw41"]
+
+[ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="1_ng344"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_tnf4y"]
+material = ExtResource("1_ng344")
+size = Vector3(2, 4, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_13pek"]
+material = ExtResource("1_ng344")
+
+[node name="WallTower" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("BoxMesh_tnf4y")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+mesh = SubResource("BoxMesh_13pek")

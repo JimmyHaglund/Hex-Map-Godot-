@@ -7,6 +7,7 @@ public sealed partial class HexFeatureManager : Node3D {
     [Export] public PackedSceneContainer[] FarmPrefabs { get; set; }
     [Export] public PackedSceneContainer[] PlantPrefabs { get; set; }
     [Export] public HexMesh Walls { get; set; }
+    [Export] public PackedScene WallTower { get; set; }
 
     private Node3D _container;
 
