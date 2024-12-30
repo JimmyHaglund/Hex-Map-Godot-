@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.IO;
 
 namespace JHM.MeshBasics;
 
@@ -208,7 +209,10 @@ public sealed partial class HexMapEditor : Control {
     }
 
     public void Save() {
-        GD.Print(OS.GetUserDataDir());
+        var filePath = Path.Combine(OS.GetUserDataDir(), "test.map");
+        GD.Print(filePath);
+        using var fileStream = File.OpenWrite(filePath);
+
     }
 
     public void Load() { 
