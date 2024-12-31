@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://txryec2ia6mi"]
+
+[ext_resource type="Script" path="res://Code/Nodes/HexUnit.cs" id="1_58sjs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nin1x"]
+albedo_color = Color(0.25098, 0.360784, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xkdi1"]
+material = SubResource("StandardMaterial3D_nin1x")
+size = Vector3(3, 10, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gxntm"]
+size = Vector3(3, 10, 3)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_58sjs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.02569, 0)
+mesh = SubResource("BoxMesh_xkdi1")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.99321, 0)
+shape = SubResource("BoxShape3D_gxntm")
