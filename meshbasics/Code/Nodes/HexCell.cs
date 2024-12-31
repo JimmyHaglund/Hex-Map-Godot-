@@ -244,6 +244,8 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    public HexCell NextWithSamePriority { get; set; }
+
     public bool HasRiverThroughEdge(HexDirection direction) {
         return
             _hasIncomingRiver && _incomingRiver == direction ||
