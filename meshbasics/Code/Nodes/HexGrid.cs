@@ -21,16 +21,14 @@ public sealed partial class HexGrid : Node3D {
 
     [ExportCategory("HexGrid Configuration")]
     [Export] public int Seed { get; set; } = 1234;
-    [Export] public Color[] Colors { get; set; }
-
+    
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
 
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
-        HexMetrics.Colors = Colors;
-
+        
         CreateMap(CellCountX, CellCountZ);
     }
 

@@ -7,7 +7,6 @@ public sealed partial class HexCell : Node3D {
     private HexCell[] _neighbors = new HexCell[6];
     private int _elevation = int.MinValue;
     private Node3D _uiRect;
-    private Color _color;
     private bool _hasIncomingRiver;
     private bool _hasOutgoingRiver;
     private bool _walled;
@@ -61,8 +60,6 @@ public sealed partial class HexCell : Node3D {
             }
         }
     }
-
-    public Color Color => HexMetrics.Colors[_terrainTypeIndex];
 
     public bool HasIncomingRiver {
         get {
