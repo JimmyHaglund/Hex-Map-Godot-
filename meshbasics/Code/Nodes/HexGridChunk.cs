@@ -584,7 +584,7 @@ public sealed partial class HexGridChunk : Node3D {
         Vector3 center,
         EdgeVertices e
     ) {
-        TriangulateEdgeFan(center, e, cell.Color);
+        TriangulateEdgeFan(center, e, _splatColor1);
 
         if (cell.HasRoads) {
             Vector2 interpolators = GetRoadInterpolators(direction, cell);
