@@ -25,7 +25,7 @@ public sealed partial class HexGrid : Node3D {
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
     private HexCellPriorityQueue _searchFrontier;
-
+    private int _searchFrontierPhase;
 
     public static event Action MapReset;
 
@@ -124,6 +124,7 @@ public sealed partial class HexGrid : Node3D {
     }
 
     private void Search(HexCell fromCell, HexCell toCell, int speed) {
+        _searchFrontierPhase += 2;
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }
@@ -131,11 +132,11 @@ public sealed partial class HexGrid : Node3D {
             _searchFrontier.Clear();
         }
         for (int i = 0; i < _cells.Length; i++) {
-            _cells[i].Distance = int.MaxValue;
             _cells[i].SetLabel(string.Empty);
             _cells[i].DisableHighlight();
         }
         fromCell.Distance = 0;
+        fromCell.SearchPhase = _searchFrontierPhase;
         _searchFrontier.Enqueue(fromCell);
         fromCell.EnableHighlight(Colors.Blue);
         while (_searchFrontier.Count > 0) {
@@ -185,11 +186,11 @@ public sealed partial class HexGrid : Node3D {
                     distance = turn * speed + moveCost;
                 }
 
-                if (neighbor.Distance == int.MaxValue) {
+                if (neighbor.SearchPhase < _searchFrontierPhase) {
+                    neighbor.SearchPhase = _searchFrontierPhase;
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
-                    neighbor.SearchHeuristic =
-                        neighbor.Coordinates.DistanceTo(toCell.Coordinates);
+                    neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
                     _searchFrontier.Enqueue(neighbor);
                 } else if (distance < neighbor.Distance) {
                     var oldPriority = neighbor.SearchPriority;
