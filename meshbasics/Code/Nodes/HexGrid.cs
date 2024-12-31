@@ -147,6 +147,14 @@ public sealed partial class HexGrid : Node3D {
             HexCell current = frontier.Dequeue();
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor == null || neighbor.Distance != int.MaxValue) {
+                    continue;
+                }
+                if (neighbor.IsUnderwater) {
+                    continue;
+                }
+                neighbor.Distance = current.Distance + 1;
+                frontier.Enqueue(neighbor);
                 if (neighbor != null && neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = current.Distance + 1;
                     frontier.Enqueue(neighbor);
