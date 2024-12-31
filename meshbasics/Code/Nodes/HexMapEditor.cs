@@ -63,6 +63,8 @@ public sealed partial class HexMapEditor : Control {
         }
         if (_editMode) { 
             EditCells(cell);
+        } else {
+            HexGrid.FindDistancesTo(cell);
         }
         _previousCell = cell;
     }

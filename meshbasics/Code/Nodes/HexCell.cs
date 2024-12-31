@@ -1,12 +1,13 @@
 using System.IO;
 using Godot;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace JHM.MeshBasics;
 
 public sealed partial class HexCell : Node3D {
     private HexCell[] _neighbors = new HexCell[6];
     private int _elevation = int.MinValue;
-    private Node3D _uiRect;
+    private Label3D _label;
     private bool _hasIncomingRiver;
     private bool _hasOutgoingRiver;
     private bool _walled;
@@ -19,14 +20,15 @@ public sealed partial class HexCell : Node3D {
     private int _plantLevel;
     private int _specialIndex;
     private int _terrainTypeIndex;
+    private int _distance;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
 
-    public Node3D UiRect {
-        get => _uiRect;
+    public Label3D Label {
+        get => _label;
         set {
-            _uiRect = value;
+            _label = value;
             UpdateUiAltitude();
         }
     }
@@ -58,6 +60,16 @@ public sealed partial class HexCell : Node3D {
                 _terrainTypeIndex = value;
                 Refresh();
             }
+        }
+    }
+
+    public int Distance {
+        get {
+            return _distance;
+        }
+        set {
+            _distance = value;
+            UpdateDistanceLabel();
         }
     }
 
@@ -235,21 +247,8 @@ public sealed partial class HexCell : Node3D {
     }
 
     public void SetShowLabel(bool visible) {
-        if (UiRect is null) return;
-        UiRect.Visible = visible;
-    }
-
-
-    private bool IsValidRiverDestination(HexCell neighbor) {
-        if (neighbor is null) return false;
-        return Elevation >= neighbor.Elevation || WaterLevel == neighbor.Elevation;
-    }
-
-    private void UpdateUiAltitude() {
-        if (UiRect is null) return;
-        var uiPosition = UiRect.Position;
-        uiPosition.Y = Position.Y + 0.05f;
-        UiRect.Position = uiPosition;
+        if (Label is null) return;
+        Label.Visible = visible;
     }
 
     public HexCell GetNeighbor(HexDirection direction) {
@@ -404,6 +403,18 @@ public sealed partial class HexCell : Node3D {
         RefreshPosition();
     }
 
+    private bool IsValidRiverDestination(HexCell neighbor) {
+        if (neighbor is null) return false;
+        return Elevation >= neighbor.Elevation || WaterLevel == neighbor.Elevation;
+    }
+
+    private void UpdateUiAltitude() {
+        if (Label is null) return;
+        var uiPosition = Label.Position;
+        uiPosition.Y = Position.Y + 0.05f;
+        Label.Position = uiPosition;
+    }
+
     private void SetRoad(int index, bool state) {
         _roads[index] = state;
         _neighbors[index]._roads[(int)((HexDirection)index).Opposite()] = state;
@@ -468,5 +479,7 @@ public sealed partial class HexCell : Node3D {
         SetRoad((int)direction, false);
     }
 
-
+    private void UpdateDistanceLabel() {
+        _label.Text = _distance.ToString();
+    }
 }

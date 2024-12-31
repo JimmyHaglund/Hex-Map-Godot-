@@ -110,6 +110,12 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
+    public void FindDistancesTo(HexCell cell) {
+        for (int i = 0; i < _cells.Length; i++) {
+            _cells[i].Distance = 0;
+        }
+    }
+
     private void CreateChunks() {
         _chunks = new HexGridChunk[_chunkCountX * _chunkCountZ];
 
@@ -163,7 +169,7 @@ public sealed partial class HexGrid : Node3D {
         Label3D label = this.InstantiateOrphan<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
         cell.Elevation = 0;
-        cell.UiRect = label;
+        cell.Label = label;
 
         AddCellToChunk(x, z, cell);
     }

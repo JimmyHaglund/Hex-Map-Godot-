@@ -42,8 +42,8 @@ public sealed partial class HexGridChunk : Node3D {
         cell.Chunk = this;
         this.AddChild(cell);
 
-        if (cell.UiRect is not null) this.AddChild(cell.UiRect);
-        cell.UiRect.Visible = _labelsVisible;
+        if (cell.Label is not null) this.AddChild(cell.Label);
+        cell.Label.Visible = _labelsVisible;
     }
 
     public void Refresh() {
