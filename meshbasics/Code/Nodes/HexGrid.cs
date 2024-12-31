@@ -123,7 +123,7 @@ public sealed partial class HexGrid : Node3D {
         GD.Print(sw.ElapsedMilliseconds);
     }
 
-    private void Search(HexCell fromCell, HexCell toCell, int speed) {
+    private bool Search(HexCell fromCell, HexCell toCell, int speed) {
         _searchFrontierPhase += 2;
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
@@ -131,27 +131,16 @@ public sealed partial class HexGrid : Node3D {
         else {
             _searchFrontier.Clear();
         }
-        for (int i = 0; i < _cells.Length; i++) {
-            _cells[i].SetLabel(string.Empty);
-            _cells[i].DisableHighlight();
-        }
+        
         fromCell.Distance = 0;
         fromCell.SearchPhase = _searchFrontierPhase;
         _searchFrontier.Enqueue(fromCell);
-        fromCell.EnableHighlight(Colors.Blue);
         while (_searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
             current.SearchPhase += 1;
 
             if (current == toCell) {
-                while (current != fromCell) {
-                    int turn = current.Distance / speed;
-                    current.SetLabel(turn.ToString());
-                    current.EnableHighlight(Colors.White);
-                    current = current.PathFrom;
-                }
-                toCell.EnableHighlight(Colors.Red);
-                break;
+                return true;
             }
 
             int currentTurn = current.Distance / speed;
@@ -201,6 +190,7 @@ public sealed partial class HexGrid : Node3D {
                 }
             }
         }
+        return false;
     }
 
     private void CreateChunks() {
