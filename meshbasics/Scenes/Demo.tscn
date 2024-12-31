@@ -109,9 +109,16 @@ offset_right = 305.53
 offset_bottom = 619.0
 
 [node name="ToggleHexUI" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer"]
+visible = false
 layout_direction = 3
 layout_mode = 2
 text = "Show Hex UI"
+alignment = 2
+
+[node name="EditMode" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer"]
+layout_direction = 3
+layout_mode = 2
+text = "Edit Mode"
 alignment = 2
 
 [node name="ToggleGrid" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer"]
@@ -526,6 +533,7 @@ layout_mode = 2
 text = "Cancel"
 
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
+[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/EditMode" to="HexMapEditor" method="SetEditMode"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleGrid" to="HexMapEditor" method="ShowGrid"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
 [connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor/Background2/VBoxContainer/Color/HSlider" method="set_editable"]
