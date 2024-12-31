@@ -111,9 +111,28 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void FindDistancesTo(HexCell cell) {
-        for (int i = 0; i < _cells.Length; i++) {
-            _cells[i].Distance = cell.Coordinates.DistanceTo(_cells[i].Coordinates);
+        _searchIndex = 0;
+        _distanceSearchCell = cell;
+        _shouldFindDistances = true;
+    }
+
+    private HexCell _distanceSearchCell;
+    private bool _shouldFindDistances = false;
+    private float _timeSinceStep = 0.0f;
+    private float _updateFrequency = 1.0f / 60.0f;
+    private int _searchIndex;
+    public override void _Process(double delta) {
+        if (!_shouldFindDistances) return;
+        _timeSinceStep += (float)delta;
+        if (_timeSinceStep < _updateFrequency) return;
+        _timeSinceStep = 0.0f;
+
+        if (++_searchIndex >= _cells.Length) {
+            _shouldFindDistances = false;
+            _searchIndex = 0;
+            return;
         }
+        _cells[_searchIndex].Distance = _distanceSearchCell.Coordinates.DistanceTo(_cells[_searchIndex].Coordinates);
     }
 
     private void CreateChunks() {
