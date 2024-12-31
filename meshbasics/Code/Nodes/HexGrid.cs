@@ -154,7 +154,8 @@ public sealed partial class HexGrid : Node3D {
                 if (neighbor.IsUnderwater) {
                     continue;
                 }
-                if (current.GetEdgeType(neighbor) == HexEdgeType.Cliff) {
+                HexEdgeType edgeType = current.GetEdgeType(neighbor);
+                if (edgeType == HexEdgeType.Cliff) {
                     continue;
                 }
                 int distance = current.Distance;
@@ -162,7 +163,9 @@ public sealed partial class HexGrid : Node3D {
                     distance += 1;
                 }
                 else {
-                    distance += 10;
+                    distance += edgeType == HexEdgeType.Flat ? 5 : 10;
+                    distance += neighbor.UrbanLevel + neighbor.FarmLevel +
+                        neighbor.PlantLevel;
                 }
                 if (neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = distance;
