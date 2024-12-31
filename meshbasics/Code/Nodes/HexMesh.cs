@@ -13,7 +13,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     private CollisionShape3D _inactiveShape;
     private List<Vector2> _uvs;
     private List<Vector2> _uv2s;
-    private List<Vector3> _terrainTypes;
+    private List<Vector3> _terrainTypes = new();
 
     [Export] public CollisionShape3D CollisionShape { get; set; }
     [Export] public CollisionShape3D AltShape { get; set; }
@@ -60,10 +60,11 @@ public sealed partial class HexMesh : MeshInstance3D {
         for (var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
             surfaceTool.SetNormal(_normals[n]);
+            surfaceTool.SetCustomFormat(0, SurfaceTool.CustomFormat.RgbFloat);
 
             if (UseTerrainTypes) {
                 var terrain = _terrainTypes[n];
-                surfaceTool.SetColor(new(terrain.X, terrain.Y, terrain.Z));
+                surfaceTool.SetCustom(0, new(terrain.X, terrain.Y, terrain.Z));
                 ListPool<Vector3>.Add(_terrainTypes);
             }
             if (UseUVCoordinates) {
