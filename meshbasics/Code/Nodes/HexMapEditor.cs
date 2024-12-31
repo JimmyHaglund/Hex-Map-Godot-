@@ -9,8 +9,7 @@ public sealed partial class HexMapEditor : Control {
     [Export] private ShaderMaterial _terrainMaterial;
     [Export] public Color[] Colors { get; set; }
     [Export] public HexGrid HexGrid { get; set; }
-    [Export] public Mesh _materialMesh;
-
+    
     private int _activeElevation = 1;
     private int _activeTerrainTypeIndex = 0;
     private bool _applyElevation = false;
@@ -32,6 +31,11 @@ public sealed partial class HexMapEditor : Control {
     private int _activeFarmLevel = 1;
     private int _activePlantLevel = 1;
     private int _activeSpecialIndex = 1;
+
+    public override void _EnterTree() {
+        base._EnterTree();
+        ShowGrid(false);
+    }
 
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
