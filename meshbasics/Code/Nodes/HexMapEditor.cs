@@ -6,9 +6,10 @@ using static System.Net.Mime.MediaTypeNames;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMapEditor : Control {
-    [Export]
-    public Color[] Colors { get; set; }
+    [Export] private ShaderMaterial _terrainMaterial;
+    [Export] public Color[] Colors { get; set; }
     [Export] public HexGrid HexGrid { get; set; }
+    [Export] public Mesh _materialMesh;
 
     private int _activeElevation = 1;
     private int _activeTerrainTypeIndex = 0;
@@ -208,6 +209,11 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetSpecialIndex(float index) {
         _activeSpecialIndex = (int)index;
+    }
+
+    public void ShowGrid(bool visible) {
+        _terrainMaterial.SetShaderParameter("GRID_ON", visible);
+        GD.Print(_terrainMaterial.Get("GRID_ON").AsBool());
     }
 
     #region Definitions
