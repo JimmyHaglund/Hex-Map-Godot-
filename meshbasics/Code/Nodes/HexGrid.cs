@@ -13,6 +13,7 @@ public sealed partial class HexGrid : Node3D {
     private int _chunkCountX;
 
     [ExportCategory("HexGrid Dependencies")]
+    [Export] private PackedScene _hexUnitPrefab;
     [Export] public int CellCountX { get; set; } = 20;
     [Export] public int CellCountZ { get; set; } = 15;
     [Export] public PackedScene HexCellPrefab { get; set; }
@@ -125,6 +126,12 @@ public sealed partial class HexGrid : Node3D {
         }
         for (int i = 0; i < _chunks.Length; i++) {
             _chunks[i].Refresh();
+        }
+
+        if (header < 2) return;
+        int unitCount = reader.ReadInt32();
+        for (int i = 0; i < unitCount; i++) {
+            HexUnit.Load(reader, this);
         }
     }
 

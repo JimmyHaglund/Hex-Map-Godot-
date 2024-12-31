@@ -71,4 +71,8 @@ public struct HexCoordinates {
         writer.Write(X);
         writer.Write(Z);
     }
+
+    public static HexCoordinates Load(BinaryReader reader) {
+        return new(reader.ReadInt32(), reader.ReadInt32());
+    }
 }

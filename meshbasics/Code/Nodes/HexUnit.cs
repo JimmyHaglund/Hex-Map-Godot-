@@ -7,6 +7,7 @@ namespace JHM.MeshBasics;
 public sealed partial class HexUnit : Node3D{
     private HexCell _location;
     private float _orientation;
+    public static PackedScene UnitPrefab;
 
     public HexCell Location {
         get {
@@ -41,6 +42,16 @@ public sealed partial class HexUnit : Node3D{
     public void Save(BinaryWriter writer) {
         Location.Coordinates.Save(writer);
         writer.Write(Orientation);
+    }
+
+    public static void Load(BinaryReader reader, HexGrid grid) {
+        HexCoordinates coordinates = HexCoordinates.Load(reader);
+        float orientation = reader.ReadSingle();
+        grid.AddUnit(
+            grid.InstantiateChild<HexUnit>(UnitPrefab),
+            grid.GetCell(coordinates),
+            orientation
+        );
     }
 
     public override void _ExitTree() {

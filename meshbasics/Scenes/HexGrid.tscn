@@ -1,13 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://bkqosooy180ch"]
+[gd_scene load_steps=7 format=3 uid="uid://bkqosooy180ch"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
 [ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
+[ext_resource type="PackedScene" uid="uid://txryec2ia6mi" path="res://Scenes/Unit.tscn" id="2_lta86"]
 [ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
 [ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="4_77bli"]
 [ext_resource type="PackedScene" uid="uid://bwok11esd24iw" path="res://Scenes/HexGridChunk.tscn" id="5_3ypkl"]
 
 [node name="HexGrid" type="Node3D"]
 script = ExtResource("1_52rku")
+_hexUnitPrefab = ExtResource("2_lta86")
 HexCellPrefab = ExtResource("2_dagm6")
 CellLabelPrefab = ExtResource("3_48iag")
 NoiseSource = ExtResource("4_77bli")
