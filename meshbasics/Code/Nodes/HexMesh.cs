@@ -13,6 +13,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     private CollisionShape3D _inactiveShape;
     private List<Vector2> _uvs;
     private List<Vector2> _uv2s;
+    private List<Vector3> _terrainTypes;
 
     [Export] public CollisionShape3D CollisionShape { get; set; }
     [Export] public CollisionShape3D AltShape { get; set; }
@@ -20,6 +21,7 @@ public sealed partial class HexMesh : MeshInstance3D {
     [Export] public bool UseColors { get; set; } = true;
     [Export] public bool UseUVCoordinates { get; set; } = false;
     [Export] public bool UseUV2Coordinates { get; set; } = false;
+    [Export] public bool UseTerrainTypes { get; set; } = false;
 
     public override void _Ready() {
         _mesh = Mesh as ArrayMesh;
@@ -45,6 +47,9 @@ public sealed partial class HexMesh : MeshInstance3D {
         if (UseColors) {
             _colors = ListPool<Color>.Get();
         }
+        if (UseTerrainTypes) {
+            _terrainTypes = ListPool<Vector3>.Get();
+        }
     }
 
     public void Apply() {
@@ -52,10 +57,15 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
         surfaceTool.SetMaterial(this.GetActiveMaterial(0));
-
         for (var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
             surfaceTool.SetNormal(_normals[n]);
+
+            if (UseTerrainTypes) {
+                var terrain = _terrainTypes[n];
+                surfaceTool.SetColor(new(terrain.X, terrain.Y, terrain.Z));
+                ListPool<Vector3>.Add(_terrainTypes);
+            }
             if (UseUVCoordinates) {
                 var uv = Vector2.Zero;
                 if (_uvs != null && n < _uvs.Count) uv = _uvs[n];
@@ -70,7 +80,6 @@ public sealed partial class HexMesh : MeshInstance3D {
                 surfaceTool.SetColor(_colors[n]);
             }
             surfaceTool.AddVertex(vertex);
-            
         }
         surfaceTool.Commit(_mesh);
 
@@ -273,6 +282,22 @@ public sealed partial class HexMesh : MeshInstance3D {
         _uv2s.Add(new Vector2(uMax, vMin));
         _uv2s.Add(new Vector2(uMin, vMax));
         _uv2s.Add(new Vector2(uMax, vMax));
+    }
+
+    public void AddTriangleTerrainTypes(Vector3 types) {
+        _terrainTypes.Add(types);
+        _terrainTypes.Add(types);
+        _terrainTypes.Add(types);
+    }
+
+    public void AddQuadTerrainTypes(Vector3 types) {
+        _terrainTypes.Add(types);
+        _terrainTypes.Add(types);
+        _terrainTypes.Add(types);
+
+        _terrainTypes.Add(types);
+        _terrainTypes.Add(types);
+        _terrainTypes.Add(types);
     }
 
     private void SwapCollisionShape() {
