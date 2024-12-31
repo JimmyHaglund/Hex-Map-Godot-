@@ -479,6 +479,20 @@ public sealed partial class HexCell : Node3D {
         SetRoad((int)direction, false);
     }
 
+    public void EnableHighlight(Color color) {
+        SetHighlightVisible(true, color);
+    }
+
+    public void DisableHighlight() {
+        SetHighlightVisible(false, new(1,1,1,1));
+    }
+
+    private void SetHighlightVisible(bool visible, Color color) {
+        var highlight = Label.GetChild<Sprite3D>(0);
+        highlight.Modulate = color;
+        highlight.Visible = visible;
+    }
+
     private void UpdateDistanceLabel() {
         _label.Text = _distance == int.MaxValue ? string.Empty : _distance.ToString();
     }
