@@ -1,8 +1,5 @@
 ﻿using Godot;
-using System.Diagnostics;
-using System.IO;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
+using System;
 
 namespace JHM.MeshBasics;
 
@@ -204,6 +201,7 @@ public sealed partial class HexMapEditor : Control {
         if (cell is null) return;
         var unit = HexGrid.InstantiateChild<HexUnit>(_unitPrefab);
         unit.Location = cell;
+        unit.Orientation = (float)(new Random().NextDouble() * 360.0f);
     }
 
     private void EditCells(HexCell center) {

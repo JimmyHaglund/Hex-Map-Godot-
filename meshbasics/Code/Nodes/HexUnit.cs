@@ -13,5 +13,16 @@ public sealed partial class HexUnit : Node3D{
             Position = value.Position;
         }
     }
+    public float Orientation {
+        get {
+            return orientation;
+        }
+        set {
+            orientation = value;
+            Rotation = new(0f, value, 0f);
+        }
+    }
+
+    float orientation;
 
 }
