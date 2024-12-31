@@ -186,6 +186,8 @@ public sealed partial class HexGrid : Node3D {
                 if (neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
+                    neighbor.SearchHeuristic =
+                        neighbor.Coordinates.DistanceTo(toCell.Coordinates);
                     frontier.Add(neighbor);
                 } else if (distance < neighbor.Distance) {
                     neighbor.PathFrom = current;
