@@ -128,9 +128,9 @@ public sealed partial class HexGrid : Node3D {
         }
         var delayMilliseconds = (int)(1.0f / 60.0f * 1000);
         
-        Queue<HexCell> frontier = new Queue<HexCell>();
+        List<HexCell> frontier = new();
         cell.Distance = 0;
-        frontier.Enqueue(cell);
+        frontier.Add(cell);
         while (frontier.Count > 0) {
             #region Task Management...
             try {
@@ -144,7 +144,8 @@ public sealed partial class HexGrid : Node3D {
             }
             #endregion
 
-            HexCell current = frontier.Dequeue();
+            HexCell current = frontier[0];
+            frontier.RemoveAt(0);
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null || neighbor.Distance != int.MaxValue) {
@@ -164,11 +165,8 @@ public sealed partial class HexGrid : Node3D {
                     distance += 10;
                 }
                 neighbor.Distance = distance;
-                frontier.Enqueue(neighbor);
-                if (neighbor != null && neighbor.Distance == int.MaxValue) {
-                    neighbor.Distance = current.Distance + 1;
-                    frontier.Enqueue(neighbor);
-                }
+                frontier.Add(neighbor);
+                frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
             }
         }
         
