@@ -4,6 +4,8 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexUnit : Node3D{
     private HexCell _location;
+    private float _orientation;
+
     public HexCell Location {
         get {
             return _location;
@@ -14,16 +16,18 @@ public sealed partial class HexUnit : Node3D{
             Position = value.Position;
         }
     }
+
     public float Orientation {
         get {
-            return orientation;
+            return _orientation;
         }
         set {
-            orientation = value;
+            _orientation = value;
             Rotation = new(0f, value, 0f);
         }
     }
 
-    float orientation;
-
+    public void ValidateLocation() {
+        Position = _location.Position;
+    }
 }

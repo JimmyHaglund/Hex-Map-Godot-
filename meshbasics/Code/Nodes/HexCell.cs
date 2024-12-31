@@ -458,10 +458,18 @@ public sealed partial class HexCell : Node3D {
             if (neighbor is null || neighbor.Chunk == Chunk) continue;
             neighbor.Chunk.Refresh();
         }
+
+        if (Unit is not null) { 
+            Unit.ValidateLocation();
+        }
     }
 
     private void RefreshSelfOnly() {
         Chunk.Refresh();
+
+        if (Unit is not null) {
+            Unit.ValidateLocation();
+        }
     }
 
     public void SetOutgoingRiver(HexDirection direction) {
