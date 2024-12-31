@@ -10,6 +10,7 @@ public sealed partial class HexUnit : Node3D{
         }
         set {
             _location = value;
+            value.Unit = this;
             Position = value.Position;
         }
     }
