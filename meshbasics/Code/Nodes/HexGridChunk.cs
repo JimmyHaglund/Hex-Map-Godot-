@@ -9,6 +9,9 @@ public sealed partial class HexGridChunk : Node3D {
     HexCell[] _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
     // Canvas GridCanvas;
     private bool _shouldUpdate = true;
+    private static Color _splatColor1 = new Color(1.0f, 0.0f, 0.0f);
+    private static Color _splatColor2 = new Color(0.0f, 1.0f, 0.0f);
+    private static Color _splatColor3 = new Color(0.0f, 0.0f, 1.0f);
 
     [Export] public HexMesh Terrain { get; set; }
     [Export] public HexMesh Rivers { get; set; }
