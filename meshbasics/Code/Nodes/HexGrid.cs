@@ -165,6 +165,8 @@ public sealed partial class HexGrid : Node3D {
                 break;
             }
 
+            int currentTurn = current.Distance / speed;
+
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null) {
@@ -189,6 +191,9 @@ public sealed partial class HexGrid : Node3D {
                     distance += neighbor.UrbanLevel + neighbor.FarmLevel +
                         neighbor.PlantLevel;
                 }
+
+                int turn = distance / speed;
+
                 if (neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
