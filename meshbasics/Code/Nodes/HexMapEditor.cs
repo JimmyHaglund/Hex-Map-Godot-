@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace JHM.MeshBasics;
 
@@ -27,6 +28,7 @@ public sealed partial class HexMapEditor : Control {
     private bool _isDrag;
     private HexDirection _dragDirection;
     private HexCell _previousCell;
+    private HexCell _searchFromCell;
     private int _activeWaterLevel;
     private int _activeUrbanLevel = 1;
     private int _activeFarmLevel = 1;
@@ -63,6 +65,12 @@ public sealed partial class HexMapEditor : Control {
         }
         if (_editMode) { 
             EditCells(cell);
+        } else if (Input.IsKeyPressed(Key.Shift)) {
+            if (_searchFromCell != null) {
+                _searchFromCell.DisableHighlight();
+            }
+            _searchFromCell = cell;
+            _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
         } else {
             HexGrid.FindDistancesTo(cell);
         }
