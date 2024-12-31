@@ -116,15 +116,15 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    public void FindPath(HexCell fromCell, HexCell toCell) {
+    public void FindPath(HexCell fromCell, HexCell toCell, int speed) {
         if (_cancellationToken is not null) {
             _cancellationToken.Cancel();
         }
         _cancellationToken = new();
-        _ = Search(fromCell, toCell, _cancellationToken.Token);
+        _ = Search(fromCell, toCell, speed, _cancellationToken.Token);
     }
 
-    private async Task Search(HexCell fromCell, HexCell toCell, System.Threading.CancellationToken cancellationToken) {
+    private async Task Search(HexCell fromCell, HexCell toCell, int speed, System.Threading.CancellationToken cancellationToken) {
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }

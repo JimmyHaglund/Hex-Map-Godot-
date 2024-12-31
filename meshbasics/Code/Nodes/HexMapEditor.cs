@@ -35,7 +35,8 @@ public sealed partial class HexMapEditor : Control {
     private int _activeFarmLevel = 1;
     private int _activePlantLevel = 1;
     private int _activeSpecialIndex = 1;
-    
+
+    private const int _speed = 24;
 
     public override void _EnterTree() {
         base._EnterTree();
@@ -73,11 +74,11 @@ public sealed partial class HexMapEditor : Control {
             _searchFromCell = cell;
             _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
             if (_searchToCell != null) {
-                HexGrid.FindPath(_searchFromCell, _searchToCell);
+                HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
             }
         } else if (_searchFromCell != null && _searchFromCell != cell) {
             _searchToCell = cell;
-            HexGrid.FindPath(_searchFromCell, _searchToCell);
+            HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
         }
         _previousCell = cell;
     }
