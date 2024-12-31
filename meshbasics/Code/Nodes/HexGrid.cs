@@ -153,6 +153,9 @@ public sealed partial class HexGrid : Node3D {
                 if (neighbor.IsUnderwater) {
                     continue;
                 }
+                if (current.GetEdgeType(neighbor) == HexEdgeType.Cliff) {
+                    continue;
+                }
                 neighbor.Distance = current.Distance + 1;
                 frontier.Enqueue(neighbor);
                 if (neighbor != null && neighbor.Distance == int.MaxValue) {
