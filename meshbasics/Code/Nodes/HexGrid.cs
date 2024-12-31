@@ -162,6 +162,9 @@ public sealed partial class HexGrid : Node3D {
                 if (current.HasRoadThroughEdge(d)) {
                     distance += 1;
                 }
+                else if (current.Walled != neighbor.Walled) {
+                    continue;
+                }
                 else {
                     distance += edgeType == HexEdgeType.Flat ? 5 : 10;
                     distance += neighbor.UrbanLevel + neighbor.FarmLevel +
