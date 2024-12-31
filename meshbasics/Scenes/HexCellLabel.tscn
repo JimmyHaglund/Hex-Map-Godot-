@@ -9,8 +9,6 @@ double_sided = false
 render_priority = 10
 outline_render_priority = 0
 modulate = Color(0, 0, 0, 1)
-text = "10
-"
 font_size = 467
 
 [node name="Sprite3D" type="Sprite3D" parent="."]

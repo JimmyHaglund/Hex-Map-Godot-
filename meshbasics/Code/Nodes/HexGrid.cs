@@ -26,6 +26,9 @@ public sealed partial class HexGrid : Node3D {
     public bool IsRefreshing => _refreshStack > 0;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
+    private HexCell _currentPathFrom;
+    private HexCell _currentPathTo;
+    private bool _currentPathExists;
 
     public static event Action MapReset;
 
@@ -68,7 +71,7 @@ public sealed partial class HexGrid : Node3D {
             GD.PrintErr("Unsupported map size.");
             return false;
         }
-
+        ClearPath();
         if (_chunks != null) {
             for (int i = 0; i < _chunks.Length; i++) {
                 _chunks[i].QueueFree();
@@ -97,6 +100,7 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void Load(BinaryReader reader, int header) {
+        ClearPath();
         int x = 20, z = 15;
         if (header >= 1) {
             x = reader.ReadInt32();
@@ -116,11 +120,11 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void FindPath(HexCell fromCell, HexCell toCell, int speed) {
-        System.Diagnostics.Stopwatch sw = new();
-        sw.Start();
-        Search(fromCell, toCell, speed);
-        sw.Stop();
-        GD.Print(sw.ElapsedMilliseconds);
+        ClearPath();
+        _currentPathFrom = fromCell;
+        _currentPathTo = toCell;
+        _currentPathExists = Search(fromCell, toCell, speed);
+        ShowPath(speed);
     }
 
     private bool Search(HexCell fromCell, HexCell toCell, int speed) {
@@ -192,6 +196,38 @@ public sealed partial class HexGrid : Node3D {
         }
         return false;
     }
+
+    private void ShowPath(int speed) {
+        if (_currentPathExists) {
+            HexCell current = _currentPathTo;
+            while (current != _currentPathFrom) {
+                int turn = current.Distance / speed;
+                current.SetLabel(turn.ToString());
+                current.EnableHighlight(Colors.White);
+                current = current.PathFrom;
+            }
+        } else if (_currentPathFrom is not null) {
+            _currentPathFrom.DisableHighlight();
+            _currentPathTo.DisableHighlight();
+        }
+        _currentPathFrom.EnableHighlight(Colors.Blue);
+        _currentPathTo.EnableHighlight(Colors.Red);
+    }
+
+    private void ClearPath() {
+        if (_currentPathExists) {
+            HexCell current = _currentPathTo;
+            while (current != _currentPathFrom) {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            _currentPathExists = false;
+        }
+        _currentPathFrom = _currentPathTo = null;
+    }
+
 
     private void CreateChunks() {
         _chunks = new HexGridChunk[_chunkCountX * _chunkCountZ];
