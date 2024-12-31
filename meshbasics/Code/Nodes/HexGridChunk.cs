@@ -23,11 +23,10 @@ public sealed partial class HexGridChunk : Node3D {
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
-    private bool _labelsVisible = false;
+    private bool _labelsVisible = true;
 
     public override void _Ready() {
         Triangulate();
-        SetUIVisible(true);
     }
 
     public override void _Process(double delta) {

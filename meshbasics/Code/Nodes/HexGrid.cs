@@ -115,7 +115,11 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void FindPath(HexCell fromCell, HexCell toCell, int speed) {
+        System.Diagnostics.Stopwatch sw = new();
+        sw.Start();
         Search(fromCell, toCell, speed);
+        sw.Stop();
+        GD.Print(sw.ElapsedMilliseconds);
     }
 
     private void Search(HexCell fromCell, HexCell toCell, int speed) {
