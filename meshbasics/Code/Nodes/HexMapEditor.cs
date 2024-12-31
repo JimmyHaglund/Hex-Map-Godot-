@@ -36,7 +36,7 @@ public sealed partial class HexMapEditor : Control {
 
     public override void _EnterTree() {
         base._EnterTree();
-        ShowGrid(false);
+        ShowGrid(true);
     }
 
     public override void _UnhandledInput(InputEvent @event) {
@@ -69,6 +69,7 @@ public sealed partial class HexMapEditor : Control {
 
     public void SetEditMode(bool value) {
         _editMode = value;
+        HexGrid.SetUIVisible(!value);
     }
 
     public void SetElevation(float elevationStep) {

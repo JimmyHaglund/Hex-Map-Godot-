@@ -27,6 +27,7 @@ public sealed partial class HexGridChunk : Node3D {
 
     public override void _Ready() {
         Triangulate();
+        SetUIVisible(true);
     }
 
     public override void _Process(double delta) {

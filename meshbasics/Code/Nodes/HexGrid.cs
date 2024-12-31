@@ -162,7 +162,6 @@ public sealed partial class HexGrid : Node3D {
 
         Label3D label = this.InstantiateOrphan<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
-        label.Text = cell.Coordinates.ToStringOnSeparateLines();
         cell.Elevation = 0;
         cell.UiRect = label;
 
