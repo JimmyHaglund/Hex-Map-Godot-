@@ -50,12 +50,6 @@ public sealed partial class HexMapEditor : Control {
         HexGrid.MapReset -= OnMapReset;
     }
 
-    private void OnMapReset() {
-        _previousCell = null;
-        _searchFromCell = null;
-        _searchToCell = null;
-    }
-
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
             HandleInput();
@@ -67,8 +61,6 @@ public sealed partial class HexMapEditor : Control {
         }
         _previousCell = null;
     }
-
-    
 
     public void SetEditMode(bool value) {
         _editMode = value;
@@ -210,9 +202,9 @@ public sealed partial class HexMapEditor : Control {
     private void CreateUnit() { 
         var cell = GetCellUnderCursor();
         if (cell is null) return;
-        HexGrid.InstantiateChild<HexUnit>(_unitPrefab);
+        var unit = HexGrid.InstantiateChild<HexUnit>(_unitPrefab);
+        unit.Location = cell;
     }
-
 
     private void EditCells(HexCell center) {
         if (center is null) return;
@@ -280,6 +272,13 @@ public sealed partial class HexMapEditor : Control {
             cell.PlantLevel = _activePlantLevel;
         }
     }
+
+    private void OnMapReset() {
+        _previousCell = null;
+        _searchFromCell = null;
+        _searchToCell = null;
+    }
+
 
     #region Definitions
     private enum OptionalToggle {
