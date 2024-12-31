@@ -30,4 +30,13 @@ public sealed partial class HexUnit : Node3D{
     public void ValidateLocation() {
         Position = _location.Position;
     }
+    public void Die() { 
+        _location.Unit = null;
+        QueueFree();
+    }
+
+    public override void _ExitTree() {
+        if (_location is null) return;
+        _location.Unit = null;
+    }
 }

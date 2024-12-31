@@ -53,7 +53,11 @@ public sealed partial class HexMapEditor : Control {
             return;
         }
         if (Input.IsKeyPressed(Key.U)) { 
-            CreateUnit();
+            if (Input.IsKeyPressed(Key.Shift)) { 
+                DestroyUnit();
+            } else { 
+                CreateUnit();
+            }
             return;
         }
         _previousCell = null;
@@ -202,6 +206,13 @@ public sealed partial class HexMapEditor : Control {
         var unit = HexGrid.InstantiateChild<HexUnit>(_unitPrefab);
         unit.Location = cell;
         unit.Orientation = (float)(new Random().NextDouble() * 360.0f);
+    }
+
+    private void DestroyUnit() {
+        HexCell cell = GetCellUnderCursor();
+        if (cell is not null && cell.Unit is not null) {
+            cell.Unit.Die();
+        }
     }
 
     private void EditCells(HexCell center) {
