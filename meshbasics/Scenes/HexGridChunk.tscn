@@ -73,6 +73,7 @@ mesh = SubResource("ArrayMesh_0fglf")
 script = ExtResource("6_nfodi")
 CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
 AltShape = NodePath("AltStaticBody/AltCollisionShape3D")
+UseTerrainTypes = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Terrain"]
 

@@ -2,7 +2,7 @@ shader_type spatial;
 #include "Water.gdshaderinc"
 
 uniform sampler2D _MainTex;
-uniform vec4 _Color : source_color = vec4(1, 1, 1, 1);
+uniform vec4 _Color : source_color;
 uniform float _Metallic;
 uniform float _Glossiness;
 

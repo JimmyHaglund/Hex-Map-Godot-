@@ -207,9 +207,6 @@ public sealed partial class HexGridChunk : Node3D {
             else {
                 TriangulateCorner(v5, nextNeighbor, e1.v5, cell, e2.v5, neighbor);
             }
-
-            // AddTriangle(v2, v4, v5);
-            // AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
         }
     }
 
@@ -265,13 +262,12 @@ public sealed partial class HexGridChunk : Node3D {
         else {
             Terrain.AddTriangle(bottom, left, right);
             Terrain.AddTriangleColor(_splatColor1, _splatColor2, _splatColor3);
+            Vector3 types;
+            types.X = bottomCell.TerrainTypeIndex;
+            types.Y = leftCell.TerrainTypeIndex;
+            types.Z = rightCell.TerrainTypeIndex;
+            Terrain.AddTriangleTerrainTypes(types);
         }
-
-        Vector3 types;
-        types.X = bottomCell.TerrainTypeIndex;
-        types.Y = leftCell.TerrainTypeIndex;
-        types.Z = rightCell.TerrainTypeIndex;
-        Terrain.AddTriangleTerrainTypes(types);
 
         Features.AddWall(bottom, bottomCell, left, leftCell, right, rightCell);
     }
@@ -595,8 +591,8 @@ public sealed partial class HexGridChunk : Node3D {
 
         Terrain.AddTriangleColor(_splatColor1);
         Terrain.AddQuadColor(_splatColor1);
-        Terrain.AddTriangleColor(_splatColor1);
         Terrain.AddQuadColor(_splatColor1);
+        Terrain.AddTriangleColor(_splatColor1);
 
         Vector3 types;
         types.X = types.Y = types.Z = cell.TerrainTypeIndex;

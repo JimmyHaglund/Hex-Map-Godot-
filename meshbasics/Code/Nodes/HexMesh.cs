@@ -57,15 +57,14 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
         surfaceTool.SetMaterial(this.GetActiveMaterial(0));
+        surfaceTool.SetCustomFormat(0, SurfaceTool.CustomFormat.RgbFloat);
         for (var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
             surfaceTool.SetNormal(_normals[n]);
-            surfaceTool.SetCustomFormat(0, SurfaceTool.CustomFormat.RgbFloat);
 
             if (UseTerrainTypes) {
                 var terrain = _terrainTypes[n];
                 surfaceTool.SetCustom(0, new(terrain.X, terrain.Y, terrain.Z));
-                ListPool<Vector3>.Add(_terrainTypes);
             }
             if (UseUVCoordinates) {
                 var uv = Vector2.Zero;
@@ -86,11 +85,15 @@ public sealed partial class HexMesh : MeshInstance3D {
 
         ListPool<Vector3>.Add(_vertices);
         ListPool<Vector3>.Add(_normals);
+        
         if (UseColors) {
             ListPool<Color>.Add(_colors);
         }
         if (UseUVCoordinates) {
             ListPool<Vector2>.Add(_uvs);
+        }
+        if (UseTerrainTypes) {
+            ListPool<Vector3>.Add(_terrainTypes);
         }
 
         if (!UseCollider) return;
@@ -228,6 +231,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         _colors.Add(color);
         _colors.Add(color);
         _colors.Add(color);
+
         _colors.Add(color);
         _colors.Add(color);
         _colors.Add(color);
@@ -295,7 +299,6 @@ public sealed partial class HexMesh : MeshInstance3D {
         _terrainTypes.Add(types);
         _terrainTypes.Add(types);
         _terrainTypes.Add(types);
-
         _terrainTypes.Add(types);
         _terrainTypes.Add(types);
         _terrainTypes.Add(types);

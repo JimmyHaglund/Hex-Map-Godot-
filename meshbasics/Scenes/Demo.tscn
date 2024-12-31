@@ -1,11 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=16 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapEditor.cs" id="4_fqh23"]
 [ext_resource type="ButtonGroup" uid="uid://c4mj36swn000w" path="res://Misc/RiverControlButtonGroup.tres" id="4_olliq"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
-[ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="4_u4nh7"]
 [ext_resource type="ButtonGroup" uid="uid://13l07g23mpmk" path="res://Misc/RoadControlButtonGroup.tres" id="5_0l2ld"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 [ext_resource type="ButtonGroup" uid="uid://dpb8786r04y0a" path="res://Misc/WallControlButtonGroup.tres" id="6_26ap1"]
@@ -71,7 +70,6 @@ shadow_opacity = 0.0
 shadow_blur = 0.0
 
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
-NoiseSource = ExtResource("4_u4nh7")
 Colors = PackedColorArray(0.741531, 0.696732, 0.348844, 1, 0.294634, 0.540796, 0.262349, 1, 0.227451, 0.294118, 0.894118, 1, 0.835294, 0.337255, 0.27451, 1, 0.837469, 0.837469, 0.837469, 1)
 
 [node name="MousePointer" type="Node3D" parent="."]
