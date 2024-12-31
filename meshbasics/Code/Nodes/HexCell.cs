@@ -238,6 +238,12 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
+    public int SearchPriority {
+        get {
+            return _distance + SearchHeuristic;
+        }
+    }
+
     public bool HasRiverThroughEdge(HexDirection direction) {
         return
             _hasIncomingRiver && _incomingRiver == direction ||

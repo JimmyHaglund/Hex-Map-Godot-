@@ -193,7 +193,7 @@ public sealed partial class HexGrid : Node3D {
                     neighbor.PathFrom = current;
                     neighbor.Distance = distance;
                 }
-                frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+                frontier.Sort((x, y) => x.SearchPriority.CompareTo(y.SearchPriority));
             }
         }
         
