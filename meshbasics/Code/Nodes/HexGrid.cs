@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
+using System;
 using Godot;
 
 namespace JHM.MeshBasics;
@@ -28,6 +26,8 @@ public sealed partial class HexGrid : Node3D {
     public bool IsRefreshing => _refreshStack > 0;
     private HexCellPriorityQueue _searchFrontier;
 
+
+    public static event Action MapReset;
 
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
@@ -84,6 +84,7 @@ public sealed partial class HexGrid : Node3D {
         CreateChunks();
         CreateCells();
         HexMapCamera.ValidatePosition();
+        MapReset?.Invoke();
         return true;
     }
 
@@ -137,16 +138,17 @@ public sealed partial class HexGrid : Node3D {
         fromCell.Distance = 0;
         _searchFrontier.Enqueue(fromCell);
         fromCell.EnableHighlight(Colors.Blue);
-        toCell.EnableHighlight(Colors.Red);
         while (_searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
 
             if (current == toCell) {
-                current = current.PathFrom;
                 while (current != fromCell) {
+                    int turn = current.Distance / speed;
+                    current.SetLabel(turn.ToString());
                     current.EnableHighlight(Colors.White);
                     current = current.PathFrom;
                 }
+                toCell.EnableHighlight(Colors.Red);
                 break;
             }
 
@@ -185,7 +187,6 @@ public sealed partial class HexGrid : Node3D {
 
                 if (neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = distance;
-                    neighbor.SetLabel(turn.ToString());
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic =
                         neighbor.Coordinates.DistanceTo(toCell.Coordinates);
@@ -194,7 +195,6 @@ public sealed partial class HexGrid : Node3D {
                     var oldPriority = neighbor.SearchPriority;
                     neighbor.PathFrom = current;
                     neighbor.Distance = distance;
-                    neighbor.SetLabel(turn.ToString());
                     _searchFrontier.Change(neighbor, oldPriority);
                 }
             }

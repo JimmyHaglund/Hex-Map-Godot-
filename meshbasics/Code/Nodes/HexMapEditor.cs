@@ -41,6 +41,18 @@ public sealed partial class HexMapEditor : Control {
     public override void _EnterTree() {
         base._EnterTree();
         ShowGrid(true);
+
+        HexGrid.MapReset += OnMapReset;
+    }
+
+    public override void _ExitTree() {
+        HexGrid.MapReset -= OnMapReset;
+    }
+
+    private void OnMapReset() {
+        _previousCell = null;
+        _searchFromCell = null;
+        _searchToCell = null;
     }
 
     public override void _UnhandledInput(InputEvent @event) {
