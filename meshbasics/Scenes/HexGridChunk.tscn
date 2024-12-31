@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGridChunk.cs" id="1_hk31i"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
-[ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/VertexColorMaterial.tres" id="5_a1qwg"]
+[ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/TerrainMaterial.tres" id="5_a1qwg"]
 [ext_resource type="Material" uid="uid://cmgf5cc3lk3rn" path="res://Materials/WaterMaterial.tres" id="5_uat4n"]
 [ext_resource type="Material" uid="uid://dpwbat2hwd6dq" path="res://Materials/ShoreWaterMaterial.tres" id="6_gl15j"]
 [ext_resource type="Material" uid="uid://deb1ldds6tidn" path="res://Materials/RoadMaterial.tres" id="6_n8kls"]
