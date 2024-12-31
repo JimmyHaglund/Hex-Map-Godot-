@@ -141,6 +141,7 @@ public sealed partial class HexGrid : Node3D {
         fromCell.EnableHighlight(Colors.Blue);
         while (_searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
+            current.SearchPhase += 1;
 
             if (current == toCell) {
                 while (current != fromCell) {
@@ -157,7 +158,7 @@ public sealed partial class HexGrid : Node3D {
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null) {
+                if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase) {
                     continue;
                 }
                 if (neighbor.IsUnderwater) {
