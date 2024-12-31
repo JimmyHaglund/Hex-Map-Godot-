@@ -1,6 +1,7 @@
 using System.IO;
 using System;
 using Godot;
+using System.Collections.Generic;
 
 namespace JHM.MeshBasics;
 
@@ -29,6 +30,7 @@ public sealed partial class HexGrid : Node3D {
     private HexCell _currentPathFrom;
     private HexCell _currentPathTo;
     private bool _currentPathExists;
+    private List<HexUnit> _units = new List<HexUnit>();
 
     public static event Action MapReset;
 
@@ -72,6 +74,7 @@ public sealed partial class HexGrid : Node3D {
             return false;
         }
         ClearPath();
+        ClearUnits();
         if (_chunks != null) {
             for (int i = 0; i < _chunks.Length; i++) {
                 _chunks[i].QueueFree();
@@ -101,6 +104,7 @@ public sealed partial class HexGrid : Node3D {
 
     public void Load(BinaryReader reader, int header) {
         ClearPath();
+        ClearUnits();
         int x = 20, z = 15;
         if (header >= 1) {
             x = reader.ReadInt32();
@@ -228,7 +232,6 @@ public sealed partial class HexGrid : Node3D {
         _currentPathFrom = _currentPathTo = null;
     }
 
-
     private void CreateChunks() {
         _chunks = new HexGridChunk[_chunkCountX * _chunkCountZ];
 
@@ -296,6 +299,13 @@ public sealed partial class HexGrid : Node3D {
         int localZ = z - chunkZ * HexMetrics.ChunkSizeZ;
         chunk.AddCell(localX + localZ * HexMetrics.ChunkSizeX, cell);
 
+    }
+
+    private void ClearUnits() {
+        for (int i = 0; i < _units.Count; i++) {
+            _units[i].Die();
+        }
+        _units.Clear();
     }
 
     // private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{
