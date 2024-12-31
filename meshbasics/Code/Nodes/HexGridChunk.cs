@@ -267,6 +267,12 @@ public sealed partial class HexGridChunk : Node3D {
             Terrain.AddTriangleColor(_splatColor1, _splatColor2, _splatColor3);
         }
 
+        Vector3 types;
+        types.X = bottomCell.TerrainTypeIndex;
+        types.Y = leftCell.TerrainTypeIndex;
+        types.Z = rightCell.TerrainTypeIndex;
+        Terrain.AddTriangleTerrainTypes(types);
+
         Features.AddWall(bottom, bottomCell, left, leftCell, right, rightCell);
     }
 
@@ -279,9 +285,14 @@ public sealed partial class HexGridChunk : Node3D {
         Vector3 v4 = HexMetrics.TerraceLerp(begin, right, 1);
         Color c3 = HexMetrics.TerraceLerp(_splatColor1, _splatColor2, 1);
         Color c4 = HexMetrics.TerraceLerp(_splatColor1, _splatColor3, 1);
+        Vector3 types;
+        types.X = beginCell.TerrainTypeIndex;
+        types.Y = leftCell.TerrainTypeIndex;
+        types.Z = rightCell.TerrainTypeIndex;
 
         Terrain.AddTriangle(begin, v3, v4);
         Terrain.AddTriangleColor(_splatColor1, c3, c4);
+        Terrain.AddTriangleTerrainTypes(types);
 
         for (int i = 2; i < HexMetrics.TerraceSteps; i++) {
             Vector3 v1 = v3;
@@ -294,10 +305,12 @@ public sealed partial class HexGridChunk : Node3D {
             c4 = HexMetrics.TerraceLerp(_splatColor1, _splatColor3, i);
             Terrain.AddQuad(v1, v2, v3, v4);
             Terrain.AddQuadColor(c1, c2, c3, c4);
+            Terrain.AddQuadTerrainTypes(types);
         }
 
         Terrain.AddQuad(v3, v4, left, right);
         Terrain.AddQuadColor(c3, c4, _splatColor2, _splatColor3);
+        Terrain.AddQuadTerrainTypes(types);
     }
 
     private void TriangulateCornerTerracesCliff(
@@ -309,19 +322,24 @@ public sealed partial class HexGridChunk : Node3D {
         if (b < 0) b = -b;
         Vector3 boundary = HexMetrics.Perturb(begin).Lerp(HexMetrics.Perturb(right), b);
         Color boundaryColor = _splatColor1.Lerp(_splatColor3, b);
+        Vector3 types;
+        types.X = beginCell.TerrainTypeIndex;
+        types.Y = leftCell.TerrainTypeIndex;
+        types.Z = rightCell.TerrainTypeIndex;
 
         TriangulateBoundaryTriangle(
-            begin, _splatColor1, left, _splatColor2, boundary, boundaryColor
+            begin, _splatColor1, left, _splatColor2, boundary, boundaryColor, types
         );
 
         if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
             TriangulateBoundaryTriangle(
-                left, _splatColor2, right, _splatColor3, boundary, boundaryColor
+                left, _splatColor2, right, _splatColor3, boundary, boundaryColor, types
             );
         }
         else {
             Terrain.AddTriangleUnperturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
             Terrain.AddTriangleColor(_splatColor2, _splatColor3, boundaryColor);
+            Terrain.AddTriangleTerrainTypes(types);
         }
     }
 
@@ -334,19 +352,24 @@ public sealed partial class HexGridChunk : Node3D {
         b *= Mathf.Sign(b);
         Vector3 boundary = HexMetrics.Perturb(begin).Lerp(HexMetrics.Perturb(left), b);
         Color boundaryColor = _splatColor1.Lerp(_splatColor2, b);
+        Vector3 types;
+        types.X = beginCell.TerrainTypeIndex;
+        types.Y = leftCell.TerrainTypeIndex;
+        types.Z = rightCell.TerrainTypeIndex;
 
         TriangulateBoundaryTriangle(
-            right, _splatColor3, begin, _splatColor1, boundary, boundaryColor
+            right, _splatColor3, begin, _splatColor1, boundary, boundaryColor, types
         );
 
         if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope) {
             TriangulateBoundaryTriangle(
-                left, _splatColor2, right, _splatColor3, boundary, boundaryColor
+                left, _splatColor2, right, _splatColor3, boundary, boundaryColor, types
             );
         }
         else {
             Terrain.AddTriangleUnperturbed(HexMetrics.Perturb(left), HexMetrics.Perturb(right), boundary);
             Terrain.AddTriangleColor(_splatColor2, _splatColor3, boundaryColor);
+            Terrain.AddTriangleTerrainTypes(types);
         }
     }
 
@@ -799,7 +822,8 @@ public sealed partial class HexGridChunk : Node3D {
     private void TriangulateBoundaryTriangle(
         Vector3 begin, Color beginColor,
         Vector3 left, Color leftColor,
-        Vector3 boundary, Color boundaryColor
+        Vector3 boundary, Color boundaryColor,
+        Vector3 types
     ) {
         Vector3 v2 = HexMetrics.Perturb(HexMetrics.TerraceLerp(begin, left, 1));
         Color c2 = HexMetrics.TerraceLerp(beginColor, leftColor, 1);
@@ -807,6 +831,7 @@ public sealed partial class HexGridChunk : Node3D {
 
         Terrain.AddTriangleUnperturbed(HexMetrics.Perturb(begin), v2, boundary);
         Terrain.AddTriangleColor(beginColor, c2, boundaryColor);
+        Terrain.AddTriangleTerrainTypes(types);
 
         for (int i = 2; i < HexMetrics.TerraceSteps; i++) {
             Vector3 v1 = v2;
@@ -815,10 +840,12 @@ public sealed partial class HexGridChunk : Node3D {
             c2 = HexMetrics.TerraceLerp(beginColor, leftColor, i);
             Terrain.AddTriangleUnperturbed(v1, v2, boundary);
             Terrain.AddTriangleColor(c1, c2, boundaryColor);
+            Terrain.AddTriangleTerrainTypes(types);
         }
 
         Terrain.AddTriangleUnperturbed(v2, HexMetrics.Perturb(left), boundary);
         Terrain.AddTriangleColor(c2, leftColor, boundaryColor);
+        Terrain.AddTriangleTerrainTypes(types);
     }
 
     private void TriangulateEdgeFan(Vector3 center, EdgeVertices edge, float type) {
