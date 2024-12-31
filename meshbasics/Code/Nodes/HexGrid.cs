@@ -114,23 +114,26 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    public void FindDistancesTo(HexCell cell) {
+    public void FindPath(HexCell fromCell, HexCell toCell) {
         if (_cancellationToken is not null) {
             _cancellationToken.Cancel();
         }
         _cancellationToken = new();
-        _ = Search(cell, _cancellationToken.Token);
+        _ = Search(fromCell, toCell, _cancellationToken.Token);
     }
 
-    private async Task Search(HexCell cell, System.Threading.CancellationToken cancellationToken) {
+    private async Task Search(HexCell fromCell, HexCell toCell, System.Threading.CancellationToken cancellationToken) {
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Distance = int.MaxValue;
+            _cells[i].DisableHighlight();
         }
         var delayMilliseconds = (int)(1.0f / 60.0f * 1000);
         
         List<HexCell> frontier = new();
-        cell.Distance = 0;
-        frontier.Add(cell);
+        fromCell.Distance = 0;
+        frontier.Add(fromCell);
+        fromCell.EnableHighlight(Colors.Blue);
+        toCell.EnableHighlight(Colors.Red);
         while (frontier.Count > 0) {
             #region Task Management...
             try {

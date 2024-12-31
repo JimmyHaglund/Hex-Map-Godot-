@@ -71,8 +71,8 @@ public sealed partial class HexMapEditor : Control {
             }
             _searchFromCell = cell;
             _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
-        } else {
-            HexGrid.FindDistancesTo(cell);
+        } else if (_searchFromCell != null && _searchFromCell != cell) {
+            HexGrid.FindPath(_searchFromCell, cell);
         }
         _previousCell = cell;
     }
