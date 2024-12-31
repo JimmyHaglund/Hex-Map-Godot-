@@ -210,9 +210,8 @@ public sealed partial class HexMapEditor : Control {
 
     private void DestroyUnit() {
         HexCell cell = GetCellUnderCursor();
-        if (cell is not null && cell.Unit is not null) {
-            cell.Unit.Die();
-        }
+        if (cell is null || cell.Unit is null) return;
+        HexGrid.RemoveUnit(cell.Unit);
     }
 
     private void EditCells(HexCell center) {

@@ -138,6 +138,11 @@ public sealed partial class HexGrid : Node3D {
         unit.Orientation = orientation;
     }
 
+    public void RemoveUnit(HexUnit unit) {
+        _units.Remove(unit);
+        unit.Die();
+    }
+
     private bool Search(HexCell fromCell, HexCell toCell, int speed) {
         _searchFrontierPhase += 2;
         if (_searchFrontier == null) {
