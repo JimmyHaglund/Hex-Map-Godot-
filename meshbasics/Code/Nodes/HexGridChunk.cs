@@ -635,7 +635,10 @@ public sealed partial class HexGridChunk : Node3D {
     }
 
     private void TriangulateAdjacentToRiver(
-        HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e
+        HexDirection direction,
+        HexCell cell,
+        Vector3 center,
+        EdgeVertices e
     ) {
         if (cell.HasRoads) {
             TriangulateRoadAdjacentToRiver(direction, cell, center, e);
@@ -664,8 +667,8 @@ public sealed partial class HexGridChunk : Node3D {
             center.Lerp(e.v5, 0.5f)
         );
 
-        TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
-        TriangulateEdgeFan(center, m, cell.Color);
+        TriangulateEdgeStrip(m, _splatColor1, e, _splatColor1);
+        TriangulateEdgeFan(center, m, _splatColor1);
 
         if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction)) {
             Features.AddFeature(cell, (center + e.v1 + e.v5) * (1f / 3f));
