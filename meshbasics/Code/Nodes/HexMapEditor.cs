@@ -8,6 +8,7 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexMapEditor : Control {
     [Export] private ShaderMaterial _terrainMaterial;
+    [Export] private PackedScene _unitPrefab;
     [Export] public Color[] Colors { get; set; }
     [Export] public HexGrid HexGrid { get; set; }
 
@@ -58,48 +59,16 @@ public sealed partial class HexMapEditor : Control {
     public override void _UnhandledInput(InputEvent @event) {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) {
             HandleInput();
-        }
-        else {
-            _previousCell = null;
-        }
-    }
-
-    void HandleInput() {
-        if (HexGrid.IsRefreshing) return;
-        var mousePosition = Mouse3D.MouseWorldPosition;
-        var cell = HexGrid.GetCell(mousePosition);
-        if (cell is null) {
-            _previousCell = null;
             return;
         }
-        if (_previousCell != null && _previousCell != cell) {
-            ValidateDrag(cell);
-        } else {
-            _isDrag = false;
+        if (Input.IsKeyPressed(Key.U)) { 
+            CreateUnit();
+            return;
         }
-        if (_editMode) {
-            EditCells(cell);
-        }
-        else if (Input.IsKeyPressed(Key.Shift) && cell != _searchToCell) {
-            if (_searchFromCell != cell) {
-                if (_searchFromCell != null) {
-                    _searchFromCell.DisableHighlight();
-                }
-                _searchFromCell = cell;
-                _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
-                if (_searchToCell != null) {
-                    HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
-                }
-            }
-        }
-        else if (_searchFromCell != null && _searchFromCell != cell) {
-            if (_searchToCell != cell) {
-                _searchToCell = cell;
-                HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
-            }
-        }
-        _previousCell = cell;
+        _previousCell = null;
     }
+
+    
 
     public void SetEditMode(bool value) {
         _editMode = value;
@@ -195,6 +164,55 @@ public sealed partial class HexMapEditor : Control {
         }
         _isDrag = false;
     }
+
+    private void HandleInput() {
+        if (HexGrid.IsRefreshing) return;
+        var cell = GetCellUnderCursor();
+        if (cell is null) {
+            _previousCell = null;
+            return;
+        }
+        if (_previousCell != null && _previousCell != cell) {
+            ValidateDrag(cell);
+        }
+        else {
+            _isDrag = false;
+        }
+        if (_editMode) {
+            EditCells(cell);
+        }
+        else if (Input.IsKeyPressed(Key.Shift) && cell != _searchToCell) {
+            if (_searchFromCell != cell) {
+                if (_searchFromCell != null) {
+                    _searchFromCell.DisableHighlight();
+                }
+                _searchFromCell = cell;
+                _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
+                if (_searchToCell != null) {
+                    HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
+                }
+            }
+        }
+        else if (_searchFromCell != null && _searchFromCell != cell) {
+            if (_searchToCell != cell) {
+                _searchToCell = cell;
+                HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
+            }
+        }
+        _previousCell = cell;
+    }
+
+    private HexCell GetCellUnderCursor() {
+        var mousePosition = Mouse3D.MouseWorldPosition;
+        return HexGrid.GetCell(mousePosition);
+    }
+
+    private void CreateUnit() { 
+        var cell = GetCellUnderCursor();
+        if (cell is null) return;
+        HexGrid.InstantiateChild<HexUnit>(_unitPrefab);
+    }
+
 
     private void EditCells(HexCell center) {
         if (center is null) return;
