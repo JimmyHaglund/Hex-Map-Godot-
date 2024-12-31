@@ -177,7 +177,7 @@ public sealed partial class HexGridChunk : Node3D {
             TriangulateEdgeTerraces(e1, cell, e2, neighbor, hasRoad);
         }
         else {
-            TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color, hasRoad);
+            TriangulateEdgeStrip(e1, _splatColor1, e2, _splatColor2, hasRoad);
         }
 
         Features.AddWall(e1, cell, e2, neighbor, hasRiver, hasRoad);
@@ -776,19 +776,19 @@ public sealed partial class HexGridChunk : Node3D {
         bool hasRoad = false
     ) {
         EdgeVertices e2 = EdgeVertices.TerraceLerp(begin, end, 1);
-        Color c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, 1);
+        Color c2 = HexMetrics.TerraceLerp(_splatColor1, _splatColor2, 1);
 
-        TriangulateEdgeStrip(begin, beginCell.Color, e2, c2, hasRoad);
+        TriangulateEdgeStrip(begin, _splatColor1, e2, c2, hasRoad);
 
         for (var i = 2; i < HexMetrics.TerraceSteps; i++) {
             EdgeVertices e1 = e2;
             Color c1 = c2;
             e2 = EdgeVertices.TerraceLerp(begin, end, i);
-            c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, i);
+            c2 = HexMetrics.TerraceLerp(_splatColor1, _splatColor2, i);
             TriangulateEdgeStrip(e1, c1, e2, c2, hasRoad);
         }
 
-        TriangulateEdgeStrip(e2, c2, end, c2, hasRoad);
+        TriangulateEdgeStrip(e2, c2, end, _splatColor2, hasRoad);
     }
 
     private void TriangulateBoundaryTriangle(
