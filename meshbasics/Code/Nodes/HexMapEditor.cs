@@ -65,20 +65,26 @@ public sealed partial class HexMapEditor : Control {
         } else {
             _isDrag = false;
         }
-        if (_editMode) { 
+        if (_editMode) {
             EditCells(cell);
-        } else if (Input.IsKeyPressed(Key.Shift) && cell != _searchToCell) {
-            if (_searchFromCell != null) { 
-                _searchFromCell.DisableHighlight();
+        }
+        else if (Input.IsKeyPressed(Key.Shift) && cell != _searchToCell) {
+            if (_searchFromCell != cell) {
+                if (_searchFromCell != null) {
+                    _searchFromCell.DisableHighlight();
+                }
+                _searchFromCell = cell;
+                _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
+                if (_searchToCell != null) {
+                    HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
+                }
             }
-            _searchFromCell = cell;
-            _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
-            if (_searchToCell != null) {
+        }
+        else if (_searchFromCell != null && _searchFromCell != cell) {
+            if (_searchToCell != cell) {
+                _searchToCell = cell;
                 HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
             }
-        } else if (_searchFromCell != null && _searchFromCell != cell) {
-            _searchToCell = cell;
-            HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
         }
         _previousCell = cell;
     }
