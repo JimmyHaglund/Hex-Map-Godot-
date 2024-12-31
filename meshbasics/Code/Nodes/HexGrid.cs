@@ -100,6 +100,11 @@ public sealed partial class HexGrid : Node3D {
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Save(writer);
         }
+
+        writer.Write(_units.Count);
+        for (int i = 0; i < _units.Count; i++) {
+            _units[i].Save(writer);
+        }
     }
 
     public void Load(BinaryReader reader, int header) {

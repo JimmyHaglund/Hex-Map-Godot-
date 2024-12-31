@@ -8,7 +8,7 @@ public sealed partial class SaveLoadMenu : Control {
     [Export] private Node _listContentParent;
     [Export] private PackedScene _saveLoadItemPrefab { get; set; }
     private bool _saveMode;
-    private const int _mapVersion = 1;
+    private const int _mapVersion = 2;
 
     [Export] public HexGrid HexGrid { get; set; }
     [Export] public Label Title { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,5 +65,10 @@ public struct HexCoordinates {
             (Y < other.Y ? other.Y - Y : Y - other.Y) +
             (Z < other.Z ? other.Z - Z : Z - other.Z)
         ) / 2;
+    }
+
+    public void Save(BinaryWriter writer) { 
+        writer.Write(X);
+        writer.Write(Z);
     }
 }

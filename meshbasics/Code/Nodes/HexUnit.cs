@@ -1,4 +1,6 @@
-﻿using Godot;
+﻿using System.IO;
+using Godot;
+using static Godot.TextServer;
 
 namespace JHM.MeshBasics;
 
@@ -30,9 +32,15 @@ public sealed partial class HexUnit : Node3D{
     public void ValidateLocation() {
         Position = _location.Position;
     }
+
     public void Die() { 
         _location.Unit = null;
         QueueFree();
+    }
+
+    public void Save(BinaryWriter writer) {
+        Location.Coordinates.Save(writer);
+        writer.Write(Orientation);
     }
 
     public override void _ExitTree() {
