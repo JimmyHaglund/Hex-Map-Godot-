@@ -23,8 +23,6 @@ public sealed partial class HexGrid : Node3D {
 
     [ExportCategory("HexGrid Configuration")]
     [Export] public int Seed { get; set; } = 1234;
-    // private Task _searchTask;
-    private System.Threading.CancellationTokenSource _cancellationToken;
     
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
@@ -117,14 +115,10 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void FindPath(HexCell fromCell, HexCell toCell, int speed) {
-        if (_cancellationToken is not null) {
-            _cancellationToken.Cancel();
-        }
-        _cancellationToken = new();
-        _ = Search(fromCell, toCell, speed, _cancellationToken.Token);
+        Search(fromCell, toCell, speed);
     }
 
-    private async Task Search(HexCell fromCell, HexCell toCell, int speed, System.Threading.CancellationToken cancellationToken) {
+    private void Search(HexCell fromCell, HexCell toCell, int speed) {
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }
@@ -136,25 +130,11 @@ public sealed partial class HexGrid : Node3D {
             _cells[i].SetLabel(string.Empty);
             _cells[i].DisableHighlight();
         }
-        var delayMilliseconds = (int)(1.0f / 60.0f * 1000);
-        
         fromCell.Distance = 0;
         _searchFrontier.Enqueue(fromCell);
         fromCell.EnableHighlight(Colors.Blue);
         toCell.EnableHighlight(Colors.Red);
         while (_searchFrontier.Count > 0) {
-            #region Task Management...
-            try {
-                await Task.Delay(delayMilliseconds, cancellationToken);
-            }
-            catch (TaskCanceledException) {
-                return;
-            }
-            if (cancellationToken.IsCancellationRequested) {
-                return;
-            }
-            #endregion
-
             HexCell current = _searchFrontier.Dequeue();
 
             if (current == toCell) {
@@ -180,7 +160,7 @@ public sealed partial class HexGrid : Node3D {
                 if (edgeType == HexEdgeType.Cliff) {
                     continue;
                 }
-                int moveCost = 0;
+                int moveCost;
                 if (current.HasRoadThroughEdge(d)) {
                     moveCost = 1;
                 }
@@ -215,8 +195,6 @@ public sealed partial class HexGrid : Node3D {
                 }
             }
         }
-        
-        _cancellationToken = null;
     }
 
     private void CreateChunks() {
