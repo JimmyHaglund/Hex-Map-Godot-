@@ -71,7 +71,6 @@ public sealed partial class HexCell : Node3D {
         }
         set {
             _distance = value;
-            UpdateDistanceLabel();
         }
     }
 
@@ -497,13 +496,13 @@ public sealed partial class HexCell : Node3D {
         SetHighlightVisible(false, new(1,1,1,1));
     }
 
+    public void SetLabel(string text) {
+        _label.Text = text;
+    }
+
     private void SetHighlightVisible(bool visible, Color color) {
         var highlight = Label.GetChild<Sprite3D>(0);
         highlight.Modulate = color;
         highlight.Visible = visible;
-    }
-
-    private void UpdateDistanceLabel() {
-        _label.Text = _distance == int.MaxValue ? string.Empty : _distance.ToString();
     }
 }

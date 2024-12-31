@@ -133,6 +133,7 @@ public sealed partial class HexGrid : Node3D {
         }
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Distance = int.MaxValue;
+            _cells[i].SetLabel(string.Empty);
             _cells[i].DisableHighlight();
         }
         var delayMilliseconds = (int)(1.0f / 60.0f * 1000);
@@ -200,6 +201,7 @@ public sealed partial class HexGrid : Node3D {
 
                 if (neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = distance;
+                    neighbor.SetLabel(turn.ToString());
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic =
                         neighbor.Coordinates.DistanceTo(toCell.Coordinates);
@@ -208,6 +210,7 @@ public sealed partial class HexGrid : Node3D {
                     var oldPriority = neighbor.SearchPriority;
                     neighbor.PathFrom = current;
                     neighbor.Distance = distance;
+                    neighbor.SetLabel(turn.ToString());
                     _searchFrontier.Change(neighbor, oldPriority);
                 }
             }
