@@ -1,7 +1,8 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bwyqw5etxq68p"]
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://bwyqw5etxq68p"]
 
 [ext_resource type="Shader" path="res://Shaders/Terrain.gdshader" id="1_iydvb"]
 [ext_resource type="Texture2DArray" uid="uid://0tlepq67irod" path="res://Misc/TerrainTexture2DArray.tres" id="2_78vjt"]
+[ext_resource type="Texture2D" uid="uid://54hw6dwurqlm" path="res://Pictures/grid.png" id="2_oaahk"]
 
 [resource]
 render_priority = 0
@@ -11,3 +12,4 @@ shader_parameter/glossiness = 0.0
 shader_parameter/metallic = 0.0
 shader_parameter/layer = 0
 shader_parameter/_MainTex = ExtResource("2_78vjt")
+shader_parameter/_GridTex = ExtResource("2_oaahk")

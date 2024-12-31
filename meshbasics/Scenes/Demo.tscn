@@ -70,7 +70,6 @@ shadow_opacity = 0.0
 shadow_blur = 0.0
 
 [node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
-Colors = PackedColorArray(0.741531, 0.696732, 0.348844, 1, 0.294634, 0.540796, 0.262349, 1, 0.227451, 0.294118, 0.894118, 1, 0.835294, 0.337255, 0.27451, 1, 0.837469, 0.837469, 0.837469, 1)
 
 [node name="MousePointer" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0477524, 0.0898705, 0.0283718)

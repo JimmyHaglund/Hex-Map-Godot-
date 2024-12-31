@@ -2,6 +2,7 @@ shader_type spatial;
 render_mode blend_mix, cull_back, depth_draw_opaque;
 
 uniform sampler2DArray _MainTex;
+uniform sampler2D _GridTex;
 uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
 uniform float metallic : hint_range(0.0, 1.0) = 0.0;
@@ -21,8 +22,13 @@ void fragment() {
     vec4 c = (GetTerrainColor(terrain.x, world_vertex, COLOR.r)
 	 + GetTerrainColor(terrain.y, world_vertex, COLOR.g)
 	 + GetTerrainColor(terrain.z, world_vertex, COLOR.b));
-	// vec3 c = 0.2 * terrain;
-	ALBEDO = c.rgb * color.rgb;
+	
+	vec2 gridUV = world_vertex.xz;
+	gridUV.x *= 1.0 / (4.0 * 8.66025404);
+	gridUV.y *= 1.0 / (2.0 * 15.0);
+	vec4 grid = texture(_GridTex, gridUV);
+	
+	ALBEDO = c.rgb * grid.rgb * color.rgb;
     METALLIC = metallic;
     ROUGHNESS = 1.0 - glossiness;
 }
