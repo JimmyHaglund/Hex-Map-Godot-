@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=19 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -6,6 +6,7 @@
 [ext_resource type="ButtonGroup" uid="uid://c4mj36swn000w" path="res://Misc/RiverControlButtonGroup.tres" id="4_olliq"]
 [ext_resource type="Script" path="res://Code/Nodes/FollowMouse.cs" id="4_qyimf"]
 [ext_resource type="ButtonGroup" uid="uid://13l07g23mpmk" path="res://Misc/RoadControlButtonGroup.tres" id="5_0l2ld"]
+[ext_resource type="Script" path="res://Code/Nodes/HexGameUI.cs" id="5_dnd0l"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapCamera.cs" id="5_mpgou"]
 [ext_resource type="ButtonGroup" uid="uid://dpb8786r04y0a" path="res://Misc/WallControlButtonGroup.tres" id="6_26ap1"]
 [ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/TerrainMaterial.tres" id="6_388q4"]
@@ -81,6 +82,12 @@ script = ExtResource("4_qyimf")
 mesh = SubResource("SphereMesh_hw2ro")
 surface_material_override/0 = SubResource("StandardMaterial3D_pf745")
 
+[node name="CheckButton" type="CheckButton" parent="."]
+offset_left = 896.0
+offset_top = 14.0
+offset_right = 940.0
+offset_bottom = 38.0
+
 [node name="HexMapEditor" type="Control" parent="." node_paths=PackedStringArray("HexGrid")]
 layout_mode = 3
 anchors_preset = 0
@@ -95,7 +102,7 @@ _unitPrefab = ExtResource("7_7igmr")
 Colors = PackedColorArray(0.905049, 0.848337, 0.424126, 1, 0.259905, 0.630793, 0.479689, 1, 0.108825, 0.339266, 0.971792, 1, 0.838877, 0.111098, 0.348332, 1)
 HexGrid = NodePath("../HexGrid")
 
-[node name="Background2" type="ColorRect" parent="HexMapEditor"]
+[node name="Controls" type="ColorRect" parent="HexMapEditor"]
 layout_mode = 2
 offset_left = 44.0
 offset_top = 1.0
@@ -104,20 +111,20 @@ offset_bottom = 1257.19
 scale = Vector2(0.6, 0.6)
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HexMapEditor/Background2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HexMapEditor/Controls"]
 layout_mode = 0
 offset_left = 7.53
 offset_right = 305.53
 offset_bottom = 619.0
 
-[node name="ToggleGrid" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="ToggleGrid" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_direction = 3
 layout_mode = 2
 button_pressed = true
 text = "Show Grid"
 alignment = 2
 
-[node name="ToggleHexUI" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="ToggleHexUI" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer"]
 visible = false
 layout_direction = 3
 layout_mode = 2
@@ -125,323 +132,327 @@ button_pressed = true
 text = "Show Hex UI"
 alignment = 2
 
-[node name="Divider" type="ColorRect" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="Divider" type="ColorRect" parent="HexMapEditor/Controls/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
 color = Color(0.169245, 0.169245, 0.169245, 1)
 
-[node name="EditMode" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="EditMode" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Mode"
 alignment = 2
 
-[node name="Color" type="VBoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="Color" type="VBoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 
-[node name="CheckButton" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/Color"]
+[node name="CheckButton" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/Color"]
 layout_direction = 3
 layout_mode = 2
 text = "Apply Terrain Type"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/Color"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/Color"]
 layout_mode = 2
 max_value = 4.0
 editable = false
 scrollable = false
 tick_count = 5
 
-[node name="ColorRect" type="ColorRect" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="ColorRect" type="ColorRect" parent="HexMapEditor/Controls/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
 color = Color(0.207512, 0.207512, 0.207512, 1)
 
-[node name="ElevationControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="ElevationControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="EnableElevationCheck" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/ElevationControls"]
+[node name="EnableElevationCheck" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/ElevationControls"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Elevation"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/ElevationControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/ElevationControls"]
 layout_mode = 2
 max_value = 4.0
 value = 1.0
 tick_count = 5
 
-[node name="WaterLevelControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="WaterLevelControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="EnableElevationCheck" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/WaterLevelControls"]
+[node name="EnableElevationCheck" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/WaterLevelControls"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Water Level"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/WaterLevelControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/WaterLevelControls"]
 layout_mode = 2
 max_value = 4.0
 tick_count = 5
 
-[node name="UrbanLevelControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="UrbanLevelControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="EnableUrbanLevel" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls"]
+[node name="EnableUrbanLevel" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/UrbanLevelControls"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Urban Level"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/UrbanLevelControls"]
 layout_mode = 2
 max_value = 3.0
 value = 1.0
 tick_count = 4
 
-[node name="FarmControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="FarmControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="EnableFarmLevel" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/FarmControls"]
+[node name="EnableFarmLevel" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/FarmControls"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Farm Level"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/FarmControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/FarmControls"]
 layout_mode = 2
 max_value = 3.0
 value = 1.0
 tick_count = 4
 
-[node name="PlantControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="PlantControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="EnablePlantLevel" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/PlantControls"]
+[node name="EnablePlantLevel" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/PlantControls"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Plant Level"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/PlantControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/PlantControls"]
 layout_mode = 2
 max_value = 3.0
 value = 1.0
 tick_count = 4
 
-[node name="SpecialFeatureControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="SpecialFeatureControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Enable" type="CheckButton" parent="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls"]
+[node name="Enable" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer/SpecialFeatureControls"]
 layout_direction = 3
 layout_mode = 2
 text = "Edit Special Features"
 alignment = 2
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/SpecialFeatureControls"]
 layout_mode = 2
 min_value = 1.0
 max_value = 3.0
 value = 1.0
 tick_count = 3
 
-[node name="BrushSizeControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="BrushSizeControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/BrushSizeControls"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/BrushSizeControls"]
 layout_mode = 2
 text = "Brush Size"
 
-[node name="HSlider" type="HSlider" parent="HexMapEditor/Background2/VBoxContainer/BrushSizeControls"]
+[node name="HSlider" type="HSlider" parent="HexMapEditor/Controls/VBoxContainer/BrushSizeControls"]
 layout_mode = 2
 max_value = 4.0
 value = 1.0
 tick_count = 5
 
-[node name="RiverControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="RiverControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RiverControls"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RiverControls"]
 layout_mode = 2
 text = "River"
 
-[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RiverControls"]
+[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RiverControls"]
 layout_mode = 2
 
-[node name="Null" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles"]
+[node name="Null" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Null"]
 layout_mode = 2
 text = "N/A"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Null"]
 layout_mode = 2
 button_pressed = true
 button_group = ExtResource("4_olliq")
 
-[node name="Add" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles"]
+[node name="Add" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Add"]
 layout_mode = 2
 text = "Add"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Add"]
 layout_mode = 2
 button_group = ExtResource("4_olliq")
 
-[node name="Remove" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles"]
+[node name="Remove" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Remove"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Remove"]
 layout_mode = 2
 text = "Remove"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Remove"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Remove"]
 layout_mode = 2
 button_group = ExtResource("4_olliq")
 
-[node name="RoadControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="RoadControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RoadControls"]
 layout_mode = 2
 text = "Road"
 
-[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls"]
+[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RoadControls"]
 layout_mode = 2
 
-[node name="Null" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
+[node name="Null" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Null"]
 layout_mode = 2
 text = "N/A"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Null"]
 layout_mode = 2
 button_pressed = true
 button_group = ExtResource("5_0l2ld")
 
-[node name="Add" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
+[node name="Add" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Add"]
 layout_mode = 2
 text = "Add"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Add"]
 layout_mode = 2
 button_group = ExtResource("5_0l2ld")
 
-[node name="Remove" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles"]
+[node name="Remove" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Remove"]
 layout_mode = 2
 text = "Remove"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Remove"]
 layout_mode = 2
 button_group = ExtResource("5_0l2ld")
 
-[node name="WallControls" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="WallControls" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/WallControls"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/WallControls"]
 layout_mode = 2
 text = "Walls"
 
-[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/WallControls"]
+[node name="Toggles" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/WallControls"]
 layout_mode = 2
 
-[node name="Null" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles"]
+[node name="Null" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Null"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Null"]
 layout_mode = 2
 text = "N/A"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Null"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Null"]
 layout_mode = 2
 button_pressed = true
 button_group = ExtResource("6_26ap1")
 
-[node name="Add" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles"]
+[node name="Add" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Add"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Add"]
 layout_mode = 2
 text = "Add"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Add"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Add"]
 layout_mode = 2
 button_group = ExtResource("6_26ap1")
 
-[node name="Remove" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles"]
+[node name="Remove" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Remove"]
+[node name="Label" type="Label" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Remove"]
 layout_mode = 2
 text = "Remove"
 
-[node name="Toggle" type="CheckBox" parent="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Remove"]
+[node name="Toggle" type="CheckBox" parent="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Remove"]
 layout_mode = 2
 button_group = ExtResource("6_26ap1")
 
-[node name="SaveLoad" type="BoxContainer" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="SaveLoad" type="BoxContainer" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="HexMapEditor/Background2/VBoxContainer/SaveLoad"]
+[node name="SaveButton" type="Button" parent="HexMapEditor/Controls/VBoxContainer/SaveLoad"]
 layout_mode = 2
 text = "Save"
 
-[node name="LoadButton" type="Button" parent="HexMapEditor/Background2/VBoxContainer/SaveLoad"]
+[node name="LoadButton" type="Button" parent="HexMapEditor/Controls/VBoxContainer/SaveLoad"]
 layout_mode = 2
 text = "Load"
 
-[node name="NewMapButton" type="Button" parent="HexMapEditor/Background2/VBoxContainer"]
+[node name="NewMapButton" type="Button" parent="HexMapEditor/Controls/VBoxContainer"]
 layout_mode = 2
 text = "New Map"
 
-[node name="NewMapMenu" type="Control" parent="."]
+[node name="NewMapMenu" type="Control" parent="HexMapEditor"]
 visible = false
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -1130.86
+offset_top = -14.8148
+offset_right = -1130.86
+offset_bottom = -14.8148
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="NewMapMenu"]
+[node name="ColorRect" type="ColorRect" parent="HexMapEditor/NewMapMenu"]
 layout_mode = 0
 offset_right = 1164.0
 offset_bottom = 649.0
 color = Color(0.211765, 0.211765, 0.211765, 0.8)
 
-[node name="BoxContainer" type="BoxContainer" parent="NewMapMenu"]
+[node name="BoxContainer" type="BoxContainer" parent="HexMapEditor/NewMapMenu"]
 layout_mode = 0
 offset_left = 422.0
 offset_top = 156.0
@@ -449,49 +460,53 @@ offset_right = 462.0
 offset_bottom = 196.0
 vertical = true
 
-[node name="Label" type="Label" parent="NewMapMenu/BoxContainer"]
+[node name="Label" type="Label" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 text = "Create New Map"
 
-[node name="CreateSmallMapButton" type="Button" parent="NewMapMenu/BoxContainer"]
+[node name="CreateSmallMapButton" type="Button" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 text = "Small"
 
-[node name="CreateMediumMapButton" type="Button" parent="NewMapMenu/BoxContainer"]
+[node name="CreateMediumMapButton" type="Button" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 text = "Medium"
 
-[node name="CreateLargeMapButton" type="Button" parent="NewMapMenu/BoxContainer"]
+[node name="CreateLargeMapButton" type="Button" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 text = "Large"
 
-[node name="Cancel" type="Button" parent="NewMapMenu/BoxContainer"]
+[node name="Cancel" type="Button" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveLoadMenu" type="Control" parent="." node_paths=PackedStringArray("_listContentParent", "HexGrid", "Title", "ActionButton", "NameInput")]
+[node name="SaveLoadMenu" type="Control" parent="HexMapEditor" node_paths=PackedStringArray("_listContentParent", "HexGrid", "Title", "ActionButton", "NameInput")]
 visible = false
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -1130.86
+offset_top = -14.8148
+offset_right = -1130.86
+offset_bottom = -14.8148
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_dqswk")
 _listContentParent = NodePath("Menu/FileListContainer/FileList")
 _saveLoadItemPrefab = ExtResource("10_4ppnm")
-HexGrid = NodePath("../HexGrid")
+HexGrid = NodePath("../../HexGrid")
 Title = NodePath("Menu/Title")
 ActionButton = NodePath("Menu/ActionButtonsContainer/ActionButton")
 NameInput = NodePath("Menu/FileNameEdit")
 
-[node name="Background" type="ColorRect" parent="SaveLoadMenu"]
+[node name="Background" type="ColorRect" parent="HexMapEditor/SaveLoadMenu"]
 layout_mode = 0
 offset_right = 1164.0
 offset_bottom = 649.0
 color = Color(0.211765, 0.211765, 0.211765, 0.8)
 
-[node name="Menu" type="BoxContainer" parent="SaveLoadMenu"]
+[node name="Menu" type="BoxContainer" parent="HexMapEditor/SaveLoadMenu"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 0
 offset_left = 357.0
@@ -500,93 +515,103 @@ offset_right = 607.0
 offset_bottom = 389.0
 vertical = true
 
-[node name="Title" type="Label" parent="SaveLoadMenu/Menu"]
+[node name="Title" type="Label" parent="HexMapEditor/SaveLoadMenu/Menu"]
 layout_mode = 2
 text = "Save Map"
 
-[node name="FileListContainer" type="ScrollContainer" parent="SaveLoadMenu/Menu"]
+[node name="FileListContainer" type="ScrollContainer" parent="HexMapEditor/SaveLoadMenu/Menu"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="FileList" type="VBoxContainer" parent="SaveLoadMenu/Menu/FileListContainer"]
+[node name="FileList" type="VBoxContainer" parent="HexMapEditor/SaveLoadMenu/Menu/FileListContainer"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MapNameButton" type="Button" parent="SaveLoadMenu/Menu/FileListContainer/FileList"]
+[node name="MapNameButton" type="Button" parent="HexMapEditor/SaveLoadMenu/Menu/FileListContainer/FileList"]
 visible = false
 layout_mode = 2
 text = "Map abc"
 
-[node name="FileNameEdit" type="TextEdit" parent="SaveLoadMenu/Menu"]
+[node name="FileNameEdit" type="TextEdit" parent="HexMapEditor/SaveLoadMenu/Menu"]
 custom_minimum_size = Vector2(0, 35.605)
 layout_mode = 2
 placeholder_text = "Enter File Name..."
 script = ExtResource("10_ip72k")
 
-[node name="ActionButtonsContainer" type="BoxContainer" parent="SaveLoadMenu/Menu"]
+[node name="ActionButtonsContainer" type="BoxContainer" parent="HexMapEditor/SaveLoadMenu/Menu"]
 layout_mode = 2
 
-[node name="ActionButton" type="Button" parent="SaveLoadMenu/Menu/ActionButtonsContainer"]
+[node name="ActionButton" type="Button" parent="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer"]
 layout_mode = 2
 text = "Save"
 
-[node name="Delete" type="Button" parent="SaveLoadMenu/Menu/ActionButtonsContainer"]
+[node name="Delete" type="Button" parent="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer"]
 layout_mode = 2
 text = "Delete"
 
-[node name="Cancel" type="Button" parent="SaveLoadMenu/Menu/ActionButtonsContainer"]
+[node name="Cancel" type="Button" parent="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer"]
 layout_mode = 2
 text = "Cancel"
 
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleGrid" to="HexMapEditor" method="ShowGrid"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/EditMode" to="HexMapEditor" method="SetEditMode"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/Color/CheckButton" to="HexMapEditor/Background2/VBoxContainer/Color/HSlider" method="set_editable"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/Color/HSlider" to="HexMapEditor" method="SetTerrainTypeIndex"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/ElevationControls/EnableElevationCheck" to="HexMapEditor" method="ToggleElevationEnabled"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/ElevationControls/HSlider" to="HexMapEditor" method="SetElevation"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/WaterLevelControls/EnableElevationCheck" to="HexMapEditor" method="SetApplyWaterLevel"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/WaterLevelControls/HSlider" to="HexMapEditor" method="SetWaterLevel"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls/EnableUrbanLevel" to="HexMapEditor" method="SetApplyUrbanLevel"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/UrbanLevelControls/HSlider" to="HexMapEditor" method="SetUrbanLevel"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/FarmControls/EnableFarmLevel" to="HexMapEditor" method="SetApplyFarmLevel"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/FarmControls/HSlider" to="HexMapEditor" method="SetFarmLevel"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/PlantControls/EnablePlantLevel" to="HexMapEditor" method="SetApplyPlantLevel"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/PlantControls/HSlider" to="HexMapEditor" method="SetPlantLevel"]
-[connection signal="toggled" from="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls/Enable" to="HexMapEditor" method="SetApplySpecialIndex"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/SpecialFeatureControls/HSlider" to="HexMapEditor" method="SetSpecialIndex"]
-[connection signal="value_changed" from="HexMapEditor/Background2/VBoxContainer/BrushSizeControls/HSlider" to="HexMapEditor" method="SetBrushSize"]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [0]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [1]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RiverControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [2]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [0]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [1]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/RoadControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [2]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [0]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [1]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/WallControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [2]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/SaveButton" to="SaveLoadMenu" method="Open" binds= [true]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/SaveLoad/LoadButton" to="SaveLoadMenu" method="Open" binds= [false]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
-[connection signal="pressed" from="HexMapEditor/Background2/VBoxContainer/NewMapButton" to="NewMapMenu" method="set_visible" binds= [true]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateSmallMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexGrid" method="CreateMap" binds= [40, 30]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateMediumMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexGrid" method="CreateMap" binds= [80, 60]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/CreateLargeMapButton" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="NewMapMenu/BoxContainer/Cancel" to="NewMapMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="SaveLoadMenu" method="PerformAction"]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="SaveLoadMenu" method="set_visible" binds= [false]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="SaveLoadMenu" method="set_visible" binds= [false]]
+[node name="HexGameUI" type="Control" parent="." node_paths=PackedStringArray("Grid")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_dnd0l")
+Grid = NodePath("../HexGrid")
+
+[connection signal="toggled" from="CheckButton" to="HexMapEditor" method="SetEditMode"]
+[connection signal="toggled" from="CheckButton" to="HexGameUI" method="SetEditMode"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/ToggleGrid" to="HexMapEditor" method="ShowGrid"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/EditMode" to="HexMapEditor" method="SetEditMode"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/Color/CheckButton" to="HexMapEditor/Controls/VBoxContainer/Color/HSlider" method="set_editable"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/Color/HSlider" to="HexMapEditor" method="SetTerrainTypeIndex"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/ElevationControls/EnableElevationCheck" to="HexMapEditor" method="ToggleElevationEnabled"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/ElevationControls/HSlider" to="HexMapEditor" method="SetElevation"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/WaterLevelControls/EnableElevationCheck" to="HexMapEditor" method="SetApplyWaterLevel"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/WaterLevelControls/HSlider" to="HexMapEditor" method="SetWaterLevel"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/UrbanLevelControls/EnableUrbanLevel" to="HexMapEditor" method="SetApplyUrbanLevel"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/UrbanLevelControls/HSlider" to="HexMapEditor" method="SetUrbanLevel"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/FarmControls/EnableFarmLevel" to="HexMapEditor" method="SetApplyFarmLevel"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/FarmControls/HSlider" to="HexMapEditor" method="SetFarmLevel"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/PlantControls/EnablePlantLevel" to="HexMapEditor" method="SetApplyPlantLevel"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/PlantControls/HSlider" to="HexMapEditor" method="SetPlantLevel"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/SpecialFeatureControls/Enable" to="HexMapEditor" method="SetApplySpecialIndex"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/SpecialFeatureControls/HSlider" to="HexMapEditor" method="SetSpecialIndex"]
+[connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/BrushSizeControls/HSlider" to="HexMapEditor" method="SetBrushSize"]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [0]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [1]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/RiverControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetRiverMode" binds= [2]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [0]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [1]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/RoadControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetRoadMode" binds= [2]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Null/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [0]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Add/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [1]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/WallControls/Toggles/Remove/Toggle" to="HexMapEditor" method="SetWalledMode" binds= [2]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/SaveLoad/SaveButton" to="HexMapEditor/SaveLoadMenu" method="Open" binds= [true]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/SaveLoad/LoadButton" to="HexMapEditor/SaveLoadMenu" method="Open" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
+[connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/NewMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [true]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexGrid" method="CreateMap" binds= [40, 30]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexGrid" method="CreateMap" binds= [80, 60]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/Cancel" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="HexMapEditor/SaveLoadMenu" method="PerformAction"]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapEditor/SaveLoadMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapEditor/SaveLoadMenu" method="set_visible" binds= [false]]

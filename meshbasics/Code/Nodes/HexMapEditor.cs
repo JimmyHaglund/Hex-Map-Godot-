@@ -9,7 +9,6 @@ public sealed partial class HexMapEditor : Control {
     [Export] public Color[] Colors { get; set; }
     [Export] public HexGrid HexGrid { get; set; }
 
-    private bool _editMode = false;
     private int _activeElevation = 1;
     private int _activeTerrainTypeIndex = 0;
     private bool _applyElevation = false;
@@ -26,8 +25,6 @@ public sealed partial class HexMapEditor : Control {
     private bool _isDrag;
     private HexDirection _dragDirection;
     private HexCell _previousCell;
-    private HexCell _searchFromCell;
-    private HexCell _searchToCell;
     private int _activeWaterLevel;
     private int _activeUrbanLevel = 1;
     private int _activeFarmLevel = 1;
@@ -41,6 +38,7 @@ public sealed partial class HexMapEditor : Control {
         ShowGrid(true);
         HexUnit.UnitPrefab = _unitPrefab;
         HexGrid.MapReset += OnMapReset;
+        SetEditMode(false);
     }
 
     public override void _ExitTree() {
@@ -64,7 +62,8 @@ public sealed partial class HexMapEditor : Control {
     }
 
     public void SetEditMode(bool value) {
-        _editMode = value;
+        Visible = value;
+        ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
         HexGrid.SetUIVisible(!value);
     }
 
@@ -171,27 +170,7 @@ public sealed partial class HexMapEditor : Control {
         else {
             _isDrag = false;
         }
-        if (_editMode) {
-            EditCells(cell);
-        }
-        else if (Input.IsKeyPressed(Key.Shift) && cell != _searchToCell) {
-            if (_searchFromCell != cell) {
-                if (_searchFromCell != null) {
-                    _searchFromCell.DisableHighlight();
-                }
-                _searchFromCell = cell;
-                _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
-                if (_searchToCell != null) {
-                    HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
-                }
-            }
-        }
-        else if (_searchFromCell != null && _searchFromCell != cell) {
-            if (_searchToCell != cell) {
-                _searchToCell = cell;
-                HexGrid.FindPath(_searchFromCell, _searchToCell, _speed);
-            }
-        }
+        EditCells(cell);
         _previousCell = cell;
     }
 
@@ -283,8 +262,6 @@ public sealed partial class HexMapEditor : Control {
 
     private void OnMapReset() {
         _previousCell = null;
-        _searchFromCell = null;
-        _searchToCell = null;
     }
 
 
