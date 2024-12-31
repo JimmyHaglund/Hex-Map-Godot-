@@ -29,6 +29,7 @@ public sealed partial class HexMapEditor : Control {
     private HexDirection _dragDirection;
     private HexCell _previousCell;
     private HexCell _searchFromCell;
+    private HexCell _searchToCell;
     private int _activeWaterLevel;
     private int _activeUrbanLevel = 1;
     private int _activeFarmLevel = 1;
@@ -65,14 +66,18 @@ public sealed partial class HexMapEditor : Control {
         }
         if (_editMode) { 
             EditCells(cell);
-        } else if (Input.IsKeyPressed(Key.Shift)) {
-            if (_searchFromCell != null) {
+        } else if (Input.IsKeyPressed(Key.Shift) && cell != _searchToCell) {
+            if (_searchFromCell != null) { 
                 _searchFromCell.DisableHighlight();
             }
             _searchFromCell = cell;
             _searchFromCell.EnableHighlight(new(0.1f, 0.1f, 0.8f));
+            if (_searchToCell != null) {
+                HexGrid.FindPath(_searchFromCell, _searchToCell);
+            }
         } else if (_searchFromCell != null && _searchFromCell != cell) {
-            HexGrid.FindPath(_searchFromCell, cell);
+            _searchToCell = cell;
+            HexGrid.FindPath(_searchFromCell, _searchToCell);
         }
         _previousCell = cell;
     }
