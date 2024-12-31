@@ -148,7 +148,7 @@ public sealed partial class HexGrid : Node3D {
             frontier.RemoveAt(0);
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null || neighbor.Distance != int.MaxValue) {
+                if (neighbor == null) {
                     continue;
                 }
                 if (neighbor.IsUnderwater) {
@@ -164,8 +164,12 @@ public sealed partial class HexGrid : Node3D {
                 else {
                     distance += 10;
                 }
-                neighbor.Distance = distance;
-                frontier.Add(neighbor);
+                if (neighbor.Distance == int.MaxValue) {
+                    neighbor.Distance = distance;
+                    frontier.Add(neighbor);
+                } else if (distance < neighbor.Distance) {
+                    neighbor.Distance = distance;
+                }
                 frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
             }
         }
