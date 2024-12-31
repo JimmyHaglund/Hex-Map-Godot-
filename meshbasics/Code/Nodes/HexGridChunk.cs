@@ -598,6 +598,13 @@ public sealed partial class HexGridChunk : Node3D {
         Terrain.AddTriangleColor(_splatColor1);
         Terrain.AddQuadColor(_splatColor1);
 
+        Vector3 types;
+        types.X = types.Y = types.Z = cell.TerrainTypeIndex;
+        Terrain.AddTriangleTerrainTypes(types);
+        Terrain.AddQuadTerrainTypes(types);
+        Terrain.AddQuadTerrainTypes(types);
+        Terrain.AddTriangleTerrainTypes(types);
+
         if (!cell.IsUnderwater) { 
             bool reversed = cell.IncomingRiver == direction;
             TriangulateRiverQuad(centerL, centerR, m.v2, m.v4, cell.RiverSurfaceY, 0.4f, reversed);
