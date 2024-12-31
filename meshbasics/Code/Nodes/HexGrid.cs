@@ -112,7 +112,7 @@ public sealed partial class HexGrid : Node3D {
 
     public void FindDistancesTo(HexCell cell) {
         for (int i = 0; i < _cells.Length; i++) {
-            _cells[i].Distance = 0;
+            _cells[i].Distance = cell.Coordinates.DistanceTo(_cells[i].Coordinates);
         }
     }
 

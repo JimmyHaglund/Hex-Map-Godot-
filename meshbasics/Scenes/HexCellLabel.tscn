@@ -2,7 +2,7 @@
 
 [node name="Label3D" type="Label3D"]
 transform = Transform3D(-1, -8.74228e-08, 0, -3.82137e-15, 4.37114e-08, 1, -8.74228e-08, 1, -4.37114e-08, 0, 0.210614, 0)
-pixel_size = 0.01
+pixel_size = 0.015
 double_sided = false
 render_priority = 10
 outline_render_priority = 0
