@@ -131,6 +131,13 @@ public sealed partial class HexGrid : Node3D {
         ShowPath(speed);
     }
 
+    public void AddUnit(HexUnit unit, HexCell location, float orientation) {
+        _units.Add(unit);
+        AddChild(unit);
+        unit.Location = location;
+        unit.Orientation = orientation;
+    }
+
     private bool Search(HexCell fromCell, HexCell toCell, int speed) {
         _searchFrontierPhase += 2;
         if (_searchFrontier == null) {

@@ -203,9 +203,9 @@ public sealed partial class HexMapEditor : Control {
     private void CreateUnit() { 
         var cell = GetCellUnderCursor();
         if (cell is null || cell.Unit != null) return;
+        var rotation = (float)(new Random().NextDouble() * 360.0f);
         var unit = HexGrid.InstantiateChild<HexUnit>(_unitPrefab);
-        unit.Location = cell;
-        unit.Orientation = (float)(new Random().NextDouble() * 360.0f);
+        HexGrid.AddUnit(unit, cell, rotation);
     }
 
     private void DestroyUnit() {
