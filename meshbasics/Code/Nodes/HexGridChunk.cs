@@ -558,18 +558,18 @@ public sealed partial class HexGridChunk : Node3D {
             1.0f / 6.0f
         );
         m.v3.Y = center.Y = e.v3.Y;
-        TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+        TriangulateEdgeStrip(m, _splatColor1, e, _splatColor1);
+
 
         Terrain.AddTriangle(centerL, m.v1, m.v2);
-        Terrain.AddTriangleColor(cell.Color);
-
         Terrain.AddQuad(centerL, center, m.v2, m.v3);
-        Terrain.AddQuadColor(cell.Color);
         Terrain.AddQuad(center, centerR, m.v3, m.v4);
-        Terrain.AddQuadColor(cell.Color);
-
         Terrain.AddTriangle(centerR, m.v4, m.v5);
-        Terrain.AddTriangleColor(cell.Color);
+
+        Terrain.AddTriangleColor(_splatColor1);
+        Terrain.AddQuadColor(_splatColor1);
+        Terrain.AddTriangleColor(_splatColor1);
+        Terrain.AddQuadColor(_splatColor1);
 
         if (!cell.IsUnderwater) { 
             bool reversed = cell.IncomingRiver == direction;
@@ -606,8 +606,8 @@ public sealed partial class HexGridChunk : Node3D {
             center.Lerp(e.v5, 0.5f)
         );
         m.v3.Y = e.v3.Y;
-        TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
-        TriangulateEdgeFan(center, m, cell.Color);
+        TriangulateEdgeStrip(m, _splatColor1, e, _splatColor1);
+        TriangulateEdgeFan(center, m, _splatColor1);
 
         if (!cell.IsUnderwater) { 
             bool reversed = cell.HasIncomingRiver;
