@@ -1,7 +1,6 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://cmgf5cc3lk3rn"]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cmgf5cc3lk3rn"]
 
 [ext_resource type="Shader" path="res://Shaders/Water.gdshader" id="1_slprs"]
-[ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="2_xx3ao"]
 
 [resource]
 render_priority = 1
@@ -9,4 +8,3 @@ shader = ExtResource("1_slprs")
 shader_parameter/_Color = Color(0.262745, 0.505882, 0.654902, 0)
 shader_parameter/_Metallic = null
 shader_parameter/_Glossiness = 0.5
-shader_parameter/_MainTex = ExtResource("2_xx3ao")
