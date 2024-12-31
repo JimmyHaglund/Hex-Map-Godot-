@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using Godot;
 
 namespace JHM.MeshBasics;
@@ -21,6 +23,8 @@ public sealed partial class HexGrid : Node3D {
 
     [ExportCategory("HexGrid Configuration")]
     [Export] public int Seed { get; set; } = 1234;
+    // private Task _searchTask;
+    private System.Threading.CancellationTokenSource _cancellationToken;
     
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
@@ -111,28 +115,46 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void FindDistancesTo(HexCell cell) {
-        _searchIndex = 0;
-        _distanceSearchCell = cell;
-        _shouldFindDistances = true;
+        if (_cancellationToken is not null) {
+            _cancellationToken.Cancel();
+        }
+        _cancellationToken = new();
+        _ = Search(cell, _cancellationToken.Token);
     }
 
-    private HexCell _distanceSearchCell;
-    private bool _shouldFindDistances = false;
-    private float _timeSinceStep = 0.0f;
-    private float _updateFrequency = 1.0f / 60.0f;
-    private int _searchIndex;
-    public override void _Process(double delta) {
-        if (!_shouldFindDistances) return;
-        _timeSinceStep += (float)delta;
-        if (_timeSinceStep < _updateFrequency) return;
-        _timeSinceStep = 0.0f;
-
-        if (++_searchIndex >= _cells.Length) {
-            _shouldFindDistances = false;
-            _searchIndex = 0;
-            return;
+    private async Task Search(HexCell cell, System.Threading.CancellationToken cancellationToken) {
+        for (int i = 0; i < _cells.Length; i++) {
+            _cells[i].Distance = int.MaxValue;
         }
-        _cells[_searchIndex].Distance = _distanceSearchCell.Coordinates.DistanceTo(_cells[_searchIndex].Coordinates);
+        var delayMilliseconds = (int)(1.0f / 60.0f * 1000);
+        
+        Queue<HexCell> frontier = new Queue<HexCell>();
+        cell.Distance = 0;
+        frontier.Enqueue(cell);
+        while (frontier.Count > 0) {
+            #region Task Management...
+            try {
+                await Task.Delay(delayMilliseconds, cancellationToken);
+            }
+            catch (TaskCanceledException) {
+                return;
+            }
+            if (cancellationToken.IsCancellationRequested) {
+                return;
+            }
+            #endregion
+
+            HexCell current = frontier.Dequeue();
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor != null && neighbor.Distance == int.MaxValue) {
+                    neighbor.Distance = current.Distance + 1;
+                    frontier.Enqueue(neighbor);
+                }
+            }
+        }
+        
+        _cancellationToken = null;
     }
 
     private void CreateChunks() {

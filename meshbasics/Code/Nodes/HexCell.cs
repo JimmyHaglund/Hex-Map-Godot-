@@ -480,6 +480,6 @@ public sealed partial class HexCell : Node3D {
     }
 
     private void UpdateDistanceLabel() {
-        _label.Text = _distance.ToString();
+        _label.Text = _distance == int.MaxValue ? string.Empty : _distance.ToString();
     }
 }
