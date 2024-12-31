@@ -149,6 +149,16 @@ public sealed partial class HexGrid : Node3D {
 
             HexCell current = frontier[0];
             frontier.RemoveAt(0);
+
+            if (current == toCell) {
+                current = current.PathFrom;
+                while (current != fromCell) {
+                    current.EnableHighlight(Colors.White);
+                    current = current.PathFrom;
+                }
+                break;
+            }
+
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null) {
@@ -175,8 +185,10 @@ public sealed partial class HexGrid : Node3D {
                 }
                 if (neighbor.Distance == int.MaxValue) {
                     neighbor.Distance = distance;
+                    neighbor.PathFrom = current;
                     frontier.Add(neighbor);
                 } else if (distance < neighbor.Distance) {
+                    neighbor.PathFrom = current;
                     neighbor.Distance = distance;
                 }
                 frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));

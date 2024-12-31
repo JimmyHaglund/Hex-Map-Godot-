@@ -24,6 +24,7 @@ public sealed partial class HexCell : Node3D {
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
+    public HexCell PathFrom { get; set; }
 
     public Label3D Label {
         get => _label;
