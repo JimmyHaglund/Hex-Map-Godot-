@@ -91,19 +91,36 @@ public sealed partial class HexUnit : Node3D {
         if (_pathToTravel == null || _pathToTravel.Count == 0 || _hasDrawnPath) {
             return;
         }
-        
         ClearPathDisplay();
 
-        Vector3 a, b = _pathToTravel[0].Position;
+        Vector3 a, b, c = _pathToTravel[0].Position;
 
-        for (var n = 0; n + 1 < _pathToTravel.Count; n++) { 
-            var point = _pathToTravel[n];
+        for (int i = 1; i < _pathToTravel.Count; i++) {
+            a = c;
+            b = _pathToTravel[i - 1].Position;
+            c = (b + _pathToTravel[i].Position) * 0.5f;
+            for (float t = 0f; t < 1f; t += 0.05f * _travelSpeed) {
+                var node = GetTree().Root.GetChild(0).InstantiateChild<Node3D>(_pathDisplayPrefab);
+                var pos = Bezier.GetPoint(a, b, c, t);
+                _pathDisplays.Add(node);
+                node.GlobalPosition = pos;
+                if (_pathDisplays.Count > 1) { 
+                    _pathDisplays[_pathDisplays.Count - 2].LookAt(node.Position);
+                }
+            }
+        }
+
+        a = c;
+        b = _pathToTravel[_pathToTravel.Count - 1].Position;
+        c = b;
+        for (float t = 0f; t < 1f; t += 0.1f) {
             var node = GetTree().Root.GetChild(0).InstantiateChild<Node3D>(_pathDisplayPrefab);
-            a = b;
-            b = (_pathToTravel[n].Position + _pathToTravel[n + 1].Position) * 0.5f;
+            var pos = Bezier.GetPoint(a, b, c, t);
             _pathDisplays.Add(node);
-            node.GlobalPosition = a;
-            node.LookAt(b);
+            node.GlobalPosition = pos;
+            if (_pathDisplays.Count > 1) {
+                _pathDisplays[_pathDisplays.Count - 2].LookAt(node.Position);
+            }
         }
         _hasDrawnPath = true;
     }
@@ -123,19 +140,22 @@ public sealed partial class HexUnit : Node3D {
         }
         if (_travelIndex >= _pathToTravel.Count) return;
 
-        Vector3 a, b;
+        Vector3 a, b, c;
         a = _pathToTravel[0].Position;
         b = _pathToTravel[_travelIndex].Position;
+        c = b;
 
         if (_travelIndex > 0) { 
             a = (_pathToTravel[_travelIndex - 1].Position + _pathToTravel[_travelIndex].Position) * 0.5f;
         
         }
-        if (_travelIndex < _pathToTravel.Count - 1) {
-            b = (_pathToTravel[_travelIndex].Position + _pathToTravel[_travelIndex + 1].Position) * 0.5f;
+        if (_travelIndex + 1 < _pathToTravel.Count) {
+            c = (b + _pathToTravel[_travelIndex + 1].Position) * 0.5f;
         }
-        Position = a.Lerp(b, _moveProgress);
-        LookAt(Position + b - a);
+        Position = Bezier.GetPoint(a, b, c, _moveProgress);
+        if (_travelIndex + 1 < _pathToTravel.Count) { 
+            LookAt(_pathToTravel[_travelIndex].Position);
+        }
     }
 
     public override void _ExitTree() {
