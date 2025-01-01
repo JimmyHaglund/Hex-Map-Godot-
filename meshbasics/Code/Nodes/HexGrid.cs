@@ -177,6 +177,19 @@ public sealed partial class HexGrid : Node3D {
         _currentPathFrom = _currentPathTo = null;
     }
 
+    public List<HexCell> GetPath() {
+        if (!_currentPathExists) {
+            return null;
+        }
+        List<HexCell> path = ListPool<HexCell>.Get();
+        for (HexCell c = _currentPathTo; c != _currentPathFrom; c = c.PathFrom) {
+            path.Add(c);
+        }
+        path.Add(_currentPathFrom);
+        path.Reverse();
+        return path;
+    }
+
     private Vector3 ClampPositionToGrid(Vector3 position) {
         float xMax =
             (CellCountX - 0.5f) *
