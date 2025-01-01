@@ -43,6 +43,7 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public HexCell GetCell(Vector3 position) {
+        position = ClampPositionToGrid(position);
         var coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * CellCountX + coordinates.Z / 2;
         if (index >= _cells.Length || index < 0) return null;
@@ -139,6 +140,7 @@ public sealed partial class HexGrid : Node3D {
         ClearPath();
         _currentPathFrom = fromCell;
         _currentPathTo = toCell;
+        if (toCell is null) return;
         _currentPathExists = Search(fromCell, toCell, speed);
         ShowPath(speed);
     }
@@ -153,6 +155,34 @@ public sealed partial class HexGrid : Node3D {
     public void RemoveUnit(HexUnit unit) {
         _units.Remove(unit);
         unit.Die();
+    }
+
+    public void ClearPath() {
+        if (_currentPathExists) {
+            HexCell current = _currentPathTo;
+            while (current != _currentPathFrom) {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            _currentPathExists = false;
+        }
+        _currentPathFrom = _currentPathTo = null;
+    }
+
+    private Vector3 ClampPositionToGrid(Vector3 position) {
+        float xMax =
+            (CellCountX - 0.5f) *
+            (2f * HexMetrics.InnerRadius);
+        position.X = Mathf.Clamp(position.X, 0f, xMax);
+
+        float zMax =
+            (CellCountZ - 1.0f) *
+            (1.5f * HexMetrics.OuterRadius);
+        position.Z = Mathf.Clamp(position.Z, 0f, zMax);
+
+        return position;
     }
 
     private bool Search(HexCell fromCell, HexCell toCell, int speed) {
@@ -240,20 +270,6 @@ public sealed partial class HexGrid : Node3D {
         }
         _currentPathFrom.EnableHighlight(Colors.Blue);
         _currentPathTo.EnableHighlight(Colors.Red);
-    }
-
-    private void ClearPath() {
-        if (_currentPathExists) {
-            HexCell current = _currentPathTo;
-            while (current != _currentPathFrom) {
-                current.SetLabel(null);
-                current.DisableHighlight();
-                current = current.PathFrom;
-            }
-            current.DisableHighlight();
-            _currentPathExists = false;
-        }
-        _currentPathFrom = _currentPathTo = null;
     }
 
     private void CreateChunks() {

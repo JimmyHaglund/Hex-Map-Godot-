@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=20 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -21,6 +21,9 @@ albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_bnbs1"]
 material = SubResource("StandardMaterial3D_7ero0")
 size = Vector2(200, 200)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vp18b"]
+size = Vector3(1000, 0.1, 1000)
 
 [sub_resource type="SphereMesh" id="SphereMesh_hw2ro"]
 
@@ -51,10 +54,14 @@ script = ExtResource("1_qmp3k")
 Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, 0, 0)
-visible = false
+transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, -3.23711, 0)
 gi_mode = 0
 mesh = SubResource("PlaneMesh_bnbs1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("BoxShape3D_vp18b")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.692649, -0.362811, 0.623382, -0.311104, 0.629471, 0.712026, -0.650732, -0.687121, 0.32313, 0, 1.66242, 0)
