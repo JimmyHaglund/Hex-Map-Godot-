@@ -11,6 +11,7 @@ uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
 uniform float metallic : hint_range(0.0, 1.0) = 0.0;
 uniform int layer = 0;
 varying vec4 terrain;
+varying vec3 visibility;
 
 void vertex() {
 	terrain = CUSTOM0;
@@ -18,20 +19,27 @@ void vertex() {
  	vec4 cell0 = GetCellData(terrain.x);
  	vec4 cell1 = GetCellData(terrain.y);
  	vec4 cell2 = GetCellData(terrain.z);
- 	terrain.x = cell0.w;
+ 	
+	terrain.x = cell0.w;
  	terrain.y = cell1.w;
  	terrain.z = cell2.w;
+	
+	visibility = vec3(0.0);
+	visibility.x = cell0.x;
+	visibility.x = cell1.x;
+	visibility.x = cell2.x;
+	visibility = mix(vec3(0.25), vec3(1.0), visibility);
 }
-vec4 GetTerrainColor (float t, vec3 worldPos, float clr) {
-	vec3 uvw = vec3(worldPos.xz * 0.02, t);
+vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {
+	vec3 uvw = vec3(worldPos.xz * 0.02, terrain[index]);
 	vec4 c = texture(_MainTex, uvw);
-	return c * clr;
+	return c * (clr[index] * visibility[index]);
 }
 void fragment() {
 	vec3 world_vertex = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-    vec4 c = (GetTerrainColor(terrain.x, world_vertex, COLOR.r)
-	 + GetTerrainColor(terrain.y, world_vertex, COLOR.g)
-	 + GetTerrainColor(terrain.z, world_vertex, COLOR.b));
+    vec4 c = (GetTerrainColor(world_vertex, COLOR, 0)
+	 + GetTerrainColor(world_vertex, COLOR, 1)
+	 + GetTerrainColor(world_vertex, COLOR, 2));
 	
 	vec4 grid = vec4(1.0, 1.0, 1.0, 1.0);
 	if (GRID_ON) {
