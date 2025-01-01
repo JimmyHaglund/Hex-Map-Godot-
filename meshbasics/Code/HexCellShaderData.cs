@@ -43,6 +43,11 @@ public sealed partial class HexCellShaderData : Node {
         
     }
 
+    public void RefreshVisibility(HexCell cell) {
+        _cellTextureData[cell.Index].R = cell.IsVisible ? 1.0f : 0.0f;
+        ProcessMode = ProcessModeEnum.Inherit;
+    }
+
     public override void _Process(double delta) {
         CallDeferred("LateUpdate");
     }

@@ -21,6 +21,7 @@ public sealed partial class HexCell : Node3D {
     private int _specialIndex;
     private int _terrainTypeIndex;
     private int _distance;
+    private int _visibility;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
@@ -29,6 +30,8 @@ public sealed partial class HexCell : Node3D {
     public int SearchPhase { get; set; }
     public HexCellShaderData ShaderData { get; set; }
     public int Index { get; set; }
+    public HexCell NextWithSamePriority { get; set; }
+    public HexUnit Unit { get; set; }
 
     public Label3D Label {
         get => _label;
@@ -246,9 +249,25 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
-    public HexCell NextWithSamePriority { get; set; }
+    public bool IsVisible {
+        get {
+            return _visibility > 0;
+        }
+    }
 
-    public HexUnit Unit { get; set; }
+    public void IncreaseVisibility() {
+        _visibility += 1;
+        if (_visibility == 1) { 
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
+    public void DecreaseVisibility() {
+        _visibility -= 1;
+        if (_visibility == 0) { 
+            ShaderData.RefreshVisibility(this);
+        }
+    }
 
     public bool HasRiverThroughEdge(HexDirection direction) {
         return
