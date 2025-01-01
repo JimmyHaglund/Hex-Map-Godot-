@@ -94,14 +94,16 @@ public sealed partial class HexUnit : Node3D {
         
         ClearPathDisplay();
 
-        for (var n = 0; n < _pathToTravel.Count; n++) { 
+        Vector3 a, b = _pathToTravel[0].Position;
+
+        for (var n = 0; n + 1 < _pathToTravel.Count; n++) { 
             var point = _pathToTravel[n];
             var node = GetTree().Root.GetChild(0).InstantiateChild<Node3D>(_pathDisplayPrefab);
+            a = b;
+            b = (_pathToTravel[n].Position + _pathToTravel[n + 1].Position) * 0.5f;
             _pathDisplays.Add(node);
-            node.GlobalPosition = point.Position;
-            if (n + 1 < _pathToTravel.Count) { 
-                node.LookAt(_pathToTravel[n + 1].Position);
-            }
+            node.GlobalPosition = a;
+            node.LookAt(b);
         }
         _hasDrawnPath = true;
     }
@@ -112,8 +114,6 @@ public sealed partial class HexUnit : Node3D {
         _hasDrawnPath = false;
     }
 
-    
-
     private void TravelPath(float delta) {
         if (_pathToTravel is null) return;
         _moveProgress += delta * _travelSpeed;
@@ -121,10 +121,19 @@ public sealed partial class HexUnit : Node3D {
             _travelIndex++;
             _moveProgress--;
         }
-        if (_travelIndex >= _pathToTravel.Count - 1) return;
+        if (_travelIndex >= _pathToTravel.Count) return;
 
-        Vector3 a = _pathToTravel[_travelIndex].Position;
-        Vector3 b = _pathToTravel[_travelIndex + 1].Position;
+        Vector3 a, b;
+        a = _pathToTravel[0].Position;
+        b = _pathToTravel[_travelIndex].Position;
+
+        if (_travelIndex > 0) { 
+            a = (_pathToTravel[_travelIndex - 1].Position + _pathToTravel[_travelIndex].Position) * 0.5f;
+        
+        }
+        if (_travelIndex < _pathToTravel.Count - 1) {
+            b = (_pathToTravel[_travelIndex].Position + _pathToTravel[_travelIndex + 1].Position) * 0.5f;
+        }
         Position = a.Lerp(b, _moveProgress);
         LookAt(Position + b - a);
     }
