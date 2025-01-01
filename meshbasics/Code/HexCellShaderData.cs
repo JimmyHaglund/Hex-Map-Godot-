@@ -38,14 +38,7 @@ public sealed partial class HexCellShaderData : Node {
     }
 
     public void RefreshTerrain(HexCell cell) {
-        _cellTextureData[cell.Index].A = (float)cell.TerrainTypeIndex / 4.0f;
-        ProcessMode = ProcessModeEnum.Inherit;
-        
-    }
-
-    public void RefreshVisibility(HexCell cell) {
-        _cellTextureData[cell.Index].R = cell.IsVisible ? 1.0f : 0.0f;
-        ProcessMode = ProcessModeEnum.Inherit;
+        _cellTextureData[cell.Index].A = (byte)cell.TerrainTypeIndex;
     }
 
     public override void _Process(double delta) {
