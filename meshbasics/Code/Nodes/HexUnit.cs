@@ -21,6 +21,13 @@ public sealed partial class HexUnit : Node3D {
 
     public static PackedScene UnitPrefab {get; set; }
     public HexGrid Grid { get; set; }
+    private HexCell CurrentTravelLocation {
+        get {
+            if (_pathToTravel is null) return _location;
+            if (_travelIndex < 0 || _travelIndex >= _pathToTravel.Count) return null;
+            return _pathToTravel[_travelIndex];
+        }
+    }
 
     private List<Node3D> _pathDisplays = new();
     
@@ -62,10 +69,16 @@ public sealed partial class HexUnit : Node3D {
     }
 
     public void Travel(List<HexCell> path) {
-        Location = path[path.Count - 1];
+        Grid.DecreaseVisibility(CurrentTravelLocation, VisionRange);
+        _location.Unit = null;
+
+        _location = path[path.Count - 1];
+        _location.Unit = this;
+
         _pathToTravel = path;
         _travelIndex = 0;
         _moveProgress = 0.0f;
+        Grid.IncreaseVisibility(CurrentTravelLocation, VisionRange);
 
         ClearPathDisplay();
     }
@@ -141,11 +154,21 @@ public sealed partial class HexUnit : Node3D {
 
         if (_pathToTravel is null) return;
         _moveProgress += delta * _travelSpeed;
-        while (_moveProgress >= 1.0f) { 
+        while (_moveProgress >= 1.0f) {
+            if (_travelIndex + 1 < _pathToTravel.Count) {
+                Grid.DecreaseVisibility(CurrentTravelLocation, VisionRange);
+            }
             _travelIndex++;
             _moveProgress--;
+            if (_travelIndex > 0) {
+                Grid.IncreaseVisibility(CurrentTravelLocation, VisionRange);
+            }
+            if (_travelIndex + 1 >= _pathToTravel.Count) break;
         }
-        if (_travelIndex >= _pathToTravel.Count) return;
+        if (_travelIndex >= _pathToTravel.Count) {
+            _pathToTravel = null;
+            return;
+        }
 
         Vector3 a, b, c;
         a = _pathToTravel[0].Position;

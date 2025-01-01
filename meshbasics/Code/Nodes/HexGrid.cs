@@ -196,6 +196,7 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void IncreaseVisibility(HexCell fromCell, int range) {
+        if (fromCell is null) return;
         List<HexCell> cells = GetVisibleCells(fromCell, range);
         for (int i = 0; i < cells.Count; i++) {
             cells[i].IncreaseVisibility();
@@ -204,6 +205,7 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public void DecreaseVisibility(HexCell fromCell, int range) {
+        if (fromCell is null) return;
         List<HexCell> cells = GetVisibleCells(fromCell, range);
         for (int i = 0; i < cells.Count; i++) {
             cells[i].DecreaseVisibility();
