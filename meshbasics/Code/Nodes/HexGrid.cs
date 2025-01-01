@@ -32,6 +32,7 @@ public sealed partial class HexGrid : Node3D {
     private HexCell _currentPathTo;
     private bool _currentPathExists;
     private List<HexUnit> _units = new List<HexUnit>();
+    private HexCellShaderData _cellShaderData;
 
     public static event Action MapReset;
 
@@ -44,7 +45,9 @@ public sealed partial class HexGrid : Node3D {
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
-        
+
+        _cellShaderData = new();
+        AddChild(_cellShaderData);
         CreateMap(CellCountX, CellCountZ);
     }
 
@@ -95,6 +98,7 @@ public sealed partial class HexGrid : Node3D {
         _chunkCountX = CellCountX / HexMetrics.ChunkSizeX;
         _chunkCountZ = CellCountZ / HexMetrics.ChunkSizeZ;
 
+        _cellShaderData.Initialize(cellCountX, cellCountZ);
         CreateChunks();
         CreateCells();
         HexMapCamera.ValidatePosition();
