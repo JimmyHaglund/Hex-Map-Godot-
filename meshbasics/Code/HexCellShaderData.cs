@@ -20,7 +20,7 @@ public sealed partial class HexCellShaderData : Node {
             _image = Image.CreateEmpty(x, z, useMipmaps: false, Image.Format.Rgba8);
             _cellTexture = ImageTexture.CreateFromImage(_image);
             Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
-            foreach(var material in _shaders) {
+            foreach (var material in _shaders) {
                 material.SetShaderParameter("texel_size", texelSize);
                 material.SetShaderParameter("hex_cell_data", _cellTexture);
             }
@@ -38,7 +38,9 @@ public sealed partial class HexCellShaderData : Node {
     }
 
     public void RefreshTerrain(HexCell cell) {
-        _cellTextureData[cell.Index].A = (byte)cell.TerrainTypeIndex;
+        _cellTextureData[cell.Index].A = (float)cell.TerrainTypeIndex / 4.0f;
+        ProcessMode = ProcessModeEnum.Inherit;
+        
     }
 
     public override void _Process(double delta) {
@@ -54,6 +56,10 @@ public sealed partial class HexCellShaderData : Node {
             }
         }
         _cellTexture.Update(_image);
+        // foreach (var material in _shaders) {
+        //     material.SetShaderParameter("hex_cell_data", _cellTexture);
+        // }
+
         this.ProcessMode = ProcessModeEnum.Disabled;
     }
 }

@@ -32,7 +32,7 @@ public sealed partial class HexGrid : Node3D {
     private HexCell _currentPathTo;
     private bool _currentPathExists;
     private List<HexUnit> _units = new List<HexUnit>();
-    private HexCellShaderData _cellShaderData;
+    [Export] private HexCellShaderData _cellShaderData;
 
     public static event Action MapReset;
 
@@ -46,8 +46,8 @@ public sealed partial class HexGrid : Node3D {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
 
-        _cellShaderData = new();
-        AddChild(_cellShaderData);
+        // _cellShaderData = new();
+        // AddChild(_cellShaderData);
         CreateMap(CellCountX, CellCountZ);
     }
 

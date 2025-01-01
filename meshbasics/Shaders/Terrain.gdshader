@@ -1,4 +1,6 @@
 shader_type spatial;
+#include "HexCellData.gdshaderinc"
+
 render_mode blend_mix, cull_back, depth_draw_opaque;
 
 uniform bool GRID_ON;
@@ -8,10 +10,17 @@ uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
 uniform float metallic : hint_range(0.0, 1.0) = 0.0;
 uniform int layer = 0;
-varying vec3 terrain;
+varying vec4 terrain;
 
 void vertex() {
-	terrain = CUSTOM0.xyz;
+	terrain = CUSTOM0;
+	
+ 	vec4 cell0 = GetCellData(terrain.x);
+ 	vec4 cell1 = GetCellData(terrain.y);
+ 	vec4 cell2 = GetCellData(terrain.z);
+ 	terrain.x = cell0.w;
+ 	terrain.y = cell1.w;
+ 	terrain.z = cell2.w;
 }
 vec4 GetTerrainColor (float t, vec3 worldPos, float clr) {
 	vec3 uvw = vec3(worldPos.xz * 0.02, t);
