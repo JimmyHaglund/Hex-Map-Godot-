@@ -61,7 +61,7 @@ public sealed partial class HexGameUI : Control {
 
     private void DoMove() {
         if (Grid.HasPath) {
-            _selectedUnit.Location = _currentCell;
+            _selectedUnit.Travel(Grid.GetPath());
             Grid.ClearPath();
         }
     }

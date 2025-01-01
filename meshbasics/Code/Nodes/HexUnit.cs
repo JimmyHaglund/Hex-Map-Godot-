@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 using Godot;
-using static Godot.TextServer;
 
 namespace JHM.MeshBasics;
 
@@ -40,6 +40,10 @@ public sealed partial class HexUnit : Node3D{
     public bool IsValidDestination(HexCell cell) {
         if (cell is null) return false;
         return !cell.IsUnderwater && cell.Unit is null;
+    }
+
+    public void Travel(List<HexCell> path) {
+        Location = path[path.Count - 1];
     }
 
     public void Die() { 
