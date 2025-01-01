@@ -24,10 +24,9 @@ void vertex() {
  	terrain.y = cell1.w;
  	terrain.z = cell2.w;
 	
-	visibility = vec3(0.0);
 	visibility.x = cell0.x;
-	visibility.x = cell1.x;
-	visibility.x = cell2.x;
+	visibility.y = cell1.x;
+	visibility.z = cell2.x;
 	visibility = mix(vec3(0.25), vec3(1.0), visibility);
 }
 vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {

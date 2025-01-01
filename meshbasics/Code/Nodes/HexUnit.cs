@@ -27,10 +27,14 @@ public sealed partial class HexUnit : Node3D {
         }
         set {
             if (_location is not null) {
+                _location.DecreaseVisibility();
                 _location.Unit = null;
             }
+            if (value is null) return;
+
             _location = value;
-            value.Unit = this;
+            _location.Unit = this;
+            _location.IncreaseVisibility();
             Position = value.Position;
         }
     }
@@ -63,8 +67,8 @@ public sealed partial class HexUnit : Node3D {
         ClearPathDisplay();
     }
 
-    public void Die() { 
-        _location.Unit = null;
+    public void Die() {
+        Location = null;
         QueueFree();
     }
 
