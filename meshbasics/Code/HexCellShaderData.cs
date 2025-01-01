@@ -20,9 +20,28 @@ public sealed partial class HexCellShaderData : Node {
                 _cellTextureData[i] = new Color(0, 0, 0, 0);
             }
         }
+        ProcessMode = ProcessModeEnum.Inherit;
     }
 
     public void RefreshTerrain(HexCell cell) {
+        _cellTextureData[cell.Index].A = (byte)cell.TerrainTypeIndex;
     }
+
+    public override void _Process(double delta) {
+        CallDeferred("LateUpdate");
+    }
+
+    private void LateUpdate() {
+        var w = _cellTexture.GetWidth();
+        for (var x = 0; x < w; x++) { 
+            for(var y = 0; y < _cellTexture.GetHeight(); y++) { 
+                var c = _cellTextureData[x + w * y];
+                _cellTexture.SetPixel(x, y, c);
+            }
+        }
+        this.ProcessMode = ProcessModeEnum.Disabled;
+    }
+
+
 
 }

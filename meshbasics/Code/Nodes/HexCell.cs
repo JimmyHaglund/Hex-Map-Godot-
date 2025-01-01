@@ -28,6 +28,7 @@ public sealed partial class HexCell : Node3D {
     public int SearchHeuristic { get; set; }
     public int SearchPhase { get; set; }
     public HexCellShaderData ShaderData { get; set; }
+    public int Index { get; set; }
 
     public Label3D Label {
         get => _label;
