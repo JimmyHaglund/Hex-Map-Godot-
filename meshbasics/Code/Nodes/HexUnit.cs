@@ -14,6 +14,9 @@ public sealed partial class HexUnit : Node3D{
             return _location;
         }
         set {
+            if (_location is not null) {
+                _location.Unit = null;
+            }
             _location = value;
             value.Unit = this;
             Position = value.Position;
@@ -58,6 +61,8 @@ public sealed partial class HexUnit : Node3D{
             orientation
         );
     }
+
+    
 
     public override void _ExitTree() {
         if (_location is null) return;

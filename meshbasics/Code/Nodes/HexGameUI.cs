@@ -19,6 +19,9 @@ public sealed partial class HexGameUI : Control {
         if (Input.IsMouseButtonPressed(MouseButton.Left)) { 
             DoSelection();
         }
+        if (_selectedUnit is not null && Input.IsMouseButtonPressed(MouseButton.Right)) { 
+            DoMove();
+        }
     }
 
     public override void _Process(double delta) {
@@ -53,6 +56,13 @@ public sealed partial class HexGameUI : Control {
         UpdateCurrentCell();
         if (_currentCell is not null) {
             _selectedUnit = _currentCell.Unit;
+        }
+    }
+
+    private void DoMove() {
+        if (Grid.HasPath) {
+            _selectedUnit.Location = _currentCell;
+            Grid.ClearPath();
         }
     }
 }

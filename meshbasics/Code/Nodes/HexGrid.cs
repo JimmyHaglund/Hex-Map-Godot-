@@ -35,6 +35,12 @@ public sealed partial class HexGrid : Node3D {
 
     public static event Action MapReset;
 
+    public bool HasPath {
+        get {
+            return _currentPathExists;
+        }
+    }
+
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
@@ -263,12 +269,12 @@ public sealed partial class HexGrid : Node3D {
                 current.EnableHighlight(Colors.White);
                 current = current.PathFrom;
             }
+            _currentPathTo.EnableHighlight(Colors.Red);
+            _currentPathFrom.EnableHighlight(Colors.Blue);
         } else if (_currentPathFrom is not null) {
             _currentPathFrom.DisableHighlight();
             _currentPathTo.DisableHighlight();
         }
-        _currentPathFrom.EnableHighlight(Colors.Blue);
-        _currentPathTo.EnableHighlight(Colors.Red);
     }
 
     private void CreateChunks() {
