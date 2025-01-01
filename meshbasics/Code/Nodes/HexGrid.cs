@@ -217,7 +217,7 @@ public sealed partial class HexGrid : Node3D {
                 if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase) {
                     continue;
                 }
-                if (neighbor.IsUnderwater) {
+                if (neighbor.IsUnderwater || neighbor.Unit != null) {
                     continue;
                 }
                 HexEdgeType edgeType = current.GetEdgeType(neighbor);
