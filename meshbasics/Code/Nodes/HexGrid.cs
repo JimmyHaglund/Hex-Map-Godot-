@@ -210,7 +210,7 @@ public sealed partial class HexGrid : Node3D {
                 return true;
             }
 
-            int currentTurn = current.Distance / speed;
+            int currentTurn = (current.Distance - 1) / speed;
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
@@ -238,7 +238,7 @@ public sealed partial class HexGrid : Node3D {
                 }
 
                 int distance = current.Distance + moveCost;
-                int turn = distance / speed;
+                int turn = (distance - 1) / speed;
                 if (turn > currentTurn) {
                     distance = turn * speed + moveCost;
                 }
@@ -264,7 +264,7 @@ public sealed partial class HexGrid : Node3D {
         if (_currentPathExists) {
             HexCell current = _currentPathTo;
             while (current != _currentPathFrom) {
-                int turn = current.Distance / speed;
+                int turn = (current.Distance - 1) / speed;
                 current.SetLabel(turn.ToString());
                 current.EnableHighlight(Colors.White);
                 current = current.PathFrom;
