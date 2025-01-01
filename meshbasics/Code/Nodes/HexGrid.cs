@@ -190,9 +190,8 @@ public sealed partial class HexGrid : Node3D {
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }
-        else {
-            _searchFrontier.Clear();
-        }
+        _searchFrontier.Clear();
+        
         
         fromCell.Distance = 0;
         fromCell.SearchPhase = _searchFrontierPhase;

@@ -34,6 +34,11 @@ public sealed partial class HexUnit : Node3D{
         Position = _location.Position;
     }
 
+    public bool IsValidDestination(HexCell cell) {
+        if (cell is null) return false;
+        return !cell.IsUnderwater && cell.Unit is null;
+    }
+
     public void Die() { 
         _location.Unit = null;
         QueueFree();
@@ -48,7 +53,7 @@ public sealed partial class HexUnit : Node3D{
         HexCoordinates coordinates = HexCoordinates.Load(reader);
         float orientation = reader.ReadSingle();
         grid.AddUnit(
-            grid.InstantiateChild<HexUnit>(UnitPrefab),
+            grid.InstantiateOrphan<HexUnit>(UnitPrefab),
             grid.GetCell(coordinates),
             orientation
         );

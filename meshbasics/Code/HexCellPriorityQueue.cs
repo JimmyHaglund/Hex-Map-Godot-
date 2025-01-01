@@ -2,7 +2,7 @@
 
 namespace JHM.MeshBasics;
 
-public class HexCellPriorityQueue {
+public sealed class HexCellPriorityQueue {
 
     List<HexCell> list = new List<HexCell>();
     int count = 0;
@@ -49,6 +49,7 @@ public class HexCellPriorityQueue {
                 current = next;
                 next = current.NextWithSamePriority;
             }
+            current.NextWithSamePriority = cell.NextWithSamePriority;
         }
         Enqueue(cell);
         count -= 1;

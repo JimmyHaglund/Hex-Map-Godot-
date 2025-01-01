@@ -31,10 +31,14 @@ public sealed partial class HexGameUI : Control {
         DoPathfinding();
     }
 
-
+    private bool _pathing = false;
     private void DoPathfinding() {
+        if (_pathing) return;
         if (!UpdateCurrentCell()) return;
+        if (!_selectedUnit.IsValidDestination(_currentCell)) return;
+        _pathing = true;
         Grid.FindPath(_selectedUnit.Location, _currentCell, 24);
+        _pathing = false;
     }
 
     private bool UpdateCurrentCell() {
