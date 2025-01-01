@@ -7,14 +7,17 @@ namespace JHM.MeshBasics;
 public sealed partial class HexUnit : Node3D {
     [Export] public PackedScene _pathDisplayPrefab;
 
+    private float _travelSpeed = 4.0f;
     private HexCell _location;
     private float _orientation;
     private List<HexCell> _pathToTravel ;
+    private float _moveProgress = 0.0f;
+    private int _travelIndex = 0;
 
     public static PackedScene UnitPrefab {get; set; }
 
     private List<Node3D> _pathDisplays = new();
-
+    
     public HexCell Location {
         get {
             return _location;
@@ -49,10 +52,12 @@ public sealed partial class HexUnit : Node3D {
     }
 
     public void Travel(List<HexCell> path) {
+        Location = path[path.Count - 1];
         _pathToTravel = path;
+        _travelIndex = 0;
+        _moveProgress = 0.0f;
+
         ClearPathDisplay();
-        _hasDrawnPath = false;
-        // Location = path[path.Count - 1];
     }
 
     public void Die() { 
@@ -78,6 +83,7 @@ public sealed partial class HexUnit : Node3D {
     
     private bool _hasDrawnPath = false;
     public override void _Process(double delta) {
+        TravelPath((float)delta);
         DrawPath();
     }
 
@@ -90,7 +96,7 @@ public sealed partial class HexUnit : Node3D {
 
         for (var n = 0; n < _pathToTravel.Count; n++) { 
             var point = _pathToTravel[n];
-            var node =   this.InstantiateChild<Node3D>(_pathDisplayPrefab);
+            var node = GetTree().Root.GetChild(0).InstantiateChild<Node3D>(_pathDisplayPrefab);
             _pathDisplays.Add(node);
             node.GlobalPosition = point.Position;
             if (n + 1 < _pathToTravel.Count) { 
@@ -104,6 +110,23 @@ public sealed partial class HexUnit : Node3D {
         foreach (var n in _pathDisplays) n.QueueFree();
         _pathDisplays.Clear();
         _hasDrawnPath = false;
+    }
+
+    
+
+    private void TravelPath(float delta) {
+        if (_pathToTravel is null) return;
+        _moveProgress += delta * _travelSpeed;
+        while (_moveProgress >= 1.0f) { 
+            _travelIndex++;
+            _moveProgress--;
+        }
+        if (_travelIndex >= _pathToTravel.Count - 1) return;
+
+        Vector3 a = _pathToTravel[_travelIndex].Position;
+        Vector3 b = _pathToTravel[_travelIndex + 1].Position;
+        Position = a.Lerp(b, _moveProgress);
+        LookAt(Position + b - a);
     }
 
     public override void _ExitTree() {
