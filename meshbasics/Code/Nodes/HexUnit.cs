@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using Godot;
+using static Godot.TextServer;
 
 namespace JHM.MeshBasics;
 
@@ -13,6 +14,8 @@ public sealed partial class HexUnit : Node3D {
     private List<HexCell> _pathToTravel ;
     private float _moveProgress = 0.0f;
     private int _travelIndex = 0;
+    private float _rotationSpeed = Mathf.Pi;
+    private float _rotationTarget;
 
     public static PackedScene UnitPrefab {get; set; }
 
@@ -79,7 +82,6 @@ public sealed partial class HexUnit : Node3D {
             orientation
         );
     }
-
     
     private bool _hasDrawnPath = false;
     public override void _Process(double delta) {
@@ -104,9 +106,7 @@ public sealed partial class HexUnit : Node3D {
                 var pos = Bezier.GetPoint(a, b, c, t);
                 _pathDisplays.Add(node);
                 node.GlobalPosition = pos;
-                if (_pathDisplays.Count > 1) { 
-                    _pathDisplays[_pathDisplays.Count - 2].LookAt(node.Position);
-                }
+                node.LookAt(node.Position + Bezier.GetDerivative(a, b, c, t));
             }
         }
 
@@ -118,9 +118,7 @@ public sealed partial class HexUnit : Node3D {
             var pos = Bezier.GetPoint(a, b, c, t);
             _pathDisplays.Add(node);
             node.GlobalPosition = pos;
-            if (_pathDisplays.Count > 1) {
-                _pathDisplays[_pathDisplays.Count - 2].LookAt(node.Position);
-            }
+            node.LookAt(node.Position + Bezier.GetDerivative(a,b,c,t));
         }
         _hasDrawnPath = true;
     }
@@ -131,7 +129,9 @@ public sealed partial class HexUnit : Node3D {
         _hasDrawnPath = false;
     }
 
+    private bool _lookBeforeMoving = false;
     private void TravelPath(float delta) {
+
         if (_pathToTravel is null) return;
         _moveProgress += delta * _travelSpeed;
         while (_moveProgress >= 1.0f) { 
@@ -153,13 +153,40 @@ public sealed partial class HexUnit : Node3D {
             c = (b + _pathToTravel[_travelIndex + 1].Position) * 0.5f;
         }
         Position = Bezier.GetPoint(a, b, c, _moveProgress);
+
         if (_travelIndex + 1 < _pathToTravel.Count) { 
-            LookAt(_pathToTravel[_travelIndex].Position);
+            var lookDirection = Bezier.GetDerivative(a, b, c, _moveProgress);
+            lookDirection.Y = 0;
+            LookAt(Position + lookDirection);
+            
         }
     }
 
     public override void _ExitTree() {
+        ClearPathDisplay();
         if (_location is null) return;
         _location.Unit = null;
+    }
+
+    private void LookAt(Vector3 point) {
+        point.Y = Position.Y;
+        LookAt(point);
+        Orientation = Rotation.Y;
+    }
+
+    private void LookAtInterpolated(Vector3 point, float deltaTime) { 
+        var deltaAngle = deltaTime * _rotationSpeed;
+        var targetRotation = point - Position;
+        var rotationDifference = Rotation.SignedAngleTo(targetRotation, Vector3.Up);
+        if (rotationDifference == 0.0f) return;
+        deltaAngle *= Mathf.Sign(rotationDifference) / Mathf.Abs(rotationDifference);
+
+        if (deltaAngle < 0) {
+            deltaAngle = Mathf.Max(deltaAngle, rotationDifference);
+        } else { 
+            deltaAngle = Mathf.Min(deltaAngle, rotationDifference);
+        }
+
+        Rotate(Vector3.Up, deltaAngle);
     }
 }
