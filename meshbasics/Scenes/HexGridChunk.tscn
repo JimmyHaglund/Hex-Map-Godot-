@@ -73,7 +73,7 @@ mesh = SubResource("ArrayMesh_0fglf")
 script = ExtResource("6_nfodi")
 CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
 AltShape = NodePath("AltStaticBody/AltCollisionShape3D")
-UseTerrainTypes = true
+UseCellData = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Terrain"]
 
@@ -90,7 +90,6 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_nb12b")
 script = ExtResource("6_nfodi")
 UseCollider = false
-UseColors = false
 UseUVCoordinates = true
 
 [node name="Water" type="MeshInstance3D" parent="."]
@@ -100,7 +99,6 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_0o867")
 script = ExtResource("6_nfodi")
 UseCollider = false
-UseColors = false
 
 [node name="WaterShore" type="MeshInstance3D" parent="."]
 material_override = ExtResource("6_gl15j")
@@ -109,7 +107,6 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_i4usy")
 script = ExtResource("6_nfodi")
 UseCollider = false
-UseColors = false
 UseUVCoordinates = true
 
 [node name="Estuaries" type="MeshInstance3D" parent="."]
@@ -119,7 +116,6 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_5q65r")
 script = ExtResource("6_nfodi")
 UseCollider = false
-UseColors = false
 UseUVCoordinates = true
 UseUV2Coordinates = true
 
@@ -131,7 +127,6 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_kd5wo")
 script = ExtResource("6_nfodi")
 UseCollider = false
-UseColors = false
 UseUVCoordinates = true
 
 [node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs", "Walls")]
@@ -188,5 +183,4 @@ mesh = SubResource("ArrayMesh_wltgt")
 skeleton = NodePath("../..")
 script = ExtResource("6_nfodi")
 UseCollider = false
-UseColors = false
 UseUVCoordinates = true

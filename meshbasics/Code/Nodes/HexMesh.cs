@@ -5,24 +5,23 @@ namespace JHM.MeshBasics;
 
 public sealed partial class HexMesh : MeshInstance3D {
     private List<Vector3> _vertices = new();
-    private List<Color> _colors = new();
     private List<Vector3> _normals = new();
+    private List<Vector3> _cellIndices = new();
     private ArrayMesh _mesh;
+    private List<Color> _cellWeights = new();
     // private List<int> _triangles = new();
     private CollisionShape3D _activeShape;
     private CollisionShape3D _inactiveShape;
     private List<Vector2> _uvs;
     private List<Vector2> _uv2s;
-    private List<Vector3> _terrainTypes = new();
-
+    
     [Export] public CollisionShape3D CollisionShape { get; set; }
     [Export] public CollisionShape3D AltShape { get; set; }
     [Export] public bool UseCollider { get; set; } = true;
-    [Export] public bool UseColors { get; set; } = true;
+    [Export] public bool UseCellData { get; set; }
     [Export] public bool UseUVCoordinates { get; set; } = false;
     [Export] public bool UseUV2Coordinates { get; set; } = false;
-    [Export] public bool UseTerrainTypes { get; set; } = false;
-
+    
     public override void _Ready() {
         _mesh = Mesh as ArrayMesh;
         _activeShape = CollisionShape;
@@ -37,18 +36,16 @@ public sealed partial class HexMesh : MeshInstance3D {
         _vertices = ListPool<Vector3>.Get();
         _normals = ListPool<Vector3>.Get();
 
+        if (UseCellData) {
+            _cellWeights = ListPool<Color>.Get();
+            _cellIndices = ListPool<Vector3>.Get();
+        }
+
         if (UseUVCoordinates) {
             _uvs = ListPool<Vector2>.Get();
         }
         if (UseUV2Coordinates) {
             _uv2s = ListPool<Vector2>.Get();
-        }
-
-        if (UseColors) {
-            _colors = ListPool<Color>.Get();
-        }
-        if (UseTerrainTypes) {
-            _terrainTypes = ListPool<Vector3>.Get();
         }
     }
 
@@ -62,10 +59,12 @@ public sealed partial class HexMesh : MeshInstance3D {
             var vertex = _vertices[n];
             surfaceTool.SetNormal(_normals[n]);
 
-            if (UseTerrainTypes) {
-                var terrain = _terrainTypes[n];
-                surfaceTool.SetCustom(0, new(terrain.X, terrain.Y, terrain.Z));
+            if (UseCellData) { 
+                surfaceTool.SetCustom(0, Colors.FromVector3(_cellIndices[n]));
+                surfaceTool.SetColor(_cellWeights[n]);
             }
+
+            
             if (UseUVCoordinates) {
                 var uv = Vector2.Zero;
                 if (_uvs != null && n < _uvs.Count) uv = _uvs[n];
@@ -76,24 +75,20 @@ public sealed partial class HexMesh : MeshInstance3D {
                 if (_uv2s != null && n < _uv2s.Count) uv = _uv2s[n];
                 surfaceTool.SetUV2(uv);
             }
-            if (UseColors) {
-                surfaceTool.SetColor(_colors[n]);
-            }
             surfaceTool.AddVertex(vertex);
         }
         surfaceTool.Commit(_mesh);
 
         ListPool<Vector3>.Add(_vertices);
         ListPool<Vector3>.Add(_normals);
-        
-        if (UseColors) {
-            ListPool<Color>.Add(_colors);
+
+        if (UseCellData) {
+            ListPool<Color>.Add(_cellWeights);
+            ListPool<Vector3>.Add(_cellIndices);
+
         }
         if (UseUVCoordinates) {
             ListPool<Vector2>.Add(_uvs);
-        }
-        if (UseTerrainTypes) {
-            ListPool<Vector3>.Add(_terrainTypes);
         }
 
         if (!UseCollider) return;
@@ -103,7 +98,6 @@ public sealed partial class HexMesh : MeshInstance3D {
     }
 
     public void SetVertices(List<Vector3> vertices) => _vertices = vertices;
-    public void SetColors(List<Color> colors) => _colors = colors;
     public void SetNormals(List<Vector3> normals) => _normals = normals;
 
     public void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3) {
@@ -136,17 +130,22 @@ public sealed partial class HexMesh : MeshInstance3D {
         // triangles.Add(vertexIndex + 2);
     }
 
-    public void AddTriangleColor(Color color) {
-        _colors.Add(color);
-        _colors.Add(color);
-        _colors.Add(color);
+    public void AddTriangleCellData(
+        Vector3 indices,
+        Color weights1,
+        Color weights2,
+        Color weights3
+    ) {
+        _cellIndices.Add(indices);
+        _cellIndices.Add(indices);
+        _cellIndices.Add(indices);
+        _cellWeights.Add(weights1);
+        _cellWeights.Add(weights2);
+        _cellWeights.Add(weights3);
     }
 
-    public void AddTriangleColor(Color c1, Color c2, Color c3) {
-        _colors.Add(c1);
-        _colors.Add(c2);
-        _colors.Add(c3);
-
+    public void AddTriangleCellData(Vector3 indices, Color weights) {
+        AddTriangleCellData(indices, weights, weights, weights);
     }
 
     public void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) {
@@ -207,34 +206,35 @@ public sealed partial class HexMesh : MeshInstance3D {
         // _triangles.Add(vertexIndex + 3);
     }
 
-    public void AddQuadColor(Color c1, Color c2, Color c3, Color c4) {
-        _colors.Add(c1);
-        _colors.Add(c2);
-        _colors.Add(c3);
-
-        _colors.Add(c2);
-        _colors.Add(c3);
-        _colors.Add(c4);
+    public void AddQuadCellData(
+        Vector3 indices,
+        Color weights1, Color weights2, Color weights3, Color weights4
+    ) {
+        _cellIndices.Add(indices);
+        _cellIndices.Add(indices);
+        _cellIndices.Add(indices);
+        
+        _cellIndices.Add(indices);
+        _cellIndices.Add(indices);
+        _cellIndices.Add(indices);
+        
+        _cellWeights.Add(weights1);
+        _cellWeights.Add(weights2);
+        _cellWeights.Add(weights3);
+        
+        _cellWeights.Add(weights2);
+        _cellWeights.Add(weights3);
+        _cellWeights.Add(weights4);
     }
 
-    public void AddQuadColor(Color c1, Color c2) {
-        _colors.Add(c1);
-        _colors.Add(c1);
-        _colors.Add(c2);
-
-        _colors.Add(c1);
-        _colors.Add(c2);
-        _colors.Add(c2);
+    public void AddQuadCellData(
+        Vector3 indices, Color weights1, Color weights2
+    ) {
+        AddQuadCellData(indices, weights1, weights1, weights2, weights2);
     }
 
-    public void AddQuadColor(Color color) {
-        _colors.Add(color);
-        _colors.Add(color);
-        _colors.Add(color);
-
-        _colors.Add(color);
-        _colors.Add(color);
-        _colors.Add(color);
+    public void AddQuadCellData(Vector3 indices, Color weights) {
+        AddQuadCellData(indices, weights, weights, weights, weights);
     }
 
     public void AddTriangleUV(Vector2 uv1, Vector2 uv2, Vector2 uv3) {
@@ -287,21 +287,6 @@ public sealed partial class HexMesh : MeshInstance3D {
         _uv2s.Add(new Vector2(uMax, vMin));
         _uv2s.Add(new Vector2(uMin, vMax));
         _uv2s.Add(new Vector2(uMax, vMax));
-    }
-
-    public void AddTriangleTerrainTypes(Vector3 types) {
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
-    }
-
-    public void AddQuadTerrainTypes(Vector3 types) {
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
-        _terrainTypes.Add(types);
     }
 
     private void SwapCollisionShape() {
