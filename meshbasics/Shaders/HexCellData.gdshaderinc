@@ -1,0 +1,13 @@
+uniform sampler2D hex_cell_data;
+uniform vec4 texel_size;
+
+vec4 GetCellData(float cellIndex) {
+	vec2 uv;
+	uv.x = (cellIndex + 0.5) * texel_size.x;
+	float row = floor(uv.x);
+	uv.x -= row;
+	uv.y = (row + 0.5) * texel_size.y;
+	vec4 data = texture(hex_cell_data, uv);
+	data.w *= 4.0;
+	return data;
+}

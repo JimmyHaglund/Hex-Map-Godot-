@@ -158,7 +158,7 @@ public sealed partial class HexUnit : Node3D {
             var lookDirection = Bezier.GetDerivative(a, b, c, _moveProgress);
             lookDirection.Y = 0;
             LookAt(Position + lookDirection);
-            
+            Orientation = Rotation.Y;
         }
     }
 
@@ -168,11 +168,11 @@ public sealed partial class HexUnit : Node3D {
         _location.Unit = null;
     }
 
-    private void LookAt(Vector3 point) {
-        point.Y = Position.Y;
-        LookAt(point);
-        Orientation = Rotation.Y;
-    }
+    //private void LookAt(Vector3 point) {
+    //    point.Y = Position.Y;
+    //    
+    //    Orientation = Rotation.Y;
+    //}
 
     private void LookAtInterpolated(Vector3 point, float deltaTime) { 
         var deltaAngle = deltaTime * _rotationSpeed;
