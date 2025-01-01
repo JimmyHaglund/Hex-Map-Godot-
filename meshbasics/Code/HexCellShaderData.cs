@@ -2,14 +2,28 @@
 namespace JHM.MeshBasics;
 
 public sealed partial class HexCellShaderData : Node {
-    private Image _cellTexture;
+    [Export] private ShaderMaterial[] _shaders;
+
+    private ImageTexture _cellTexture;
+    private Image _image;
     private Color[] _cellTextureData;
 
     public void Initialize(int x, int z) {
         if (_cellTexture is not null) { 
-            _cellTexture.Resize(x, z, Image.Interpolation.Nearest);
+            _image.Resize(x, z, Image.Interpolation.Nearest);
+            _cellTexture.Update(_image);
+            Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
+            foreach (var material in _shaders) {
+                material.SetShaderParameter("texel_size", texelSize);
+            }
         } else {
-            _cellTexture = Image.CreateEmpty(x, z, useMipmaps: false, Image.Format.Rgba8);
+            _image = Image.CreateEmpty(x, z, useMipmaps: false, Image.Format.Rgba8);
+            _cellTexture = ImageTexture.CreateFromImage(_image);
+            Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
+            foreach(var material in _shaders) {
+                material.SetShaderParameter("texel_size", texelSize);
+                material.SetShaderParameter("hex_cell_data", _cellTexture);
+            }
         }
 
         if (_cellTextureData == null || _cellTextureData.Length != x * z) {
@@ -36,12 +50,10 @@ public sealed partial class HexCellShaderData : Node {
         for (var x = 0; x < w; x++) { 
             for(var y = 0; y < _cellTexture.GetHeight(); y++) { 
                 var c = _cellTextureData[x + w * y];
-                _cellTexture.SetPixel(x, y, c);
+                _image.SetPixel(x, y, c);
             }
         }
+        _cellTexture.Update(_image);
         this.ProcessMode = ProcessModeEnum.Disabled;
     }
-
-
-
 }
