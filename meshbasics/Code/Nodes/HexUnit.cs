@@ -4,10 +4,16 @@ using Godot;
 
 namespace JHM.MeshBasics;
 
-public sealed partial class HexUnit : Node3D{
+public sealed partial class HexUnit : Node3D {
+    [Export] public PackedScene _pathDisplayPrefab;
+
     private HexCell _location;
     private float _orientation;
-    public static PackedScene UnitPrefab;
+    private List<HexCell> _pathToTravel ;
+
+    public static PackedScene UnitPrefab {get; set; }
+
+    private List<Node3D> _pathDisplays = new();
 
     public HexCell Location {
         get {
@@ -43,7 +49,10 @@ public sealed partial class HexUnit : Node3D{
     }
 
     public void Travel(List<HexCell> path) {
-        Location = path[path.Count - 1];
+        _pathToTravel = path;
+        ClearPathDisplay();
+        _hasDrawnPath = false;
+        // Location = path[path.Count - 1];
     }
 
     public void Die() { 
@@ -67,6 +76,35 @@ public sealed partial class HexUnit : Node3D{
     }
 
     
+    private bool _hasDrawnPath = false;
+    public override void _Process(double delta) {
+        DrawPath();
+    }
+
+    private void DrawPath() {
+        if (_pathToTravel == null || _pathToTravel.Count == 0 || _hasDrawnPath) {
+            return;
+        }
+        
+        ClearPathDisplay();
+
+        for (var n = 0; n < _pathToTravel.Count; n++) { 
+            var point = _pathToTravel[n];
+            var node =   this.InstantiateChild<Node3D>(_pathDisplayPrefab);
+            _pathDisplays.Add(node);
+            node.GlobalPosition = point.Position;
+            if (n + 1 < _pathToTravel.Count) { 
+                node.LookAt(_pathToTravel[n + 1].Position);
+            }
+        }
+        _hasDrawnPath = true;
+    }
+
+    private void ClearPathDisplay() {
+        foreach (var n in _pathDisplays) n.QueueFree();
+        _pathDisplays.Clear();
+        _hasDrawnPath = false;
+    }
 
     public override void _ExitTree() {
         if (_location is null) return;
