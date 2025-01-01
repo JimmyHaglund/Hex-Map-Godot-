@@ -325,6 +325,7 @@ public sealed partial class HexGrid : Node3D {
         HexCell cell = _cells[i] = this.InstantiateOrphan<HexCell>(HexCellPrefab, $"HexCell_{i}");
         cell.Position = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        cell.ShaderData = _cellShaderData;
         
         if (x > 0) {
             cell.SetNeighbor(HexDirection.W, _cells[i - 1]);

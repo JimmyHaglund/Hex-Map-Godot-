@@ -27,6 +27,7 @@ public sealed partial class HexCell : Node3D {
     public HexCell PathFrom { get; set; }
     public int SearchHeuristic { get; set; }
     public int SearchPhase { get; set; }
+    public HexCellShaderData ShaderData { get; set; }
 
     public Label3D Label {
         get => _label;
@@ -61,7 +62,7 @@ public sealed partial class HexCell : Node3D {
         set {
             if (_terrainTypeIndex != value) {
                 _terrainTypeIndex = value;
-                Refresh();
+                ShaderData.RefreshTerrain(this);
             }
         }
     }
@@ -382,6 +383,7 @@ public sealed partial class HexCell : Node3D {
 
     public void Load(BinaryReader reader) {
         _terrainTypeIndex = reader.ReadByte();
+        ShaderData.RefreshTerrain(this);
         _elevation = reader.ReadByte();
         _waterLevel = reader.ReadByte();
         _urbanLevel = reader.ReadByte();

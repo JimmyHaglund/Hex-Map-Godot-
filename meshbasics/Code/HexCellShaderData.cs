@@ -22,4 +22,7 @@ public sealed partial class HexCellShaderData : Node {
         }
     }
 
+    public void RefreshTerrain(HexCell cell) {
+    }
+
 }
