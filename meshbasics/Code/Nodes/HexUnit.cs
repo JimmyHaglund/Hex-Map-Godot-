@@ -17,7 +17,10 @@ public sealed partial class HexUnit : Node3D {
     private float _rotationSpeed = Mathf.Pi;
     private float _rotationTarget;
 
+    public const int VisionRange = 3;
+
     public static PackedScene UnitPrefab {get; set; }
+    public HexGrid Grid { get; set; }
 
     private List<Node3D> _pathDisplays = new();
     
@@ -27,14 +30,14 @@ public sealed partial class HexUnit : Node3D {
         }
         set {
             if (_location is not null) {
-                _location.DecreaseVisibility();
+                Grid?.DecreaseVisibility(_location, VisionRange);
                 _location.Unit = null;
             }
             if (value is null) return;
 
             _location = value;
             _location.Unit = this;
-            _location.IncreaseVisibility();
+            Grid?.IncreaseVisibility(_location, VisionRange);
             Position = value.Position;
         }
     }

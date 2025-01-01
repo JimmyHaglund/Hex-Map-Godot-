@@ -158,6 +158,7 @@ public sealed partial class HexGrid : Node3D {
     public void AddUnit(HexUnit unit, HexCell location, float orientation) {
         _units.Add(unit);
         AddChild(unit);
+        unit.Grid = this;
         unit.Location = location;
         unit.Orientation = orientation;
     }
@@ -192,6 +193,22 @@ public sealed partial class HexGrid : Node3D {
         path.Add(_currentPathFrom);
         path.Reverse();
         return path;
+    }
+
+    public void IncreaseVisibility(HexCell fromCell, int range) {
+        List<HexCell> cells = GetVisibleCells(fromCell, range);
+        for (int i = 0; i < cells.Count; i++) {
+            cells[i].IncreaseVisibility();
+        }
+        ListPool<HexCell>.Add(cells);
+    }
+
+    public void DecreaseVisibility(HexCell fromCell, int range) {
+        List<HexCell> cells = GetVisibleCells(fromCell, range);
+        for (int i = 0; i < cells.Count; i++) {
+            cells[i].DecreaseVisibility();
+        }
+        ListPool<HexCell>.Add(cells);
     }
 
     private Vector3 ClampPositionToGrid(Vector3 position) {
@@ -276,6 +293,69 @@ public sealed partial class HexGrid : Node3D {
         }
         return false;
     }
+
+    private List<HexCell> GetVisibleCells(HexCell fromCell, int range) {
+        List<HexCell> visibleCells = ListPool<HexCell>.Get();
+        _searchFrontierPhase += 2;
+        if (_searchFrontier == null) {
+            _searchFrontier = new HexCellPriorityQueue();
+        }
+        _searchFrontier.Clear();
+
+
+        fromCell.Distance = 0;
+        fromCell.SearchPhase = _searchFrontierPhase;
+        _searchFrontier.Enqueue(fromCell);
+        while (_searchFrontier.Count > 0) {
+            HexCell current = _searchFrontier.Dequeue();
+            current.SearchPhase += 1;
+
+            visibleCells.Add(current);
+
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase) {
+                    continue;
+                }
+                if (neighbor.IsUnderwater || neighbor.Unit != null) {
+                    continue;
+                }
+                HexEdgeType edgeType = current.GetEdgeType(neighbor);
+                if (edgeType == HexEdgeType.Cliff) {
+                    continue;
+                }
+                int moveCost;
+                if (current.HasRoadThroughEdge(d)) {
+                    moveCost = 1;
+                }
+                else if (current.Walled != neighbor.Walled) {
+                    continue;
+                }
+                else {
+                    moveCost = edgeType == HexEdgeType.Flat ? 5 : 10;
+                    moveCost += neighbor.UrbanLevel + neighbor.FarmLevel +
+                        neighbor.PlantLevel;
+                }
+
+                int distance = current.Distance + 1;
+                if (distance > range) continue;
+
+                if (neighbor.SearchPhase < _searchFrontierPhase) {
+                    neighbor.SearchPhase = _searchFrontierPhase;
+                    neighbor.Distance = distance;
+                    neighbor.SearchHeuristic = 0;
+                    _searchFrontier.Enqueue(neighbor);
+                }
+                else if (distance < neighbor.Distance) {
+                    var oldPriority = neighbor.SearchPriority;
+                    neighbor.Distance = distance;
+                    _searchFrontier.Change(neighbor, oldPriority);
+                }
+            }
+        }
+        return visibleCells;
+    }
+
 
     private void ShowPath(int speed) {
         if (_currentPathExists) {
