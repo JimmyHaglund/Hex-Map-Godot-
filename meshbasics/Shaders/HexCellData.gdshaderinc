@@ -8,7 +8,7 @@ vec4 GetCellData(float cellIndex) {
 	uv.x -= row;
 	uv.y = (row + 0.5) * texel_size.y;
 	vec4 data = texture(hex_cell_data, uv);
-	data.w *= 4.0;
+	data.w *= 4.0; // Terrain type is stored here. We multiply by 4 to get an integer index.
 	return data;
 }
 

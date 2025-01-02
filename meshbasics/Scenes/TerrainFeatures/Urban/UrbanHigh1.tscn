@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://0dmhwjyfsi5x"]
 
-[ext_resource type="Material" uid="uid://dbldjyhucfyro" path="res://Materials/UrbanMaterial.tres" id="1_wqiv4"]
+[ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="1_wqiv4"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_8uaat"]
 material = ExtResource("1_wqiv4")

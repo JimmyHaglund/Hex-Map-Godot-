@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=22 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://Code/Nodes/SaveLoadMenu.cs" id="9_dqswk"]
 [ext_resource type="PackedScene" uid="uid://dxitv45u170cv" path="res://Scenes/SaveLoadItem.tscn" id="10_4ppnm"]
 [ext_resource type="Script" path="res://Code/Nodes/FileNameTextEdit.cs" id="10_ip72k"]
+[ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="15_1aw4t"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
 albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
@@ -26,9 +27,17 @@ size = Vector2(200, 200)
 size = Vector3(1000, 0.1, 1000)
 
 [sub_resource type="SphereMesh" id="SphereMesh_hw2ro"]
+radial_segments = 8
+rings = 4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pf745"]
 albedo_color = Color(0.321569, 1, 0.686275, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_32ab0"]
+material = ExtResource("15_1aw4t")
+size = Vector2(200, 200)
+subdivide_width = 200
+subdivide_depth = 200
 
 [node name="Demo" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
@@ -572,6 +581,11 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("5_dnd0l")
 Grid = NodePath("../HexGrid")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, -0.000715585, 0, 1, 0, 0.000715585, 0, 1, 97.7618, 5.16095, 100.072)
+visible = false
+mesh = SubResource("PlaneMesh_32ab0")
 
 [connection signal="toggled" from="CheckButton" to="HexMapEditor" method="SetEditMode"]
 [connection signal="toggled" from="CheckButton" to="HexGameUI" method="SetEditMode"]

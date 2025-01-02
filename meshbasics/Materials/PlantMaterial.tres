@@ -1,7 +1,7 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bi3rfema8om7k"]
 
 [ext_resource type="Shader" path="res://Shaders/Feature.gdshader" id="1_ajinr"]
-[ext_resource type="Texture2D" uid="uid://fx64qunk61tl" path="res://Pictures/hex-grid-coordinates.png" id="2_7n88p"]
+[ext_resource type="Texture2D" uid="uid://clp3jjpjq1t34" path="res://Pictures/topRight_fixed.png" id="2_tbfr4"]
 
 [resource]
 render_priority = 0
@@ -10,4 +10,4 @@ shader_parameter/texel_size = null
 shader_parameter/u_color = Color(0.211591, 0.39624, 0.188679, 1)
 shader_parameter/u_glossiness = 0.0
 shader_parameter/u_metallic = 0.0
-shader_parameter/u_grid_coordinates = ExtResource("2_7n88p")
+shader_parameter/u_grid_coordinates = ExtResource("2_tbfr4")
