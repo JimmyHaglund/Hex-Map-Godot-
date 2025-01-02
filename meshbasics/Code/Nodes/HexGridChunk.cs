@@ -429,6 +429,7 @@ public sealed partial class HexGridChunk : Node3D {
         Water.AddTriangle(center, e1.v4, e1.v5);
 
         Vector3 indices = Vector3.One * cell.Index;
+        indices.Y = neighbor.Index;
         Water.AddTriangleCellData(indices, _weights1);
         Water.AddTriangleCellData(indices, _weights1);
         Water.AddTriangleCellData(indices, _weights1);
@@ -442,7 +443,7 @@ public sealed partial class HexGridChunk : Node3D {
             center2 + HexMetrics.GetFirstSolidCorner(direction.Opposite())
         );
         if (cell.HasRiverThroughEdge(direction)) {
-            TriangulateEstuary(e1, e2, cell.IncomingRiver == direction);
+            TriangulateEstuary(e1, e2, cell.IncomingRiver == direction, indices);
         }
         else {
             WaterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
@@ -453,6 +454,10 @@ public sealed partial class HexGridChunk : Node3D {
             WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
             WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
             WaterShore.AddQuadUV(0f, 0f, 0f, 1f);
+            WaterShore.AddQuadCellData(indices, _weights1, _weights2);
+            WaterShore.AddQuadCellData(indices, _weights1, _weights2);
+            WaterShore.AddQuadCellData(indices, _weights1, _weights2);
+            WaterShore.AddQuadCellData(indices, _weights1, _weights2);
         }
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
@@ -471,10 +476,12 @@ public sealed partial class HexGridChunk : Node3D {
                 new Vector2(0f, 1f),
                 new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f)
             );
+            indices.Z = nextNeighbor.Index;
+            WaterShore.AddTriangleCellData(indices, _weights1, _weights2, _weights3);
         }
     }
 
-    void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2, bool incomingRiver) {
+    void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2, bool incomingRiver, Vector3 indices) {
         WaterShore.AddTriangle(e2.v1, e1.v2, e1.v1);
         WaterShore.AddTriangle(e2.v5, e1.v5, e1.v4);
         WaterShore.AddTriangleUV(
@@ -483,6 +490,9 @@ public sealed partial class HexGridChunk : Node3D {
         WaterShore.AddTriangleUV(
             new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f)
         );
+        WaterShore.AddTriangleCellData(indices, _weights2, _weights1, _weights1);
+        WaterShore.AddTriangleCellData(indices, _weights2, _weights1, _weights1);
+
         Estuaries.AddQuad(e2.v1, e1.v2, e2.v2, e1.v3);
         Estuaries.AddTriangle(e1.v3, e2.v2, e2.v4);
         Estuaries.AddQuad(e1.v3, e1.v4, e2.v4, e2.v5);
@@ -498,6 +508,12 @@ public sealed partial class HexGridChunk : Node3D {
             new Vector2(0f, 0f), new Vector2(0f, 0f),
             new Vector2(1f, 1f), new Vector2(0f, 1f)
         );
+        Estuaries.AddQuadCellData(
+            indices, _weights2, _weights1, _weights2, _weights1
+        );
+        Estuaries.AddTriangleCellData(indices, _weights1, _weights2, _weights2);
+        Estuaries.AddQuadCellData(indices, _weights1, _weights2);
+
         if (incomingRiver) {
             Estuaries.AddQuadUV2(
                 new Vector2(1.5f, 1.0f), new Vector2(0.7f, 1.15f),

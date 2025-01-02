@@ -6,7 +6,8 @@
 [resource]
 render_priority = 1
 shader = ExtResource("1_urhql")
-shader_parameter/_Color = Color(0.263235, 0.505746, 0.65462, 0)
+shader_parameter/texel_size = null
+shader_parameter/_Color = Color(0.262745, 0.505882, 0.654902, 0)
 shader_parameter/_Metallic = 0.0
 shader_parameter/_Glossiness = 0.5
 shader_parameter/_MainTex = ExtResource("2_pbwdr")

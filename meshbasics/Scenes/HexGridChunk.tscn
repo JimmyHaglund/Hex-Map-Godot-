@@ -102,12 +102,14 @@ UseCollider = false
 UseCellData = true
 
 [node name="WaterShore" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.00315, 0, 0, 0, 1.00315, 0, 0, 0, 1.00315, 0, 0, 0)
 material_override = ExtResource("6_gl15j")
 cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("ArrayMesh_i4usy")
 script = ExtResource("6_nfodi")
 UseCollider = false
+UseCellData = true
 UseUVCoordinates = true
 
 [node name="Estuaries" type="MeshInstance3D" parent="."]
@@ -117,6 +119,7 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_5q65r")
 script = ExtResource("6_nfodi")
 UseCollider = false
+UseCellData = true
 UseUVCoordinates = true
 UseUV2Coordinates = true
 

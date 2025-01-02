@@ -16,7 +16,7 @@ void vertex() {
 	vec4 cell2 = GetCellData(indices.z);
 
 	visibility = cell0.x * COLOR.x + cell1.x * COLOR.y + cell2.x * COLOR.z;
-	visibility = mix(0.25, 1.0, visibility);
+	visibility = mix(0.05, 1.0, visibility);
 }
 
 void fragment() {

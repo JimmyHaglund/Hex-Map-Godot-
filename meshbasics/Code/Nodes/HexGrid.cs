@@ -319,25 +319,6 @@ public sealed partial class HexGrid : Node3D {
                 if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase) {
                     continue;
                 }
-                if (neighbor.IsUnderwater || neighbor.Unit != null) {
-                    continue;
-                }
-                HexEdgeType edgeType = current.GetEdgeType(neighbor);
-                if (edgeType == HexEdgeType.Cliff) {
-                    continue;
-                }
-                int moveCost;
-                if (current.HasRoadThroughEdge(d)) {
-                    moveCost = 1;
-                }
-                else if (current.Walled != neighbor.Walled) {
-                    continue;
-                }
-                else {
-                    moveCost = edgeType == HexEdgeType.Flat ? 5 : 10;
-                    moveCost += neighbor.UrbanLevel + neighbor.FarmLevel +
-                        neighbor.PlantLevel;
-                }
 
                 int distance = current.Distance + 1;
                 if (distance > range) continue;

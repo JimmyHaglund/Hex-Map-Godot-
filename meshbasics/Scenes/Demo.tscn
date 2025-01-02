@@ -55,6 +55,7 @@ Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, -3.23711, 0)
+visible = false
 gi_mode = 0
 mesh = SubResource("PlaneMesh_bnbs1")
 
