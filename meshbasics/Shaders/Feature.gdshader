@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, cull_back, depth_draw_opaque;
+render_mode depth_draw_always, cull_back;
 #include "HexCellData.gdshaderinc"
 
 uniform vec4 u_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
@@ -13,14 +13,19 @@ varying vec2 uv_main_tex;
 varying float visibility;
 
 void vertex() {
-    vec3 world_pos = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-    uv_main_tex = UV;
-    visibility = 1.0;
+    vec3 world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec4 gridUV = vec4(world_pos.xz, 0.0, 0.0);
+	gridUV.x *= 1.0 / (4.0 * 8.66025404);
+	gridUV.y *= 1.0 / (2.0 * 15.0);
+	vec2 cellDataCoordinates = floor(gridUV.xy) + texture(u_grid_coordinates, gridUV.xy).rg;
+	cellDataCoordinates *= 2.0;
+	
+	visibility = GetCellData2(cellDataCoordinates).x;
+	visibility = mix(0.0, 1.0, visibility);
 }
 
 void fragment() {
-    vec4 color = texture(u_main_tex, uv_main_tex) * u_color;
-
+    vec4 color = texture(u_main_tex, UV) * u_color;
     ALBEDO = color.rgb * visibility;
     METALLIC = u_metallic;
     ROUGHNESS = 1.0 - u_glossiness;

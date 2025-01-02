@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fx64qunk61tl"
-path="res://.godot/imported/hex-grid-coordinates.png-f65151b3b902099c6f97e3725aaa335f.ctex"
+uid="uid://hrh6gpuwap52"
+path="res://.godot/imported/hex-grid-coordinates - Copy.png-4a1441f96816111e5f57bfbf708c106b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Pictures/hex-grid-coordinates.png"
-dest_files=["res://.godot/imported/hex-grid-coordinates.png-f65151b3b902099c6f97e3725aaa335f.ctex"]
+source_file="res://Pictures/hex-grid-coordinates - Copy.png"
+dest_files=["res://.godot/imported/hex-grid-coordinates - Copy.png-4a1441f96816111e5f57bfbf708c106b.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
 mipmaps/limit=-1
-roughness/mode=1
+roughness/mode=0
 roughness/src_normal=""
 process/fix_alpha_border=false
 process/premult_alpha=false

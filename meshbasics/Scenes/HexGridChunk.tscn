@@ -67,6 +67,7 @@ Estuaries = NodePath("Estuaries")
 Features = NodePath("Features")
 
 [node name="Terrain" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98023e-08, -7.45058e-09, 3.72529e-08)
 material_override = ExtResource("5_a1qwg")
 gi_mode = 2
 mesh = SubResource("ArrayMesh_0fglf")

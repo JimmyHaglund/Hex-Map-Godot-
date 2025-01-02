@@ -11,3 +11,10 @@ vec4 GetCellData(float cellIndex) {
 	data.w *= 4.0;
 	return data;
 }
+
+vec4 GetCellData2(vec2 cellDataCoordinates) {
+	vec2 uv = cellDataCoordinates + 0.5;
+	uv.x *= texel_size.x;
+	uv.y *= texel_size.y;
+	return texture(hex_cell_data, uv);
+}
