@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
+using System.Reflection;
 using Godot;
 using static Godot.RenderingServer;
 
@@ -611,7 +612,8 @@ public sealed partial class HexGridChunk : Node3D {
                 center.Lerp(e.v1, interpolators.X),
                 center.Lerp(e.v5, interpolators.Y),
                 e,
-                cell.HasRoadThroughEdge(direction)
+                cell.HasRoadThroughEdge(direction),
+                cell.Index
             );
         }
     }
@@ -777,13 +779,13 @@ public sealed partial class HexGridChunk : Node3D {
 
         Vector3 mL = roadCenter.Lerp(e.v1, interpolators.X);
         Vector3 mR = roadCenter.Lerp(e.v5, interpolators.Y);
-        TriangulateRoad(roadCenter, mL, mR, e, hasRoadThroughEdge);
+        TriangulateRoad(roadCenter, mL, mR, e, hasRoadThroughEdge, cell.Index);
 
         if (previousHasRiver) {
-            TriangulateRoadEdge(roadCenter, center, mL);
+            TriangulateRoadEdge(roadCenter, center, mL, cell.Index);
         }
         if (nextHasRiver) {
-            TriangulateRoadEdge(roadCenter, mR, center);
+            TriangulateRoadEdge(roadCenter, mR, center, cell.Index);
         }
     }
 
@@ -870,7 +872,7 @@ public sealed partial class HexGridChunk : Node3D {
         Terrain.AddQuadCellData(indices, w1, w2);
 
         if (hasRoad) {
-            TriangulateRoadSegment(e1.v2, e1.v3, e1.v4, e2.v2, e2.v3, e2.v4);
+            TriangulateRoadSegment(e1.v2, e1.v3, e1.v4, e2.v2, e2.v3, e2.v4, w1, w2, indices);
         }
     }
 
@@ -897,12 +899,16 @@ public sealed partial class HexGridChunk : Node3D {
 
     private void TriangulateRoadSegment(
         Vector3 v1, Vector3 v2, Vector3 v3,
-        Vector3 v4, Vector3 v5, Vector3 v6
+        Vector3 v4, Vector3 v5, Vector3 v6,
+        Color w1, Color w2, Vector3 indices
     ) {
         Roads.AddQuad(v1, v2, v4, v5);
         Roads.AddQuad(v2, v3, v5, v6);
         Roads.AddQuadUV(0f, 1f, 0f, 0f);
         Roads.AddQuadUV(1f, 0f, 0f, 0f);
+
+        Roads.AddQuadCellData(indices, w1, w2);
+        Roads.AddQuadCellData(indices, w1, w2);
     }
 
     private void TriangulateRoad(
@@ -910,11 +916,13 @@ public sealed partial class HexGridChunk : Node3D {
         Vector3 mL,
         Vector3 mR,
         EdgeVertices e,
-        bool hasRoadThroughCellEdge
+        bool hasRoadThroughCellEdge,
+        float index
     ) {
         if (hasRoadThroughCellEdge) {
+            Vector3 indices = new(index, index, index);
             Vector3 mC = mL.Lerp(mR, 0.5f);
-            TriangulateRoadSegment(mL, mC, mR, e.v2, e.v3, e.v4);
+            TriangulateRoadSegment(mL, mC, mR, e.v2, e.v3, e.v4, _weights1, _weights1, indices);
             Roads.AddTriangle(center, mL, mC);
             Roads.AddTriangle(center, mC, mR);
 
@@ -924,16 +932,21 @@ public sealed partial class HexGridChunk : Node3D {
             Roads.AddTriangleUV(
                 new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f)
             );
+            Roads.AddTriangleCellData(indices, _weights1);
+            Roads.AddTriangleCellData(indices, _weights1);
         } else {
-            TriangulateRoadEdge(center, mL, mR);
+            TriangulateRoadEdge(center, mL, mR, index);
         }
     }
 
-    private void TriangulateRoadEdge(Vector3 center, Vector3 mL, Vector3 mR) {
+    private void TriangulateRoadEdge(Vector3 center, Vector3 mL, Vector3 mR, float index) {
         Roads.AddTriangle(center, mL, mR);
         Roads.AddTriangleUV(
             new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f)
         );
+        Vector3 indices;
+        indices.X = indices.Y = indices.Z = index;
+        Roads.AddTriangleCellData(indices, _weights1);
     }
 
     private Vector2 GetRoadInterpolators(HexDirection direction, HexCell cell) {

@@ -60,6 +60,7 @@ public sealed partial class HexMesh : MeshInstance3D {
             surfaceTool.SetNormal(_normals[n]);
 
             if (UseCellData) { 
+                var c = Colors.FromVector3(_cellIndices[n]);
                 surfaceTool.SetCustom(0, Colors.FromVector3(_cellIndices[n]));
                 surfaceTool.SetColor(_cellWeights[n]);
             }

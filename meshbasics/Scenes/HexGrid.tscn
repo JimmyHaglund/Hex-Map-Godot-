@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bkqosooy180ch"]
+[gd_scene load_steps=10 format=3 uid="uid://bkqosooy180ch"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
 [ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bwok11esd24iw" path="res://Scenes/HexGridChunk.tscn" id="5_3ypkl"]
 [ext_resource type="Script" path="res://Code/HexCellShaderData.cs" id="7_2hcal"]
 [ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/TerrainMaterial.tres" id="8_b80po"]
+[ext_resource type="Material" uid="uid://deb1ldds6tidn" path="res://Materials/RoadMaterial.tres" id="9_qrbye"]
 
 [node name="HexGrid" type="Node3D" node_paths=PackedStringArray("_cellShaderData")]
 script = ExtResource("1_52rku")
@@ -20,4 +21,4 @@ _cellShaderData = NodePath("CellShaderData")
 
 [node name="CellShaderData" type="Node" parent="."]
 script = ExtResource("7_2hcal")
-_shaders = Array[ShaderMaterial]([ExtResource("8_b80po")])
+_shaders = Array[ShaderMaterial]([ExtResource("8_b80po"), ExtResource("9_qrbye")])

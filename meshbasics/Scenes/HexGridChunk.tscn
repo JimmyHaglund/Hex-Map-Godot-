@@ -127,6 +127,7 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_kd5wo")
 script = ExtResource("6_nfodi")
 UseCollider = false
+UseCellData = true
 UseUVCoordinates = true
 
 [node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs", "Walls")]

@@ -10,19 +10,19 @@ uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
 uniform float metallic : hint_range(0.0, 1.0) = 0.0;
 uniform int layer = 0;
-varying vec4 terrain;
+varying vec4 indices;
 varying vec3 visibility;
 
 void vertex() {
-	terrain = CUSTOM0;
+	indices = CUSTOM0;
 	
- 	vec4 cell0 = GetCellData(terrain.x);
- 	vec4 cell1 = GetCellData(terrain.y);
- 	vec4 cell2 = GetCellData(terrain.z);
+ 	vec4 cell0 = GetCellData(indices.x);
+ 	vec4 cell1 = GetCellData(indices.y);
+ 	vec4 cell2 = GetCellData(indices.z);
  	
-	terrain.x = cell0.w;
- 	terrain.y = cell1.w;
- 	terrain.z = cell2.w;
+	indices.x = cell0.w;
+ 	indices.y = cell1.w;
+ 	indices.z = cell2.w;
 	
 	visibility.x = cell0.x;
 	visibility.y = cell1.x;
@@ -30,7 +30,7 @@ void vertex() {
 	visibility = mix(vec3(0.25), vec3(1.0), visibility);
 }
 vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {
-	vec3 uvw = vec3(worldPos.xz * 0.02, terrain[index]);
+	vec3 uvw = vec3(worldPos.xz * 0.02, indices[index]);
 	vec4 c = texture(_MainTex, uvw);
 	return c * (clr[index] * visibility[index]);
 }

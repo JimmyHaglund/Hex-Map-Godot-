@@ -61,9 +61,6 @@ public sealed partial class HexCellShaderData : Node {
             }
         }
         _cellTexture.Update(_image);
-        // foreach (var material in _shaders) {
-        //     material.SetShaderParameter("hex_cell_data", _cellTexture);
-        // }
 
         this.ProcessMode = ProcessModeEnum.Disabled;
     }
