@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bkqosooy180ch"]
+[gd_scene load_steps=14 format=3 uid="uid://bkqosooy180ch"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
 [ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
@@ -12,6 +12,7 @@
 [ext_resource type="Material" uid="uid://cmgf5cc3lk3rn" path="res://Materials/WaterMaterial.tres" id="10_u5gs2"]
 [ext_resource type="Material" uid="uid://dpwbat2hwd6dq" path="res://Materials/ShoreWaterMaterial.tres" id="11_ttff7"]
 [ext_resource type="Material" uid="uid://c506dce10lnjn" path="res://Materials/EstuaryMaterial.tres" id="12_255k0"]
+[ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="13_142xe"]
 
 [node name="HexGrid" type="Node3D" node_paths=PackedStringArray("_cellShaderData")]
 script = ExtResource("1_52rku")
@@ -24,4 +25,4 @@ _cellShaderData = NodePath("CellShaderData")
 
 [node name="CellShaderData" type="Node" parent="."]
 script = ExtResource("7_2hcal")
-_shaders = Array[ShaderMaterial]([ExtResource("8_b80po"), ExtResource("9_qrbye"), ExtResource("10_u5gs2"), ExtResource("11_ttff7"), ExtResource("12_255k0")])
+_shaders = Array[ShaderMaterial]([ExtResource("8_b80po"), ExtResource("9_qrbye"), ExtResource("10_u5gs2"), ExtResource("11_ttff7"), ExtResource("12_255k0"), ExtResource("13_142xe")])

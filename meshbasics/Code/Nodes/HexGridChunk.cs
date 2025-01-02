@@ -146,20 +146,24 @@ public sealed partial class HexGridChunk : Node3D {
 
         if (hasRiver) {
             e2.v3.Y = neighbor.StreamBedY;
+            Vector3 indices = Vector3.One * cell.Index;
+            indices.Y = neighbor.Index;
             if (!cell.IsUnderwater) {
                 if (!neighbor.IsUnderwater) {
 
                     TriangulateRiverQuad(
                         e1.v2, e1.v4, e2.v2, e2.v4,
                         cell.RiverSurfaceY, neighbor.RiverSurfaceY, 0.8f,
-                        cell.HasIncomingRiver && cell.IncomingRiver == direction
+                        cell.HasIncomingRiver && cell.IncomingRiver == direction,
+                        indices
                     );
                 }
                 else if (cell.Elevation > neighbor.WaterLevel) {
                     TriangulateWaterfallInWater(
                         e1.v2, e1.v4, e2.v2, e2.v4,
                         cell.RiverSurfaceY, neighbor.RiverSurfaceY,
-                        neighbor.WaterSurfaceY
+                        neighbor.WaterSurfaceY,
+                        indices
                     );
                 }
             } else if (
@@ -169,7 +173,8 @@ public sealed partial class HexGridChunk : Node3D {
                 TriangulateWaterfallInWater(
                     e2.v4, e2.v2, e1.v4, e1.v2,
                     neighbor.RiverSurfaceY, cell.RiverSurfaceY,
-                    cell.WaterSurfaceY
+                    cell.WaterSurfaceY,
+                    indices
                 );
             }
         }
@@ -547,7 +552,7 @@ public sealed partial class HexGridChunk : Node3D {
 
     void TriangulateWaterfallInWater(
         Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
-        float y1, float y2, float waterY
+        float y1, float y2, float waterY, Vector3 indices
     ) {
         v1.Y = v2.Y = y1;
         v3.Y = v4.Y = y2;
@@ -563,6 +568,7 @@ public sealed partial class HexGridChunk : Node3D {
 
         Rivers.AddQuadUnperturbed(v1, v2, v3, v4);
         Rivers.AddQuadUV(0f, 1f, 0.8f, 1f);
+        Rivers.AddQuadCellData(indices, _weights1, _weights2);
     }
 
     private void TriangulateWithRiver(
@@ -622,8 +628,8 @@ public sealed partial class HexGridChunk : Node3D {
 
         if (!cell.IsUnderwater) { 
             bool reversed = cell.IncomingRiver == direction;
-            TriangulateRiverQuad(centerL, centerR, m.v2, m.v4, cell.RiverSurfaceY, 0.4f, reversed);
-            TriangulateRiverQuad(m.v2, m.v4, e.v2, e.v4, cell.RiverSurfaceY, 0.6f, reversed);
+            TriangulateRiverQuad(centerL, centerR, m.v2, m.v4, cell.RiverSurfaceY, 0.4f, reversed, indices);
+            TriangulateRiverQuad(m.v2, m.v4, e.v2, e.v4, cell.RiverSurfaceY, 0.6f, reversed, indices);
         }
     }
 
@@ -661,8 +667,9 @@ public sealed partial class HexGridChunk : Node3D {
 
         if (!cell.IsUnderwater) { 
             bool reversed = cell.HasIncomingRiver;
+            Vector3 indices = Vector3.One * cell.Index;
             TriangulateRiverQuad(
-                m.v2, m.v4, e.v2, e.v4, cell.RiverSurfaceY, 0.6f, reversed
+                m.v2, m.v4, e.v2, e.v4, cell.RiverSurfaceY, 0.6f, reversed, indices
             );
 
             center.Y = m.v2.Y = m.v4.Y = cell.RiverSurfaceY;
@@ -681,6 +688,7 @@ public sealed partial class HexGridChunk : Node3D {
                     new Vector2(1f, 0.6f)
                 );
             }
+            Rivers.AddTriangleCellData(indices, _weights1);
         }
     }
 
@@ -908,7 +916,7 @@ public sealed partial class HexGridChunk : Node3D {
 
     private void TriangulateRiverQuad(
         Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
-        float y1, float y2, float v, bool reversed
+        float y1, float y2, float v, bool reversed, Vector3 indices
     ) {
         v1.Y = v2.Y = y1;
         v3.Y = v4.Y = y2;
@@ -918,13 +926,14 @@ public sealed partial class HexGridChunk : Node3D {
         } else { 
             Rivers.AddQuadUV(0.0f, 1.0f, v, v + 0.2f);
         }
+        Rivers.AddQuadCellData(indices, _weights1, _weights2);
     }
 
     private void TriangulateRiverQuad(
         Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
-        float y, float v, bool reversed
+        float y, float v, bool reversed, Vector3 indices
     ) {
-        TriangulateRiverQuad(v1, v2, v3, v4, y, y, v, reversed);
+        TriangulateRiverQuad(v1, v2, v3, v4, y, y, v, reversed, indices);
     }
 
     private void TriangulateRoadSegment(

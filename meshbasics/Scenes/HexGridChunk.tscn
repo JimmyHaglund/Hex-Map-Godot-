@@ -90,6 +90,7 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_nb12b")
 script = ExtResource("6_nfodi")
 UseCollider = false
+UseCellData = true
 UseUVCoordinates = true
 
 [node name="Water" type="MeshInstance3D" parent="."]
