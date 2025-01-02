@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://c61ir5defoy8i"]
+
+[ext_resource type="Shader" path="res://Shaders/Feature.gdshader" id="1_7nlo5"]
+[ext_resource type="Texture2D" uid="uid://fx64qunk61tl" path="res://Pictures/hex-grid-coordinates.png" id="2_3d2tv"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_7nlo5")
+shader_parameter/texel_size = null
+shader_parameter/u_color = Color(0.719799, 0.775222, 0.398391, 1)
+shader_parameter/u_glossiness = 0.0
+shader_parameter/u_metallic = 0.0
+shader_parameter/u_grid_coordinates = ExtResource("2_3d2tv")

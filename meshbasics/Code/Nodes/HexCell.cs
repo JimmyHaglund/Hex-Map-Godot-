@@ -534,6 +534,7 @@ public sealed partial class HexCell : Node3D {
     }
 
     private void SetHighlightVisible(bool visible, Color color) {
+        if (IsQueuedForDeletion()) return;
         if (Label is null) return;
         if (Label.IsQueuedForDeletion()) return;
         var highlight = Label.GetChild<Sprite3D>(0);

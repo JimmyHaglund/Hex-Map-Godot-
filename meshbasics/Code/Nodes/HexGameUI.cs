@@ -7,7 +7,21 @@ public sealed partial class HexGameUI : Control {
     private HexUnit _selectedUnit;
 
     [Export] public HexGrid Grid { get; set; }
-    
+
+    public override void _EnterTree() {
+        HexGrid.MapReset += ClearSelection;
+    }
+
+    public override void _ExitTree() {
+        HexGrid.MapReset -= ClearSelection;
+    }
+
+
+    private void ClearSelection() { 
+        _selectedUnit = null;
+        _currentCell = null;
+    }
+
     public void SetEditMode(bool toggle) { 
         Visible = !toggle;
         ProcessMode = toggle ? ProcessModeEnum.Disabled : ProcessModeEnum.Inherit;

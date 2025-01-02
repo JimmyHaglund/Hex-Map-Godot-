@@ -1,14 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://c20es8s6wmvxe"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_8uaat"]
-size = Vector3(1.25, 4.5, 1.25)
+[ext_resource type="Material" uid="uid://bi3rfema8om7k" path="res://Materials/PlantMaterial.tres" id="1_nl8mg"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_18cwa"]
-albedo_color = Color(0.15885, 0.348671, 0.181765, 1)
+[sub_resource type="BoxMesh" id="BoxMesh_8uaat"]
+material = ExtResource("1_nl8mg")
+size = Vector3(1.25, 4.5, 1.25)
 
 [node name="UrbanHigh1" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.011, 2.25, 0.009)
 mesh = SubResource("BoxMesh_8uaat")
-surface_material_override/0 = SubResource("StandardMaterial3D_18cwa")

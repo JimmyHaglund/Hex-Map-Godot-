@@ -1,4 +1,13 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://ppqhm8mxrs2o"]
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://ppqhm8mxrs2o"]
+
+[ext_resource type="Shader" path="res://Shaders/Feature.gdshader" id="1_8f3et"]
+[ext_resource type="Texture2D" uid="uid://fx64qunk61tl" path="res://Pictures/hex-grid-coordinates.png" id="2_lmxop"]
 
 [resource]
-albedo_color = Color(0.556686, 0.29026, 0.27974, 1)
+render_priority = 0
+shader = ExtResource("1_8f3et")
+shader_parameter/texel_size = null
+shader_parameter/u_color = Color(0.918472, 0.316195, 0.242146, 1)
+shader_parameter/u_glossiness = 0.64
+shader_parameter/u_metallic = 0.0
+shader_parameter/u_grid_coordinates = ExtResource("2_lmxop")

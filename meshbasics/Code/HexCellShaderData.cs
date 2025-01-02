@@ -9,22 +9,29 @@ public sealed partial class HexCellShaderData : Node {
     private Color[] _cellTextureData;
 
     public void Initialize(int x, int z) {
+        //if (_cellTexture is not null) {
+        //    _image.Dispose
+        //    _image.Resize(x, z, Image.Interpolation.Nearest);
+        //    _cellTexture.Update(_image);
+        //    Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
+        //    foreach (var material in _shaders) {
+        //        material.SetShaderParameter("texel_size", texelSize);
+        //    }
+        //} else {
         if (_cellTexture is not null) { 
-            _image.Resize(x, z, Image.Interpolation.Nearest);
-            _cellTexture.Update(_image);
-            Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
-            foreach (var material in _shaders) {
-                material.SetShaderParameter("texel_size", texelSize);
-            }
-        } else {
-            _image = Image.CreateEmpty(x, z, useMipmaps: false, Image.Format.Rgba8);
-            _cellTexture = ImageTexture.CreateFromImage(_image);
-            Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
-            foreach (var material in _shaders) {
-                material.SetShaderParameter("texel_size", texelSize);
-                material.SetShaderParameter("hex_cell_data", _cellTexture);
-            }
+            _cellTexture.Dispose();
+            _image.Dispose();
+            _cellTexture = null;
+            _image = null;
         }
+        _image = Image.CreateEmpty(x, z, useMipmaps: false, Image.Format.Rgba8);
+        _cellTexture = ImageTexture.CreateFromImage(_image);
+        Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
+        foreach (var material in _shaders) {
+            material.SetShaderParameter("texel_size", texelSize);
+            material.SetShaderParameter("hex_cell_data", _cellTexture);
+        }
+        //}
 
         if (_cellTextureData == null || _cellTextureData.Length != x * z) {
             _cellTextureData = new Color[x * z];
