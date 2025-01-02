@@ -14,7 +14,7 @@ void vertex() {
 	vec4 cell0 = GetCellData(indices.x);
 	vec4 cell1 = GetCellData(indices.y);
 
-	visibility = cell0.x * COLOR.x + cell1.x * COLOR.y;
+	visibility = cell0.x * COLOR.x  + cell1.x * COLOR.y;
 	visibility = mix(0.25, 1.0, visibility);
 }
 

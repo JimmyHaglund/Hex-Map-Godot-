@@ -99,6 +99,7 @@ gi_mode = 2
 mesh = SubResource("ArrayMesh_0o867")
 script = ExtResource("6_nfodi")
 UseCollider = false
+UseCellData = true
 
 [node name="WaterShore" type="MeshInstance3D" parent="."]
 material_override = ExtResource("6_gl15j")

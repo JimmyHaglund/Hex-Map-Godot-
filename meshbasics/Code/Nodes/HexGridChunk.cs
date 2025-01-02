@@ -385,6 +385,8 @@ public sealed partial class HexGridChunk : Node3D {
         Vector3 c2 = center + HexMetrics.GetSecondWaterCorner(direction);
 
         Water.AddTriangle(center, c1, c2);
+        Vector3 indices = cell.Index * Vector3.One;
+        Water.AddTriangleCellData(indices, _weights1);
 
         if (direction <= HexDirection.SE && neighbor != null) {
             Vector3 bridge = HexMetrics.GetWaterBridge(direction);
@@ -392,6 +394,8 @@ public sealed partial class HexGridChunk : Node3D {
             Vector3 e2 = c2 + bridge;
 
             Water.AddQuad(c1, c2, e1, e2);
+            indices.Y = neighbor.Index;
+            Water.AddQuadCellData(indices, _weights1, _weights2);
 
             if (direction <= HexDirection.E) {
                 HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
@@ -400,6 +404,10 @@ public sealed partial class HexGridChunk : Node3D {
                 }
                 Water.AddTriangle(
                     c2, e2, c2 + HexMetrics.GetWaterBridge(direction.Next())
+                );
+                indices.Z = nextNeighbor.Index;
+                Water.AddTriangleCellData(
+                    indices, _weights1, _weights2, _weights3
                 );
             }
         }
@@ -419,6 +427,12 @@ public sealed partial class HexGridChunk : Node3D {
         Water.AddTriangle(center, e1.v2, e1.v3);
         Water.AddTriangle(center, e1.v3, e1.v4);
         Water.AddTriangle(center, e1.v4, e1.v5);
+
+        Vector3 indices = Vector3.One * cell.Index;
+        Water.AddTriangleCellData(indices, _weights1);
+        Water.AddTriangleCellData(indices, _weights1);
+        Water.AddTriangleCellData(indices, _weights1);
+        Water.AddTriangleCellData(indices, _weights1);
 
         Vector3 center2 = neighbor.Position;
         center2.Y = center.Y;

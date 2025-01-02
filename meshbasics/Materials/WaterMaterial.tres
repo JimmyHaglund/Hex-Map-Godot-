@@ -6,7 +6,8 @@
 [resource]
 render_priority = 1
 shader = ExtResource("1_slprs")
-shader_parameter/_Color = Color(0.318488, 0.490249, 0.674591, 0)
+shader_parameter/texel_size = null
+shader_parameter/_Color = Color(0.352052, 0.638557, 0.60909, 0)
 shader_parameter/_Metallic = null
 shader_parameter/_Glossiness = 0.5
 shader_parameter/_MainTex = ExtResource("2_a6jrj")

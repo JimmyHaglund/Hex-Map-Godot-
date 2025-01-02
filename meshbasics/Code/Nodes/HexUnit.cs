@@ -126,7 +126,10 @@ public sealed partial class HexUnit : Node3D {
                 var pos = Bezier.GetPoint(a, b, c, t);
                 _pathDisplays.Add(node);
                 node.GlobalPosition = pos;
-                node.LookAt(node.Position + Bezier.GetDerivative(a, b, c, t));
+                var derivative = Bezier.GetDerivative(a, b, c, t);
+                if (!derivative.IsEqualApprox(Vector3.Zero)) {
+                    node.LookAt(node.Position + derivative);
+                }
             }
         }
 
