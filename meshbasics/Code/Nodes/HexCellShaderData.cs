@@ -7,6 +7,22 @@ public sealed partial class HexCellShaderData : Node {
     private ImageTexture _cellTexture;
     private Image _image;
     private Color[] _cellTextureData;
+    private static HexCellShaderData _instance;
+
+    public static void SetShaderParameter(string parameterName, Godot.Variant value) { 
+        if (_instance is null) return;
+        foreach(var shader in _instance._shaders) { 
+            shader.SetShaderParameter(parameterName, value);
+        }
+    } 
+
+    public override void _EnterTree() {
+        _instance = this;
+    }
+
+    public override void _ExitTree() {
+        if (_instance == this) _instance = null;
+    }
 
     public void Initialize(int x, int z) {
         //if (_cellTexture is not null) {

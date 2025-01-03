@@ -27,6 +27,7 @@ public sealed partial class HexGameUI : Control {
         ProcessMode = toggle ? ProcessModeEnum.Disabled : ProcessModeEnum.Inherit;
         Grid.SetUIVisible(!toggle);
         Grid.ClearPath();
+        HexCellShaderData.SetShaderParameter("HEX_MAP_EDIT_MODE", true);
     }
 
     public override void _UnhandledInput(InputEvent @event) {
