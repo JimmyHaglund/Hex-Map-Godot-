@@ -320,7 +320,10 @@ public sealed partial class HexGrid : Node3D {
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase) {
+                if (neighbor == null 
+                    || neighbor.SearchPhase > _searchFrontierPhase
+                    || !neighbor.Explorable
+                ) {
                     continue;
                 }
 
