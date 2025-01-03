@@ -29,6 +29,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0, 10")] private int _mapBorderX = 5;
     [Export(PropertyHint.Range, "0, 10")] private int _mapBorderZ = 5;
     [Export(PropertyHint.Range, "0, 10")] private int _regionBorder = 5;
+    [Export(PropertyHint.Range, "0, 4")] private int _regionCount = 1;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -184,27 +185,69 @@ public sealed partial class HexMapGenerator : Node {
         }
 
         MapRegion region;
-        if (_rng.NextDouble() < 0.5f) {
-            region.xMin = _mapBorderX;
-            region.xMax = Grid.CellCountX / 2 - _regionBorder;
-            region.zMin = _mapBorderZ;
-            region.zMax = Grid.CellCountZ - _mapBorderZ;
-            _regions.Add(region);
+        switch (_regionCount) {
+            default:
+                region.xMin = _mapBorderX;
+                region.xMax = Grid.CellCountX - _mapBorderX;
+                region.zMin = _mapBorderZ;
+                region.zMax = Grid.CellCountZ - _mapBorderZ;
+                _regions.Add(region);
+                break;
+            case 2:
+                if (_rng.NextDouble() < 0.5f) {
+                    region.xMin = _mapBorderX;
+                    region.xMax = Grid.CellCountX / 2 - _regionBorder;
+                    region.zMin = _mapBorderZ;
+                    region.zMax = Grid.CellCountZ - _mapBorderZ;
+                    _regions.Add(region);
+                    region.xMin = Grid.CellCountX / 2 + _regionBorder;
+                    region.xMax = Grid.CellCountX - _mapBorderX;
+                    _regions.Add(region);
+                }
+                else {
+                    region.xMin = _mapBorderX;
+                    region.xMax = Grid.CellCountX - _mapBorderX;
+                    region.zMin = _mapBorderZ;
+                    region.zMax = Grid.CellCountZ / 2 - _regionBorder;
+                    _regions.Add(region);
+                    region.zMin = Grid.CellCountZ / 2 + _regionBorder;
+                    region.zMax = Grid.CellCountZ - _mapBorderZ;
+                    _regions.Add(region);
+                }
+                break;
+            case 3:
+                region.xMin = _mapBorderX;
+                region.xMax = Grid.CellCountX / 3 - _regionBorder;
+                region.zMin = _mapBorderZ;
+                region.zMax = Grid.CellCountZ - _mapBorderZ;
+                _regions.Add(region);
 
-            region.xMin = Grid.CellCountX / 2 + _regionBorder;
-            region.xMax = Grid.CellCountX - _mapBorderX;
-            _regions.Add(region);
-        } else {
-            region.xMin = _mapBorderX;
-            region.xMax = Grid.CellCountX - _mapBorderX;
-            region.zMin = _mapBorderZ;
-            region.zMax = Grid.CellCountZ / 2 - _regionBorder;
-            _regions.Add(region);
+                region.xMin = Grid.CellCountX / 3 + _regionBorder;
+                region.xMax = Grid.CellCountX * 2 / 3 - _regionBorder;
+                _regions.Add(region);
 
-            region.zMin = Grid.CellCountZ / 2 + _regionBorder;
-            region.zMax = Grid.CellCountZ - _mapBorderZ;
-            _regions.Add(region);
+                region.xMin = Grid.CellCountX * 2 / 3 + _regionBorder;
+                region.xMax = Grid.CellCountX - _mapBorderX;
+                _regions.Add(region);
+                break;
+            case 4:
+                region.xMin = _mapBorderX;
+                region.xMax = Grid.CellCountX / 2 - _regionBorder;
+                region.zMin = _mapBorderZ;
+                region.zMax = Grid.CellCountZ / 2 - _regionBorder;
+                _regions.Add(region);
+                region.xMin = Grid.CellCountX / 2 + _regionBorder;
+                region.xMax = Grid.CellCountX - _mapBorderX;
+                _regions.Add(region);
+                region.zMin = Grid.CellCountZ / 2 + _regionBorder;
+                region.zMax = Grid.CellCountZ - _mapBorderZ;
+                _regions.Add(region);
+                region.xMin = _mapBorderX;
+                region.xMax = Grid.CellCountX / 2 - _regionBorder;
+                _regions.Add(region);
+                break;
         }
+    }
     }
 
 }
