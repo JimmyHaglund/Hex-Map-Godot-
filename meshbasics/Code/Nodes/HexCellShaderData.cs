@@ -69,7 +69,8 @@ public sealed partial class HexCellShaderData : Node {
         if (ImmediateMode) {
             _cellTextureData[index].R = cell.IsVisible ? 1.0f : 0.0f;
             _cellTextureData[index].G = cell.IsExplored ? 1.0f : 0.0f;
-        } else { 
+        } else if (_cellTextureData[index].B < 1.0f) {
+            _cellTextureData[index].B = 1.0f;
             _transitioningCells.Add(cell);
         }
         ProcessMode = ProcessModeEnum.Inherit;
@@ -111,6 +112,9 @@ public sealed partial class HexCellShaderData : Node {
             data.R = t < 0.0f ? 0.0f : t;
         }
 
+        if (!stillUpdating) { 
+            data.B = 0.0f;
+        }
         _cellTextureData[index] = data;
         return !stillUpdating;
     }
