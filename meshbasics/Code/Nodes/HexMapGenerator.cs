@@ -34,7 +34,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0, 10")] private int _regionBorder = 5;
     [Export(PropertyHint.Range, "0, 4")] private int _regionCount = 1;
     [Export(PropertyHint.Range, "0, 100")] private int _erosionPercentage = 50;
-
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _evaporation = 0.5f;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -341,6 +341,22 @@ public sealed partial class HexMapGenerator : Node {
         for (int i = 0; i < _cellCount; i++) {
             _climate.Add(initialData);
         }
+        for (int cycle = 0; cycle < 40; cycle++) {
+            for (int i = 0; i < _cellCount; i++) {
+                EvolveClimate(i);
+            }
+        }
+    }
+
+    private void EvolveClimate(int cellIndex) {
+        HexCell cell = Grid.GetCell(cellIndex);
+        ClimateData cellClimate = _climate[cellIndex];
+
+        if (cell.IsUnderwater) {
+            cellClimate.clouds += _evaporation;
+        }
+
+        _climate[cellIndex] = cellClimate;
     }
 
 }
