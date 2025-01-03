@@ -4,9 +4,8 @@ uniform bool HEX_MAP_EDIT_MODE;
 
 vec4 FilterCellData(vec4 data) {
 	if (HEX_MAP_EDIT_MODE) {
-		data.x = 1.0;
+		data.xy = vec2(1.0);
 	}
-	
 	return data;
 }
 

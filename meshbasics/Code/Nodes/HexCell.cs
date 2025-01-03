@@ -32,6 +32,7 @@ public sealed partial class HexCell : Node3D {
     public int Index { get; set; }
     public HexCell NextWithSamePriority { get; set; }
     public HexUnit Unit { get; set; }
+    public bool IsExplored { get; private set; }
 
     public Label3D Label {
         get => _label;
@@ -257,7 +258,8 @@ public sealed partial class HexCell : Node3D {
 
     public void IncreaseVisibility() {
         _visibility += 1;
-        if (_visibility == 1) { 
+        if (_visibility == 1) {
+            IsExplored = true;
             ShaderData.RefreshVisibility(this);
         }
     }

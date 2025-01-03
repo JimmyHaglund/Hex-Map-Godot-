@@ -11,7 +11,7 @@ uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
 uniform float metallic : hint_range(0.0, 1.0) = 0.0;
 uniform int layer = 0;
 varying vec4 indices;
-varying vec3 visibility;
+varying vec4 visibility;
 
 void vertex() {
 	indices = CUSTOM0;
@@ -27,7 +27,8 @@ void vertex() {
 	visibility.x = cell0.x;
 	visibility.y = cell1.x;
 	visibility.z = cell2.x;
-	visibility = mix(vec3(0.25), vec3(1.0), visibility);
+	visibility.xyz = mix(vec3(0.25), vec3(1.0), visibility.xyz);
+	visibility.w = cell0.y * COLOR.x + cell1.y * COLOR.y + cell2.y * COLOR.z;
 }
 vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {
 	vec3 uvw = vec3(worldPos.xz * 0.02, indices[index]);
@@ -47,8 +48,8 @@ void fragment() {
 		gridUV.y *= 1.0 / (2.0 * 15.0);
 		grid = texture(_GridTex, gridUV);
 	}
-	
-	ALBEDO = c.rgb * grid.rgb * color.rgb;
+	float explored = visibility.w;
+	ALBEDO = c.rgb * grid.rgb * color.rgb * explored;
     METALLIC = metallic;
     ROUGHNESS = 1.0 - glossiness;
 }

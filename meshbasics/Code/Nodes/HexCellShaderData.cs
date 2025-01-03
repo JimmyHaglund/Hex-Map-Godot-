@@ -67,7 +67,9 @@ public sealed partial class HexCellShaderData : Node {
     }
 
     public void RefreshVisibility(HexCell cell) {
-        _cellTextureData[cell.Index].R = cell.IsVisible ? 1.0f : 0.0f;
+        int index = cell.Index;
+        _cellTextureData[index].R = cell.IsVisible ? 1.0f : 0.0f;
+        _cellTextureData[index].G = cell.IsExplored ? 1.0f : 0.0f;
         ProcessMode = ProcessModeEnum.Inherit;
     }
 
