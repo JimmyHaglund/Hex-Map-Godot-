@@ -193,8 +193,11 @@ public sealed partial class HexMapGenerator : Node {
         while (erodibleCells.Count > targetErodibleCount) {
             int index = (int)_rng.Next(0, erodibleCells.Count);
             HexCell cell = erodibleCells[index];
+            HexCell targetCell = GetErosionTarget(cell);
+
 
             cell.Elevation -= 1;
+            targetCell.Elevation += 1;
             if (!IsErodible(cell)) {
                 erodibleCells[index] = erodibleCells[^1];
                 erodibleCells.RemoveAt(erodibleCells.Count - 1);
@@ -207,6 +210,16 @@ public sealed partial class HexMapGenerator : Node {
                     !erodibleCells.Contains(neighbor)
                 ) {
                     erodibleCells.Add(neighbor);
+                }
+            }
+
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = targetCell.GetNeighbor(d);
+                if (neighbor != null && 
+                    !IsErodible(neighbor) &&
+                    erodibleCells.Contains(neighbor)
+                ) {
+                    erodibleCells.Remove(neighbor);
                 }
             }
         }
@@ -224,6 +237,20 @@ public sealed partial class HexMapGenerator : Node {
             }
         }
         return false;
+    }
+
+    private HexCell GetErosionTarget(HexCell cell) {
+        List<HexCell> candidates = ListPool<HexCell>.Get();
+        int erodibleElevation = cell.Elevation - 2;
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+            HexCell neighbor = cell.GetNeighbor(d);
+            if (neighbor != null && neighbor.Elevation <= erodibleElevation) {
+                candidates.Add(neighbor);
+            }
+        }
+        HexCell target = candidates[_rng.Next(0, candidates.Count)];
+        ListPool<HexCell>.Add(candidates);
+        return target;
     }
 
     private void CreateRegions() {
