@@ -8,6 +8,7 @@ public sealed partial class HexMapGenerator : Node {
     private int _cellCount;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
+    private int _xMin, _xMax, _zMin, _zMax;
     [Export] private int _seed = 1337;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
@@ -19,22 +20,25 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "-4, 0")] private int _elevationMinimum = -2;
     [Export(PropertyHint.Range, "6, 10")] private int _elevationMaximum = 8;
     [Export(PropertyHint.Range, "0, 10")] private int _mapBorderX = 5;
-    [Export(PropertyHint.Range, "0, 10")] private int _mapBorderY = 5;
+    [Export(PropertyHint.Range, "0, 10")] private int _mapBorderZ = 5;
 
     [Export]public HexGrid Grid {get; set; }
 
-
-
     public void GenerateMap(int x, int z) {
+        _rng = new(_seed);
         _cellCount = x * z;
         Grid.CreateMap(x, z);
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }
-        CreateLand();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).WaterLevel = _waterLevel;
         }
+        _xMin = _mapBorderX;
+        _xMax = x - _mapBorderX;
+        _zMin = _mapBorderZ;
+        _zMax = z - _mapBorderZ;
+        CreateLand();
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
@@ -143,8 +147,11 @@ public sealed partial class HexMapGenerator : Node {
     }
 
     HexCell GetRandomCell() {
-        return Grid.GetCell((int)_rng.NextInt64(0, _cellCount));
+        var x = (int)_rng.NextInt64(_xMin, _xMax);
+        var z = (int)_rng.NextInt64(_zMin, _zMax);
+        return Grid.GetCell(x, z);
     }
+
     private void SetTerrainType() {
         for (int i = 0; i < _cellCount; i++) {
             HexCell cell = Grid.GetCell(i);
