@@ -4,10 +4,11 @@ using System;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMapGenerator : Node {
-    private Random _rng = new(1337);
+    private Random _rng;
     private int _cellCount;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
+    [Export] private int _seed = 1337;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMax = 100;
@@ -38,6 +39,10 @@ public sealed partial class HexMapGenerator : Node {
         }
 
         
+    }
+
+    public override void _EnterTree() {
+        _rng = new(_seed);
     }
 
     private void CreateLand() {
