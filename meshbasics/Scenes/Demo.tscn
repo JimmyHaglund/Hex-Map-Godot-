@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=23 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://dxitv45u170cv" path="res://Scenes/SaveLoadItem.tscn" id="10_4ppnm"]
 [ext_resource type="Script" path="res://Code/Nodes/FileNameTextEdit.cs" id="10_ip72k"]
 [ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="15_1aw4t"]
+[ext_resource type="Script" path="res://Code/Nodes/HexMapGenerator.cs" id="16_npjkd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ero0"]
 albedo_color = Color(0.139652, 0.299136, 0.315846, 1)
@@ -586,6 +587,9 @@ Grid = NodePath("../HexGrid")
 transform = Transform3D(1, 0, -0.000715585, 0, 1, 0, 0.000715585, 0, 1, 97.7618, 5.16095, 100.072)
 visible = false
 mesh = SubResource("PlaneMesh_32ab0")
+
+[node name="MapGenerator" type="Node" parent="."]
+script = ExtResource("16_npjkd")
 
 [connection signal="toggled" from="CheckButton" to="HexMapEditor" method="SetEditMode"]
 [connection signal="toggled" from="CheckButton" to="HexGameUI" method="SetEditMode"]
