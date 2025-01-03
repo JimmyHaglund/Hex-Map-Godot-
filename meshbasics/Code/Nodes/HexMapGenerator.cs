@@ -88,6 +88,7 @@ public sealed partial class HexMapGenerator : Node {
                     landBudget = RaiseTerrain(chunkSize + 1, landBudget, _regions[i]);
                     if (landBudget == 0) return;
                 }
+                // GD.Print(landBudget);
             }
         }
         if (landBudget > 0) {
@@ -156,8 +157,7 @@ public sealed partial class HexMapGenerator : Node {
             }
             current.Elevation = newElevation;
             if (originalElevation >= _waterLevel &&
-                newElevation < _waterLevel &&
-                --budget == 0
+                newElevation < _waterLevel
             ) {
                 budget += 1;
             }
@@ -186,10 +186,28 @@ public sealed partial class HexMapGenerator : Node {
     private void SetTerrainType() {
         for (int i = 0; i < _cellCount; i++) {
             HexCell cell = Grid.GetCell(i);
+            float moisture = _climate[i].moisture;
             if (!cell.IsUnderwater) {
-                cell.TerrainTypeIndex = cell.Elevation - cell.WaterLevel;
+                if (moisture < 0.05f) {
+                    cell.TerrainTypeIndex = 4;
+                }
+                else if (moisture < 0.12f) {
+                    cell.TerrainTypeIndex = 0;
+                }
+                else if (moisture < 0.28f) {
+                    cell.TerrainTypeIndex = 3;
+                }
+                else if (moisture < 0.85f) {
+                    cell.TerrainTypeIndex = 1;
+                }
+                else {
+                    cell.TerrainTypeIndex = 2;
+                }
             }
-            cell.SetMapData(_climate[i].moisture);
+            else {
+                cell.TerrainTypeIndex = 2;
+            }
+            cell.SetMapData(moisture);
         }
     }
 
@@ -219,7 +237,8 @@ public sealed partial class HexMapGenerator : Node {
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = cell.GetNeighbor(d);
-                if (neighbor != null &&
+                if (
+                    neighbor != null && 
                     neighbor.Elevation == cell.Elevation + 2 &&
                     !erodibleCells.Contains(neighbor)
                 ) {
@@ -233,9 +252,10 @@ public sealed partial class HexMapGenerator : Node {
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = targetCell.GetNeighbor(d);
-                if (neighbor != null &&
-                    !IsErodible(neighbor) &&
-                    erodibleCells.Contains(neighbor)
+                if (
+                    neighbor != null && neighbor != cell &&
+                    neighbor.Elevation == targetCell.Elevation + 1 &&
+                    !IsErodible(neighbor)
                 ) {
                     erodibleCells.Remove(neighbor);
                 }

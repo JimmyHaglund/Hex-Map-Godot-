@@ -15,6 +15,6 @@ shader_parameter/glossiness = 0.0
 shader_parameter/_Specular = 0.2
 shader_parameter/layer = 0
 shader_parameter/_BackgroundColor = Color(0.407843, 0.380392, 0.356863, 1)
-shader_parameter/SHOW_MAP_DATA = true
+shader_parameter/SHOW_MAP_DATA = false
 shader_parameter/_MainTex = ExtResource("2_78vjt")
 shader_parameter/_GridTex = ExtResource("2_oaahk")
