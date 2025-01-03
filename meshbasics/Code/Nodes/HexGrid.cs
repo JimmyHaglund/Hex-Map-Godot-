@@ -72,6 +72,14 @@ public sealed partial class HexGrid : Node3D {
         return _cells[x + z * CellCountX];
     }
 
+    public HexCell GetCell(int xOffset, int zOffset) {
+        return _cells[xOffset + zOffset * CellCountX];
+    }
+
+    public HexCell GetCell(int cellIndex) {
+        return _cells[cellIndex];
+    }
+
     public void SetUIVisible(bool visible) {
         foreach (var chunk in _chunks) chunk.SetUIVisible(visible);
     }

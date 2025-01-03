@@ -612,8 +612,9 @@ transform = Transform3D(1, 0, -0.000715585, 0, 1, 0, 0.000715585, 0, 1, 97.7618,
 visible = false
 mesh = SubResource("PlaneMesh_32ab0")
 
-[node name="MapGenerator" type="Node" parent="."]
+[node name="MapGenerator" type="Node" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("16_npjkd")
+Grid = NodePath("../HexGrid")
 
 [connection signal="toggled" from="CheckButton" to="HexMapEditor" method="SetEditMode"]
 [connection signal="toggled" from="CheckButton" to="HexGameUI" method="SetEditMode"]

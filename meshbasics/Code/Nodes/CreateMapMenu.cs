@@ -6,7 +6,7 @@ public sealed partial class CreateMapMenu : Control {
     [Export] private HexGrid _grid;
     [Export] private HexMapGenerator _generator;
 
-    private bool _generate;
+    private bool _generate = true;
 
     public void SetGenerate(bool value) => _generate = value;
 
