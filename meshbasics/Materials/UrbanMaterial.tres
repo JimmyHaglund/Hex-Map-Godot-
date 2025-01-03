@@ -7,7 +7,9 @@
 render_priority = 0
 shader = ExtResource("1_8f3et")
 shader_parameter/texel_size = null
+shader_parameter/HEX_MAP_EDIT_MODE = null
 shader_parameter/u_color = Color(0.918472, 0.316195, 0.242146, 1)
 shader_parameter/u_glossiness = 0.438
-shader_parameter/u_metallic = 0.0
+shader_parameter/_Specular = 0.2
+shader_parameter/_BackgroundColor = Color(0.407843, 0.380392, 0.356863, 1)
 shader_parameter/u_grid_coordinates = ExtResource("2_2ocfg")
