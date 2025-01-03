@@ -43,7 +43,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _seepageFactor = 0.125f;
     [Export] private HexDirection _windDirection = HexDirection.NW;
     [Export(PropertyHint.Range, "1.0, 10.0")] private float _windStrength = 4.0f;
-
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _startingMoisture = 1.0f;
     [Export] public HexGrid Grid {get; set; }
 
 
@@ -348,9 +348,11 @@ public sealed partial class HexMapGenerator : Node {
         _climate.Clear();
         _nextClimate.Clear();
         ClimateData initialData = new ClimateData();
+        initialData.moisture = _startingMoisture;
+        ClimateData clearData = new ClimateData();
         for (int i = 0; i < _cellCount; i++) {
             _climate.Add(initialData);
-            _nextClimate.Add(initialData);
+            _nextClimate.Add(clearData);
         }
         for (int cycle = 0; cycle < 40; cycle++) {
             for (int i = 0; i < _cellCount; i++) {
