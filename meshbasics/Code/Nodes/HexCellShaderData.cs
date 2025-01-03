@@ -8,6 +8,7 @@ public sealed partial class HexCellShaderData : Node {
     private Image _image;
     private Color[] _cellTextureData;
     private static HexCellShaderData _instance;
+    public bool ImmediateMode { get; set; } = false;
 
     public static void SetShaderParameter(string parameterName, Godot.Variant value) { 
         if (_instance is null) return;
