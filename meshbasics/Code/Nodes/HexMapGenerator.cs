@@ -14,6 +14,7 @@ public sealed partial class HexMapGenerator : Node {
     }
 
     private List<ClimateData> _climate = new List<ClimateData>();
+    private List<ClimateData> _nextClimate = new List<ClimateData>();
     private List<MapRegion> _regions;
     private Random _rng;
     private int _cellCount;
@@ -345,14 +346,19 @@ public sealed partial class HexMapGenerator : Node {
 
     private void CreateClimate() {
         _climate.Clear();
+        _nextClimate.Clear();
         ClimateData initialData = new ClimateData();
         for (int i = 0; i < _cellCount; i++) {
             _climate.Add(initialData);
+            _nextClimate.Add(initialData);
         }
         for (int cycle = 0; cycle < 40; cycle++) {
             for (int i = 0; i < _cellCount; i++) {
                 EvolveClimate(i);
             }
+            List<ClimateData> swap = _climate;
+            _climate = _nextClimate;
+            _nextClimate = swap;
         }
     }
 
@@ -386,7 +392,7 @@ public sealed partial class HexMapGenerator : Node {
             if (neighbor is null) {
                 continue;
             }
-            ClimateData neighborClimate = _climate[neighbor.Index];
+            ClimateData neighborClimate = _nextClimate[neighbor.Index];
             if (d == mainDispersalDirection) {
                 neighborClimate.clouds += cloudDispersal * _windStrength;
             }
@@ -402,11 +408,16 @@ public sealed partial class HexMapGenerator : Node {
                 neighborClimate.moisture += seepage;
             }
 
-            _climate[neighbor.Index] = neighborClimate;
+            _nextClimate[neighbor.Index] = neighborClimate;
         }
-        cellClimate.clouds = 0.0f;
+        ClimateData nextCellClimate = _nextClimate[cellIndex];
+        nextCellClimate.moisture += cellClimate.moisture;
+        if (nextCellClimate.moisture > 1f) {
+            nextCellClimate.moisture = 1f;
+        }
+        _nextClimate[cellIndex] = nextCellClimate;
 
-        _climate[cellIndex] = cellClimate;
+        _climate[cellIndex] = new ClimateData();
     }
 
 }
