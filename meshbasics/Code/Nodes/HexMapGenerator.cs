@@ -356,6 +356,18 @@ public sealed partial class HexMapGenerator : Node {
             cellClimate.clouds += _evaporation;
         }
 
+        float cloudDispersal = cellClimate.clouds * (1.0f / 6.0f);
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+            HexCell neighbor = cell.GetNeighbor(d);
+            if (neighbor is null) {
+                continue;
+            }
+            ClimateData neighborClimate = _climate[neighbor.Index];
+            neighborClimate.clouds += cloudDispersal;
+            _climate[neighbor.Index] = neighborClimate;
+        }
+        cellClimate.clouds = 0.0f;
+
         _climate[cellIndex] = cellClimate;
     }
 
