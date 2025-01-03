@@ -4,21 +4,50 @@ using System;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMapGenerator : Node {
-    [Export]public HexGrid Grid {get; set; }
     private Random _rng = new(1337);
     private int _cellCount;
+    private HexCellPriorityQueue _searchFrontier;
+    private int _searchFrontierPhase;
 
+    [Export]public HexGrid Grid {get; set; }
 
     public void GenerateMap(int x, int z) {
         _cellCount = x * z;
         Grid.CreateMap(x, z);
+        if (_searchFrontier == null) {
+            _searchFrontier = new HexCellPriorityQueue();
+        }
         RaiseTerrain(7);
+        for (int i = 0; i < _cellCount; i++) {
+            Grid.GetCell(i).SearchPhase = 0;
+        }
     }
 
     private void RaiseTerrain(int chunkSize) {
-        for (int i = 0; i < chunkSize; i++) {
-            GetRandomCell().TerrainTypeIndex = 1;
+        _searchFrontierPhase += 1;
+        HexCell firstCell = GetRandomCell();
+        firstCell.SearchPhase = _searchFrontierPhase;
+        firstCell.Distance = 0;
+        firstCell.SearchHeuristic = 0;
+        _searchFrontier.Enqueue(firstCell);
+
+        int size = 0;
+        while (size < chunkSize && _searchFrontier.Count > 0) {
+            HexCell current = _searchFrontier.Dequeue();
+            current.TerrainTypeIndex = 1;
+            size += 1;
+
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor != null && neighbor.SearchPhase < _searchFrontierPhase) {
+                    neighbor.SearchPhase = _searchFrontierPhase;
+                    neighbor.Distance = 0;
+                    neighbor.SearchHeuristic = 0;
+                    _searchFrontier.Enqueue(neighbor);
+                }
+            }
         }
+        _searchFrontier.Clear();
     }
 
     HexCell GetRandomCell() {
