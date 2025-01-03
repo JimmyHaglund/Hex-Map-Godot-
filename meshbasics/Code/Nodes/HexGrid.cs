@@ -132,6 +132,8 @@ public sealed partial class HexGrid : Node3D {
                 return;
             }
         }
+        var originalMode = _cellShaderData.ImmediateMode;
+        _cellShaderData.ImmediateMode = true;
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Load(reader, header);
         }
@@ -144,6 +146,7 @@ public sealed partial class HexGrid : Node3D {
         for (int i = 0; i < unitCount; i++) {
             HexUnit.Load(reader, this);
         }
+        _cellShaderData.ImmediateMode = originalMode;
     }
 
     public void FindPath(HexCell fromCell, HexCell toCell, HexUnit unit) {
