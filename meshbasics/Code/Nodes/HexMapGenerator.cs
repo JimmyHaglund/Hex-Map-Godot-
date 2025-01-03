@@ -13,6 +13,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMax = 100;
     [Export(PropertyHint.Range, "5, 95")] private int _landPercentage = 50;
     [Export(PropertyHint.Range, "1, 5")] private int _waterLevel = 2;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _highRiseProbability = 0.25f;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -55,11 +56,16 @@ public sealed partial class HexMapGenerator : Node {
         _searchFrontier.Enqueue(firstCell);
         HexCoordinates center = firstCell.Coordinates;
 
+        int rise = _rng.NextDouble() < _highRiseProbability ? 2 : 1;
         int size = 0;
         while (size < chunkSize && _searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
-            current.Elevation += 1;
-            if (current.Elevation == _waterLevel && --budget == 0) {
+            int originalElevation = current.Elevation;
+            current.Elevation = originalElevation + rise;
+            if (originalElevation < _waterLevel &&
+                current.Elevation >= _waterLevel &&
+                --budget == 0
+            ) {
                 break;
             }
             size += 1;
