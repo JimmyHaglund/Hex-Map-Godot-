@@ -195,9 +195,20 @@ public sealed partial class HexMapGenerator : Node {
             HexCell cell = erodibleCells[index];
 
             cell.Elevation -= 1;
+            if (!IsErodible(cell)) {
+                erodibleCells[index] = erodibleCells[^1];
+                erodibleCells.RemoveAt(erodibleCells.Count - 1);
+            }
 
-            erodibleCells[index] = erodibleCells[^1];
-            erodibleCells.RemoveAt(erodibleCells.Count - 1);
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = cell.GetNeighbor(d);
+                if (neighbor != null &&
+                    IsErodible(neighbor) &&
+                    !erodibleCells.Contains(neighbor)
+                ) {
+                    erodibleCells.Add(neighbor);
+                }
+            }
         }
 
 
