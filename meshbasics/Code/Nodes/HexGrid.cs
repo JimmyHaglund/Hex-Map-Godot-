@@ -307,10 +307,11 @@ public sealed partial class HexGrid : Node3D {
         }
         _searchFrontier.Clear();
 
-
-        fromCell.Distance = 0;
+        range += fromCell.ViewElevation;
         fromCell.SearchPhase = _searchFrontierPhase;
+        fromCell.Distance = 0;
         _searchFrontier.Enqueue(fromCell);
+        HexCoordinates fromCoordinates = fromCell.Coordinates;
         while (_searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
             current.SearchPhase += 1;
@@ -324,7 +325,11 @@ public sealed partial class HexGrid : Node3D {
                 }
 
                 int distance = current.Distance + 1;
-                if (distance > range) continue;
+                if (distance + neighbor.ViewElevation > range ||
+                    distance > fromCoordinates.DistanceTo(neighbor.Coordinates)
+                ) {
+                    continue;
+                }
 
                 if (neighbor.SearchPhase < _searchFrontierPhase) {
                     neighbor.SearchPhase = _searchFrontierPhase;
