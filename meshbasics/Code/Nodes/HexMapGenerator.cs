@@ -1,6 +1,7 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JHM.MeshBasics;
 
@@ -18,8 +19,12 @@ public sealed partial class HexMapGenerator : Node {
     private List<MapRegion> _regions;
     private Random _rng;
     private int _cellCount;
+    private int _landCells;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
+
+    [Export] public HexGrid Grid {get; set; }
+
     [Export] private int _seed = 1337;
     [Export] private bool _staticSeed = false;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
@@ -44,7 +49,8 @@ public sealed partial class HexMapGenerator : Node {
     [Export] private HexDirection _windDirection = HexDirection.NW;
     [Export(PropertyHint.Range, "1.0, 10.0")] private float _windStrength = 4.0f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _startingMoisture = 0.1f;
-    [Export] public HexGrid Grid {get; set; }
+    [Export(PropertyHint.Range, "0, 20")] private int _riverPercentage = 10;
+
 
 
     public void GenerateMap(int x, int z) {
@@ -78,7 +84,8 @@ public sealed partial class HexMapGenerator : Node {
 
     private void CreateLand() {
         int landBudget = Mathf.RoundToInt(_cellCount * _landPercentage * 0.01f);
-        for(int guard = 0; landBudget > 0 && guard < 10000; guard++) {
+        _landCells = landBudget;
+        for (int guard = 0; landBudget > 0 && guard < 10000; guard++) {
             bool sink = _rng.NextDouble() < _sinkProbability;
             for(int i = 0; i < _regions.Count; i++) {
                 int chunkSize = (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax - 1);
@@ -94,6 +101,7 @@ public sealed partial class HexMapGenerator : Node {
         }
         if (landBudget > 0) {
             GD.PrintErr("Failed to use up " + landBudget + " land budget.");
+            _landCells -= landBudget;
         }
     }
 
@@ -464,7 +472,49 @@ public sealed partial class HexMapGenerator : Node {
                 riverOrigins.Add(cell);
             }
         }
+        int riverBudget = Mathf.RoundToInt(_landCells * _riverPercentage * 0.01f);
+        while (riverBudget > 0 && riverOrigins.Count > 0) {
+            int index = (int)_rng.Next(0, riverOrigins.Count);
+            int lastIndex = riverOrigins.Count - 1;
+            HexCell origin = riverOrigins[index];
+            riverOrigins[index] = riverOrigins[lastIndex];
+            riverOrigins.RemoveAt(lastIndex);
 
+            if (!origin.HasRiver) {
+                riverBudget -= CreateRiver(origin);
+            }
+        }
+
+        if (riverBudget > 0) {
+            GD.PrintErr("Failed to use up river budget.");
+        }
         ListPool<HexCell>.Add(riverOrigins);
+    }
+
+    List<HexDirection> flowDirections = new List<HexDirection>();
+
+    private int CreateRiver(HexCell origin) {
+        int length = 1;
+        HexCell cell = origin;
+        while (!cell.IsUnderwater) {
+            flowDirections.Clear();
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = cell.GetNeighbor(d);
+                if (neighbor is null || neighbor.HasRiver) {
+                    continue;
+                }
+                flowDirections.Add(d);
+            }
+
+            if (flowDirections.Count == 0) {
+                return length > 1 ? length : 0;
+            }
+
+            HexDirection direction = flowDirections[_rng.Next(0, flowDirections.Count)];
+            cell.SetOutgoingRiver(direction);
+            length += 1;
+            cell = cell.GetNeighbor(direction);
+        }
+        return length;
     }
 }
