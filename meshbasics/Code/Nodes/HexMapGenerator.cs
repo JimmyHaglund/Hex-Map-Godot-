@@ -11,7 +11,8 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMax = 100;
-    [Export(PropertyHint.Range, "5, 95")] public int landPercentage = 50;
+    [Export(PropertyHint.Range, "5, 95")] private int _landPercentage = 50;
+    [Export(PropertyHint.Range, "1, 5")] private int _waterLevel = 2;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -24,14 +25,19 @@ public sealed partial class HexMapGenerator : Node {
             _searchFrontier = new HexCellPriorityQueue();
         }
         CreateLand();
+        for (int i = 0; i < _cellCount; i++) {
+            Grid.GetCell(i).WaterLevel = _waterLevel;
+        }
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
         }
+
+        
     }
 
     private void CreateLand() {
-        int landBudget = Mathf.RoundToInt(_cellCount * landPercentage * 0.01f);
+        int landBudget = Mathf.RoundToInt(_cellCount * _landPercentage * 0.01f);
         while (landBudget > 0) {
             landBudget = RaiseTerrain(
                 (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax + 1),
@@ -53,7 +59,7 @@ public sealed partial class HexMapGenerator : Node {
         while (size < chunkSize && _searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
             current.Elevation += 1;
-            if (current.Elevation == 1 && --budget == 0) {
+            if (current.Elevation == _waterLevel && --budget == 0) {
                 break;
             }
             size += 1;
@@ -78,7 +84,9 @@ public sealed partial class HexMapGenerator : Node {
     private void SetTerrainType() {
         for (int i = 0; i < _cellCount; i++) {
             HexCell cell = Grid.GetCell(i);
-            cell.TerrainTypeIndex = cell.Elevation;
+            if (!cell.IsUnderwater) {
+                cell.TerrainTypeIndex = cell.Elevation - cell.WaterLevel;
+            }
         }
     }
 
