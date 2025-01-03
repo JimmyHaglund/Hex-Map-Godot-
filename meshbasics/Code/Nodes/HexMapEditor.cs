@@ -38,7 +38,8 @@ public sealed partial class HexMapEditor : Control {
         ShowGrid(true);
         HexUnit.UnitPrefab = _unitPrefab;
         HexGrid.MapReset += OnMapReset;
-        SetEditMode(false);
+        HexCellShaderData.SetShaderParameter("HEX_MAP_EDIT_MODE", true);
+        SetEditMode(true);
     }
 
     public override void _ExitTree() {
