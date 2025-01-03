@@ -5,11 +5,14 @@ using System.Collections.Generic;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMapGenerator : Node {
-    struct MapRegion {
+    private struct MapRegion {
         public int xMin, xMax, zMin, zMax;
     }
+    private struct ClimateData {
+        public float clouds;
+    }
 
-
+    private List<ClimateData> _climate = new List<ClimateData>();
     private List<MapRegion> _regions;
     private Random _rng;
     private int _cellCount;
@@ -50,6 +53,7 @@ public sealed partial class HexMapGenerator : Node {
         CreateRegions();
         CreateLand();
         ErodeLand();
+        CreateClimate();
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
@@ -176,10 +180,7 @@ public sealed partial class HexMapGenerator : Node {
             if (!cell.IsUnderwater) {
                 cell.TerrainTypeIndex = cell.Elevation - cell.WaterLevel;
             }
-            cell.SetMapData(
-                (cell.Elevation - _elevationMinimum) /
-                (float)(_elevationMaximum - _elevationMinimum)
-            );
+            cell.SetMapData(_climate[i].clouds);
         }
     }
 
@@ -331,6 +332,14 @@ public sealed partial class HexMapGenerator : Node {
                 region.xMax = Grid.CellCountX / 2 - _regionBorder;
                 _regions.Add(region);
                 break;
+        }
+    }
+
+    private void CreateClimate() {
+        _climate.Clear();
+        ClimateData initialData = new ClimateData();
+        for (int i = 0; i < _cellCount; i++) {
+            _climate.Add(initialData);
         }
     }
 
