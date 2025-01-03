@@ -22,6 +22,7 @@ public sealed partial class HexCell : Node3D {
     private int _terrainTypeIndex;
     private int _distance;
     private int _visibility;
+    private bool _isExplored = false;
 
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
@@ -32,7 +33,16 @@ public sealed partial class HexCell : Node3D {
     public int Index { get; set; }
     public HexCell NextWithSamePriority { get; set; }
     public HexUnit Unit { get; set; }
-    public bool IsExplored { get; private set; }
+    public bool Explorable { get; set; }
+
+    public bool IsExplored { 
+        get {
+            return _isExplored && Explorable;
+        } 
+        private set { 
+            _isExplored = value;
+        } 
+    }
 
     public Label3D Label {
         get => _label;
@@ -260,7 +270,7 @@ public sealed partial class HexCell : Node3D {
 
     public new bool IsVisible {
         get {
-            return _visibility > 0;
+            return _visibility > 0 && Explorable;
         }
     }
 
