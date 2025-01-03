@@ -403,7 +403,7 @@ public sealed partial class HexCell : Node3D {
 
     public void Save(BinaryWriter writer) {
         writer.Write((byte)_terrainTypeIndex);
-        writer.Write((byte)_elevation);
+        writer.Write((byte)_elevation + 127);
         writer.Write((byte)_waterLevel);
         writer.Write((byte)_urbanLevel);
         writer.Write((byte)_farmLevel);
@@ -473,6 +473,7 @@ public sealed partial class HexCell : Node3D {
 
         IsExplored = header >= 3 ? reader.ReadBoolean() : false;
         ShaderData.RefreshVisibility(this);
+        if (header >= 4) _elevation += 127;
 
     }
 
