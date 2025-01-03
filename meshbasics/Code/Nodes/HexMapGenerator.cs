@@ -206,16 +206,20 @@ public sealed partial class HexMapGenerator : Node {
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = cell.GetNeighbor(d);
                 if (neighbor != null &&
-                    IsErodible(neighbor) &&
+                    neighbor.Elevation == cell.Elevation + 2 &&
                     !erodibleCells.Contains(neighbor)
                 ) {
                     erodibleCells.Add(neighbor);
                 }
             }
 
+            if (IsErodible(targetCell) && !erodibleCells.Contains(targetCell)) {
+                erodibleCells.Add(targetCell);
+            }
+
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = targetCell.GetNeighbor(d);
-                if (neighbor != null && 
+                if (neighbor != null &&
                     !IsErodible(neighbor) &&
                     erodibleCells.Contains(neighbor)
                 ) {

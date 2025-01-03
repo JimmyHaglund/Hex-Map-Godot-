@@ -614,7 +614,7 @@ mesh = SubResource("PlaneMesh_32ab0")
 
 [node name="MapGenerator" type="Node" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("16_npjkd")
-_jitterProbability = 0.469
+_jitterProbability = 0.2
 Grid = NodePath("../HexGrid")
 
 [connection signal="toggled" from="CheckButton" to="HexMapEditor" method="SetEditMode"]
