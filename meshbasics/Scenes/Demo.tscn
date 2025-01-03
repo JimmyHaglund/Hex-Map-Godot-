@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://7x60g5iqbehg"]
+[gd_scene load_steps=26 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
 [ext_resource type="Script" path="res://Code/Nodes/Mouse3D.cs" id="1_qmp3k"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://Code/Nodes/SaveLoadMenu.cs" id="9_dqswk"]
 [ext_resource type="PackedScene" uid="uid://dxitv45u170cv" path="res://Scenes/SaveLoadItem.tscn" id="10_4ppnm"]
 [ext_resource type="Script" path="res://Code/Nodes/FileNameTextEdit.cs" id="10_ip72k"]
+[ext_resource type="Script" path="res://Code/Nodes/CreateMapMenu.cs" id="11_0q6vo"]
 [ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="15_1aw4t"]
 [ext_resource type="Script" path="res://Code/Nodes/HexMapGenerator.cs" id="16_npjkd"]
 
@@ -33,6 +34,14 @@ rings = 4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pf745"]
 albedo_color = Color(0.321569, 1, 0.686275, 1)
+
+[sub_resource type="InputEventKey" id="InputEventKey_y58fe"]
+device = -1
+keycode = 84
+unicode = 116
+
+[sub_resource type="Shortcut" id="Shortcut_gs0f4"]
+events = [SubResource("InputEventKey_y58fe")]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_32ab0"]
 material = ExtResource("15_1aw4t")
@@ -102,19 +111,23 @@ mesh = SubResource("SphereMesh_hw2ro")
 surface_material_override/0 = SubResource("StandardMaterial3D_pf745")
 
 [node name="CheckButton" type="CheckButton" parent="."]
-offset_left = 896.0
+offset_left = 895.0
 offset_top = 14.0
-offset_right = 940.0
+offset_right = 939.0
 offset_bottom = 38.0
+button_pressed = true
+shortcut = SubResource("Shortcut_gs0f4")
 
 [node name="HexMapEditor" type="Control" parent="." node_paths=PackedStringArray("HexGrid")]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 916.0
-offset_top = 12.0
-offset_right = 956.0
-offset_bottom = 52.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.81, 0.81)
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("4_fqh23")
 _terrainMaterial = ExtResource("6_388q4")
 _unitPrefab = ExtResource("7_7igmr")
@@ -123,10 +136,10 @@ HexGrid = NodePath("../HexGrid")
 
 [node name="Controls" type="ColorRect" parent="HexMapEditor"]
 layout_mode = 2
-offset_left = 44.0
-offset_top = 1.0
-offset_right = 359.435
-offset_bottom = 1257.19
+offset_left = 1193.83
+offset_top = 9.87654
+offset_right = 1509.26
+offset_bottom = 1266.07
 scale = Vector2(0.6, 0.6)
 color = Color(0.226707, 0.226707, 0.226707, 1)
 
@@ -452,23 +465,29 @@ text = "Load"
 layout_mode = 2
 text = "New Map"
 
-[node name="NewMapMenu" type="Control" parent="HexMapEditor"]
+[node name="NewMapMenu" type="Control" parent="HexMapEditor" node_paths=PackedStringArray("_grid", "_generator")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1130.86
-offset_top = -14.8148
-offset_right = -1130.86
-offset_bottom = -14.8148
+offset_right = -1152.0
+offset_bottom = -648.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("11_0q6vo")
+_grid = NodePath("../../HexGrid")
+_generator = NodePath("../../MapGenerator")
 
 [node name="ColorRect" type="ColorRect" parent="HexMapEditor/NewMapMenu"]
-layout_mode = 0
-offset_right = 1164.0
-offset_bottom = 649.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1428.0
+offset_bottom = 800.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.211765, 0.211765, 0.211765, 0.8)
 
 [node name="BoxContainer" type="BoxContainer" parent="HexMapEditor/NewMapMenu"]
@@ -482,6 +501,11 @@ vertical = true
 [node name="Label" type="Label" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 text = "Create New Map"
+
+[node name="CheckBox" type="CheckBox" parent="HexMapEditor/NewMapMenu/BoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Generate"
 
 [node name="CreateSmallMapButton" type="Button" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
@@ -505,10 +529,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1130.86
-offset_top = -14.8148
-offset_right = -1130.86
-offset_bottom = -14.8148
+offset_left = 160.494
+offset_top = 60.4938
+offset_right = 160.494
+offset_bottom = 60.4938
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_dqswk")
@@ -625,15 +649,16 @@ script = ExtResource("16_npjkd")
 [connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/SaveLoad/LoadButton" to="HexMapEditor/SaveLoadMenu" method="Open" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
 [connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/NewMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [true]]
+[connection signal="toggled" from="HexMapEditor/NewMapMenu/BoxContainer/CheckBox" to="HexMapEditor/NewMapMenu" method="SetGenerate"]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexGrid" method="CreateMap" binds= [20, 15]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapEditor/NewMapMenu" method="CreateMap" binds= [20, 15]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexGrid" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapEditor/NewMapMenu" method="CreateMap" binds= [40, 30]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
-[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexGrid" method="CreateMap" binds= [80, 60]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapEditor/NewMapMenu" method="CreateMap" binds= [80, 60]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/Cancel" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="HexMapEditor/SaveLoadMenu" method="PerformAction"]
