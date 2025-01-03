@@ -15,6 +15,8 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "1, 5")] private int _waterLevel = 2;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _highRiseProbability = 0.25f;
     [Export(PropertyHint.Range, "0.0, 0.4")] private float _sinkProbability = 0.2f;
+    [Export(PropertyHint.Range, "-4, 0")] private int _elevationMinimum = -2;
+    [Export(PropertyHint.Range, "6, 10")] private int _elevationMaximum = 8;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -65,9 +67,13 @@ public sealed partial class HexMapGenerator : Node {
         while (size < chunkSize && _searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
             int originalElevation = current.Elevation;
-            current.Elevation = originalElevation + rise;
+            int newElevation = originalElevation + rise;
+            if (newElevation > _elevationMaximum) {
+                continue;
+            }
+            current.Elevation = newElevation;
             if (originalElevation < _waterLevel &&
-                current.Elevation >= _waterLevel &&
+                newElevation >= _waterLevel &&
                 --budget == 0
             ) {
                 break;
@@ -102,9 +108,13 @@ public sealed partial class HexMapGenerator : Node {
         while (size < chunkSize && _searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
             int originalElevation = current.Elevation;
-            current.Elevation = originalElevation - sink;
+            int newElevation = current.Elevation - sink;
+            if (newElevation < _elevationMinimum) {
+                continue;
+            }
+            current.Elevation = newElevation;
             if (originalElevation >= _waterLevel &&
-                current.Elevation < _waterLevel &&
+                newElevation < _waterLevel &&
                 --budget == 0
             ) {
                 budget += 1;
