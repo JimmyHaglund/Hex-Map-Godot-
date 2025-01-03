@@ -75,4 +75,4 @@ RotateLeft={
 
 textures/canvas_textures/default_texture_filter=2
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
-environment/defaults/default_clear_color=Color(0.434129, 0.342109, 0.290994, 1)
+environment/defaults/default_clear_color=Color(0.407843, 0.380392, 0.356863, 1)

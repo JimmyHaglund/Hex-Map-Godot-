@@ -55,7 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -45)
 
 [node name="Camera3D" type="Camera3D" parent="HexMapCamera/CameraSwivel/CameraStick"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0318947, -0.00157738, -0.00157928)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0318947, -0.00157928, -0.00157928)
 
 [node name="Node3D" type="Node3D" parent="HexMapCamera" node_paths=PackedStringArray("Camera")]
 transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.5)

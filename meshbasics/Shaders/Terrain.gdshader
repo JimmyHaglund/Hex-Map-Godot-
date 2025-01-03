@@ -13,6 +13,7 @@ uniform float _Specular : hint_range(0.0, 1.0) = 0.2;
 uniform int layer = 0;
 varying vec4 indices;
 varying vec4 visibility;
+uniform vec3 _BackgroundColor : source_color = vec3(0.0, 0.0, 0.0);
 
 void vertex() {
 	indices = CUSTOM0;
@@ -59,4 +60,5 @@ void fragment() {
 	ALBEDO = c.rgb * grid.rgb * color.rgb * explored;
 	SPECULAR = _Specular * explored;
     ROUGHNESS = 1.0 - glossiness;
+	EMISSION = _BackgroundColor * (1.0 - explored);
 }
