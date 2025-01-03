@@ -401,9 +401,11 @@ public sealed partial class HexCell : Node3D {
             }
         }
         writer.Write((byte)roadFlags);
+
+        writer.Write(IsExplored);
     }
 
-    public void Load(BinaryReader reader) {
+    public void Load(BinaryReader reader, int header) {
         _terrainTypeIndex = reader.ReadByte();
         ShaderData.RefreshTerrain(this);
         _elevation = reader.ReadByte();
@@ -437,6 +439,10 @@ public sealed partial class HexCell : Node3D {
         }
 
         RefreshPosition();
+
+        IsExplored = header >= 3 ? reader.ReadBoolean() : false;
+        ShaderData.RefreshVisibility(this);
+
     }
 
     private bool IsValidRiverDestination(HexCell neighbor) {

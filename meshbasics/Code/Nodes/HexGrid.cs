@@ -133,7 +133,7 @@ public sealed partial class HexGrid : Node3D {
             }
         }
         for (int i = 0; i < _cells.Length; i++) {
-            _cells[i].Load(reader);
+            _cells[i].Load(reader, header);
         }
         for (int i = 0; i < _chunks.Length; i++) {
             _chunks[i].Refresh();

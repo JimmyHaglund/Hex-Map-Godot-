@@ -8,7 +8,7 @@ public sealed partial class SaveLoadMenu : Control {
     [Export] private Node _listContentParent;
     [Export] private PackedScene _saveLoadItemPrefab { get; set; }
     private bool _saveMode;
-    private const int _mapVersion = 2;
+    private const int _mapVersion = 3;
 
     [Export] public HexGrid HexGrid { get; set; }
     [Export] public Label Title { get; set; }
@@ -62,7 +62,6 @@ public sealed partial class SaveLoadMenu : Control {
     }
 
     public void Save(string filePath) {
-        GD.Print(filePath);
         using var fileStream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(fileStream);
         writer.Write(_mapVersion);
