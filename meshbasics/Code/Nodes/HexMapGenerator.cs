@@ -8,8 +8,13 @@ public sealed partial class HexMapGenerator : Node {
     private int _cellCount;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
+    [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
+    [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMax = 100;
 
     [Export]public HexGrid Grid {get; set; }
+
+
 
     public void GenerateMap(int x, int z) {
         _cellCount = x * z;
@@ -17,7 +22,9 @@ public sealed partial class HexMapGenerator : Node {
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }
-        RaiseTerrain(30);
+        for (int i = 0; i < 5; i++) {
+            RaiseTerrain((int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax));
+        }
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
         }
@@ -43,7 +50,7 @@ public sealed partial class HexMapGenerator : Node {
                 if (neighbor != null && neighbor.SearchPhase < _searchFrontierPhase) {
                     neighbor.SearchPhase = _searchFrontierPhase;
                     neighbor.Distance = neighbor.Coordinates.DistanceTo(center); ;
-                    neighbor.SearchHeuristic = 0;
+                    neighbor.SearchHeuristic = _rng.Next() < _jitterProbability ? 1 : 0;
                     _searchFrontier.Enqueue(neighbor);
                 }
             }
