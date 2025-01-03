@@ -190,6 +190,17 @@ public sealed partial class HexMapGenerator : Node {
 
         int targetErodibleCount = (int)(erodibleCells.Count * (100 - _erosionPercentage) * 0.01f);
 
+        while (erodibleCells.Count > targetErodibleCount) {
+            int index = (int)_rng.Next(0, erodibleCells.Count);
+            HexCell cell = erodibleCells[index];
+
+            cell.Elevation -= 1;
+
+            erodibleCells[index] = erodibleCells[^1];
+            erodibleCells.RemoveAt(erodibleCells.Count - 1);
+        }
+
+
         ListPool<HexCell>.Add(erodibleCells);
     }
 
