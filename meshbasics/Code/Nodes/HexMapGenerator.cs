@@ -30,6 +30,8 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0, 10")] private int _mapBorderZ = 5;
     [Export(PropertyHint.Range, "0, 10")] private int _regionBorder = 5;
     [Export(PropertyHint.Range, "0, 4")] private int _regionCount = 1;
+    [Export(PropertyHint.Range, "0, 100")] private int _erosionPercentage = 50;
+
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -47,6 +49,7 @@ public sealed partial class HexMapGenerator : Node {
         }
         CreateRegions();
         CreateLand();
+        ErodeLand();
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
@@ -176,6 +179,8 @@ public sealed partial class HexMapGenerator : Node {
         }
     }
 
+    private void ErodeLand() { }
+
     private void CreateRegions() {
         if (_regions == null) {
             _regions = new List<MapRegion>();
@@ -247,7 +252,6 @@ public sealed partial class HexMapGenerator : Node {
                 _regions.Add(region);
                 break;
         }
-    }
     }
 
 }
