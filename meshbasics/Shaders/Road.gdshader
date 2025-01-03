@@ -4,9 +4,9 @@ shader_type spatial;
 uniform vec4 _Color : source_color = vec4(1, 1, 1, 1);
 uniform sampler2D _MainTex;
 uniform float _Glossiness;
-uniform float _Metallic;
+uniform float _Specular : hint_range(0.0, 1.0) = 0.2;
 render_mode depth_draw_opaque;
-varying float visibility;
+varying vec2 visibility;
 varying vec4 indices;
 
 void vertex() {
@@ -14,8 +14,9 @@ void vertex() {
 	vec4 cell0 = GetCellData(indices.x);
 	vec4 cell1 = GetCellData(indices.y);
 
-	visibility = cell0.x * COLOR.x  + cell1.x * COLOR.y;
-	visibility = mix(0.25, 1.0, visibility);
+	visibility.x = cell0.x * COLOR.x  + cell1.x * COLOR.y;
+	visibility.x = mix(0.25, 1.0, visibility.x);
+	visibility.y = cell0.y * COLOR.x + cell1.y * COLOR.y;
 }
 
 void fragment() {
@@ -27,10 +28,11 @@ void fragment() {
 	blend *= noise.x + 0.5;
 	blend = smoothstep(0.4, 0.7, blend);
 	
+    vec4 c =  _Color * (noise.y * 0.75 + 0.25) * visibility.x;
+	float explored = visibility.y;
 	
-    vec4 c =  _Color * (noise.y * 0.75 + 0.25) * visibility;
     ALBEDO = c.rgb;
-    METALLIC = _Metallic;
+    SPECULAR = _Specular * explored;
     ROUGHNESS = 1.0 - _Glossiness;
-    ALPHA = blend;
+    ALPHA = blend * explored;
 }
