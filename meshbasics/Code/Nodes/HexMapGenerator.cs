@@ -5,11 +5,16 @@ using System.Diagnostics;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMapGenerator : Node {
+    struct MapRegion {
+        public int xMin, xMax, zMin, zMax;
+    }
+
+
+    private MapRegion _region;
     private Random _rng;
     private int _cellCount;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
-    private int _xMin, _xMax, _zMin, _zMax;
     [Export] private int _seed = 1337;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
@@ -35,10 +40,10 @@ public sealed partial class HexMapGenerator : Node {
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).WaterLevel = _waterLevel;
         }
-        _xMin = _mapBorderX;
-        _xMax = x - _mapBorderX;
-        _zMin = _mapBorderZ;
-        _zMax = z - _mapBorderZ;
+        _region.xMin = _mapBorderX;
+        _region.xMax = x - _mapBorderX;
+        _region.zMin = _mapBorderZ;
+        _region.zMax = z - _mapBorderZ;
         CreateLand();
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
@@ -151,8 +156,8 @@ public sealed partial class HexMapGenerator : Node {
     }
 
     HexCell GetRandomCell() {
-        var x = (int)_rng.NextInt64(_xMin, _xMax);
-        var z = (int)_rng.NextInt64(_zMin, _zMax);
+        var x = (int)_rng.NextInt64(_region.xMin, _region.xMax);
+        var z = (int)_rng.NextInt64(_region.zMin, _region.zMax);
         return Grid.GetCell(x, z);
     }
 
