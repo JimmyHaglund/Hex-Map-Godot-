@@ -1,6 +1,6 @@
 ﻿using Godot;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace JHM.MeshBasics;
 
@@ -10,12 +10,13 @@ public sealed partial class HexMapGenerator : Node {
     }
 
 
-    private MapRegion _region;
+    private List<MapRegion> _regions;
     private Random _rng;
     private int _cellCount;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
     [Export] private int _seed = 1337;
+    [Export] private bool _staticSeed = false;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMax = 100;
@@ -31,7 +32,9 @@ public sealed partial class HexMapGenerator : Node {
     [Export]public HexGrid Grid {get; set; }
 
     public void GenerateMap(int x, int z) {
-        _rng = new(_seed);
+        if (_staticSeed) {
+            _rng = new(_seed);
+        }
         _cellCount = x * z;
         Grid.CreateMap(x, z);
         if (_searchFrontier == null) {
@@ -40,10 +43,7 @@ public sealed partial class HexMapGenerator : Node {
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).WaterLevel = _waterLevel;
         }
-        _region.xMin = _mapBorderX;
-        _region.xMax = x - _mapBorderX;
-        _region.zMin = _mapBorderZ;
-        _region.zMax = z - _mapBorderZ;
+        CreateRegions();
         CreateLand();
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
@@ -60,12 +60,16 @@ public sealed partial class HexMapGenerator : Node {
     private void CreateLand() {
         int landBudget = Mathf.RoundToInt(_cellCount * _landPercentage * 0.01f);
         for(int guard = 0; landBudget > 0 && guard < 10000; guard++) {
-            int chunkSize = (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax - 1);
-            if (_rng.NextDouble() < _sinkProbability) {
-                landBudget = SinkTerrain(chunkSize, landBudget);
-            }
-            else {
-                landBudget = RaiseTerrain(chunkSize + 1, landBudget);
+            bool sink = _rng.NextDouble() < _sinkProbability;
+            for(int i = 0; i < _regions.Count; i++) {
+                int chunkSize = (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax - 1);
+                if (sink) { 
+                    landBudget = SinkTerrain(chunkSize, landBudget, _regions[i]);
+                }
+                else {
+                    landBudget = RaiseTerrain(chunkSize + 1, landBudget, _regions[i]);
+                    if (landBudget == 0) return;
+                }
             }
         }
         if (landBudget > 0) {
@@ -73,9 +77,9 @@ public sealed partial class HexMapGenerator : Node {
         }
     }
 
-    private int RaiseTerrain(int chunkSize, int budget) {
+    private int RaiseTerrain(int chunkSize, int budget, MapRegion region) {
         _searchFrontierPhase += 1;
-        HexCell firstCell = GetRandomCell();
+        HexCell firstCell = GetRandomCell(region);
         firstCell.SearchPhase = _searchFrontierPhase;
         firstCell.Distance = 0;
         firstCell.SearchHeuristic = 0;
@@ -114,9 +118,9 @@ public sealed partial class HexMapGenerator : Node {
         return budget;
     }
 
-    private int SinkTerrain(int chunkSize, int budget) {
+    private int SinkTerrain(int chunkSize, int budget, MapRegion region) {
         _searchFrontierPhase += 1;
-        HexCell firstCell = GetRandomCell();
+        HexCell firstCell = GetRandomCell(region);
         firstCell.SearchPhase = _searchFrontierPhase;
         firstCell.Distance = 0;
         firstCell.SearchHeuristic = 0;
@@ -155,9 +159,9 @@ public sealed partial class HexMapGenerator : Node {
         return budget;
     }
 
-    HexCell GetRandomCell() {
-        var x = (int)_rng.NextInt64(_region.xMin, _region.xMax);
-        var z = (int)_rng.NextInt64(_region.zMin, _region.zMax);
+    private HexCell GetRandomCell(MapRegion region) {
+        var x = (int)_rng.NextInt64(region.xMin, region.xMax);
+        var z = (int)_rng.NextInt64(region.zMin, region.zMax);
         return Grid.GetCell(x, z);
     }
 
@@ -170,5 +174,20 @@ public sealed partial class HexMapGenerator : Node {
         }
     }
 
+    private void CreateRegions() {
+        if (_regions == null) {
+            _regions = new List<MapRegion>();
+        }
+        else {
+            _regions.Clear();
+        }
+
+        MapRegion region;
+        region.xMin = _mapBorderX;
+        region.xMax = Grid.CellCountX - _mapBorderX;
+        region.zMin = _mapBorderZ;
+        region.zMax = Grid.CellCountZ - _mapBorderZ;
+        _regions.Add(region);
+    }
 
 }
