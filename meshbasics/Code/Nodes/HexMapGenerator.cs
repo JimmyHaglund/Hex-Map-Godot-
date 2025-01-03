@@ -11,6 +11,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _jitterProbability = 0.25f;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMin = 30;
     [Export(PropertyHint.Range, "20, 200")] private int _chunkSizeMax = 100;
+    [Export(PropertyHint.Range, "5, 95")] public int landPercentage = 50;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -22,15 +23,23 @@ public sealed partial class HexMapGenerator : Node {
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }
-        for (int i = 0; i < 5; i++) {
-            RaiseTerrain((int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax));
-        }
+        CreateLand();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
         }
     }
 
-    private void RaiseTerrain(int chunkSize) {
+    private void CreateLand() {
+        int landBudget = Mathf.RoundToInt(_cellCount * landPercentage * 0.01f);
+        while (landBudget > 0) {
+            landBudget = RaiseTerrain(
+                (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax + 1),
+                landBudget
+            );
+        }
+    }
+
+    private int RaiseTerrain(int chunkSize, int budget) {
         _searchFrontierPhase += 1;
         HexCell firstCell = GetRandomCell();
         firstCell.SearchPhase = _searchFrontierPhase;
@@ -42,7 +51,12 @@ public sealed partial class HexMapGenerator : Node {
         int size = 0;
         while (size < chunkSize && _searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
-            current.TerrainTypeIndex = 1;
+            if (current.TerrainTypeIndex == 0) {
+                current.TerrainTypeIndex = 1;
+                if (--budget == 0) {
+                    break;
+                }
+            }
             size += 1;
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
@@ -56,6 +70,7 @@ public sealed partial class HexMapGenerator : Node {
             }
         }
         _searchFrontier.Clear();
+        return budget;
     }
 
     HexCell GetRandomCell() {
