@@ -11,8 +11,10 @@ public sealed partial class HexCellShaderData : Node {
     private Color[] _cellTextureData;
     private static HexCellShaderData _instance;
     private List<HexCell> _transitioningCells = new();
+    private bool _needsVisibilityReset;
 
     public bool ImmediateMode { get; set; } = false;
+    public HexGrid Grid {get; set;}
 
     public static void SetShaderParameter(string parameterName, Godot.Variant value) { 
         if (_instance is null) return;
@@ -76,6 +78,11 @@ public sealed partial class HexCellShaderData : Node {
         ProcessMode = ProcessModeEnum.Inherit;
     }
 
+    public void ViewElevationChanged() {
+        _needsVisibilityReset = true;
+        ProcessMode = ProcessModeEnum.Inherit;
+    }
+
     public override void _EnterTree() {
         _instance = this;
     }
@@ -120,6 +127,11 @@ public sealed partial class HexCellShaderData : Node {
     }
 
     private void LateUpdate(float deltaTime) {
+        if (_needsVisibilityReset) {
+            _needsVisibilityReset = false;
+            Grid.ResetVisibility();
+        }
+
         var transitionDelta = deltaTime * _transitionSpeed;
         for (int i = 0; i < _transitioningCells.Count; i++) {
             var isFinished = UpdateCellData(_transitioningCells[i], transitionDelta);

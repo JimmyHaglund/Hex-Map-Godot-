@@ -45,7 +45,7 @@ public sealed partial class HexGrid : Node3D {
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
-
+        _cellShaderData.Grid = this;
         // _cellShaderData = new();
         // AddChild(_cellShaderData);
         CreateMap(CellCountX, CellCountZ);
@@ -216,6 +216,16 @@ public sealed partial class HexGrid : Node3D {
         ListPool<HexCell>.Add(cells);
     }
 
+    public void ResetVisibility() {
+        for (int i = 0; i < _cells.Length; i++) {
+            _cells[i].ResetVisibility();
+        }
+        for (int i = 0; i < _units.Count; i++) {
+            HexUnit unit = _units[i];
+            IncreaseVisibility(unit.Location, unit.VisionRange);
+        }
+    }
+
     private Vector3 ClampPositionToGrid(Vector3 position) {
         float xMax =
             (CellCountX - 0.5f) *
@@ -331,7 +341,6 @@ public sealed partial class HexGrid : Node3D {
         }
         return visibleCells;
     }
-
 
     private void ShowPath(int speed) {
         if (_currentPathExists) {

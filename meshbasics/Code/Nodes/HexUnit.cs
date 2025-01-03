@@ -17,7 +17,7 @@ public sealed partial class HexUnit : Node3D {
     private float _rotationSpeed = Mathf.Pi;
     private float _rotationTarget;
 
-    public const int VisionRange = 3;
+    public int VisionRange => 3;
 
     public static PackedScene UnitPrefab {get; set; }
     public HexGrid Grid { get; set; }

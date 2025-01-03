@@ -46,7 +46,11 @@ public sealed partial class HexCell : Node3D {
         get => _elevation;
         set {
             if (_elevation == value) return;
+            int originalViewElevation = ViewElevation;
             _elevation = value;
+            if (ViewElevation != originalViewElevation) {
+                ShaderData.ViewElevationChanged();
+            }
             RefreshPosition();
             ValidateRivers();
 
@@ -177,7 +181,11 @@ public sealed partial class HexCell : Node3D {
             if (_waterLevel == value) {
                 return;
             }
+            int originalViewElevation = ViewElevation;
             _waterLevel = value;
+            if (ViewElevation != originalViewElevation) {
+                ShaderData.ViewElevationChanged();
+            }
             ValidateRivers();
             Refresh();
         }
@@ -250,9 +258,15 @@ public sealed partial class HexCell : Node3D {
         }
     }
 
-    public bool IsVisible {
+    public new bool IsVisible {
         get {
             return _visibility > 0;
+        }
+    }
+
+    public int ViewElevation {
+        get {
+            return _elevation >= _waterLevel ? _elevation : _waterLevel;
         }
     }
 
@@ -370,6 +384,13 @@ public sealed partial class HexCell : Node3D {
         UpdateUiAltitude();
     }
 
+    public void ResetVisibility() {
+        if (_visibility > 0) {
+            _visibility = 0;
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
     public void Save(BinaryWriter writer) {
         writer.Write((byte)_terrainTypeIndex);
         writer.Write((byte)_elevation);
@@ -444,6 +465,8 @@ public sealed partial class HexCell : Node3D {
         ShaderData.RefreshVisibility(this);
 
     }
+
+    
 
     private bool IsValidRiverDestination(HexCell neighbor) {
         if (neighbor is null) return false;
