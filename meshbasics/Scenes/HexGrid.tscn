@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
 [ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="4_77bli"]
 [ext_resource type="PackedScene" uid="uid://bwok11esd24iw" path="res://Scenes/HexGridChunk.tscn" id="5_3ypkl"]
-[ext_resource type="Script" path="res://Code/HexCellShaderData.cs" id="7_2hcal"]
+[ext_resource type="Script" path="res://Code/Nodes/HexCellShaderData.cs" id="7_ovv7j"]
 [ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/TerrainMaterial.tres" id="8_b80po"]
 [ext_resource type="Material" uid="uid://deb1ldds6tidn" path="res://Materials/RoadMaterial.tres" id="9_qrbye"]
 [ext_resource type="Material" uid="uid://cmgf5cc3lk3rn" path="res://Materials/WaterMaterial.tres" id="10_u5gs2"]
@@ -27,5 +27,5 @@ ChunkPrefab = ExtResource("5_3ypkl")
 _cellShaderData = NodePath("CellShaderData")
 
 [node name="CellShaderData" type="Node" parent="."]
-script = ExtResource("7_2hcal")
-_shaders = Array[ShaderMaterial]([ExtResource("8_b80po"), ExtResource("9_qrbye"), ExtResource("10_u5gs2"), ExtResource("11_ttff7"), ExtResource("12_255k0"), ExtResource("13_142xe"), ExtResource("14_3bdi3"), ExtResource("15_rh0ap"), ExtResource("16_gp14x")])
+script = ExtResource("7_ovv7j")
+_shaders = Array[ShaderMaterial]([ExtResource("16_gp14x"), ExtResource("15_rh0ap"), ExtResource("14_3bdi3"), ExtResource("12_255k0"), ExtResource("13_142xe"), ExtResource("10_u5gs2"), ExtResource("9_qrbye"), ExtResource("8_b80po"), ExtResource("11_ttff7")])
