@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System;
+using System.Diagnostics;
 
 namespace JHM.MeshBasics;
 
@@ -53,7 +54,7 @@ public sealed partial class HexMapGenerator : Node {
 
     private void CreateLand() {
         int landBudget = Mathf.RoundToInt(_cellCount * _landPercentage * 0.01f);
-        while (landBudget > 0) {
+        for(int guard = 0; landBudget > 0 && guard < 10000; guard++) {
             int chunkSize = (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax - 1);
             if (_rng.NextDouble() < _sinkProbability) {
                 landBudget = SinkTerrain(chunkSize, landBudget);
@@ -61,6 +62,9 @@ public sealed partial class HexMapGenerator : Node {
             else {
                 landBudget = RaiseTerrain(chunkSize + 1, landBudget);
             }
+        }
+        if (landBudget > 0) {
+            GD.PrintErr("Failed to use up " + landBudget + " land budget.");
         }
     }
 
