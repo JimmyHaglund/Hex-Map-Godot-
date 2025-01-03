@@ -10,6 +10,7 @@ public sealed partial class HexMapGenerator : Node {
     }
     private struct ClimateData {
         public float clouds;
+        public float moisture;
     }
 
     private List<ClimateData> _climate = new List<ClimateData>();
@@ -35,6 +36,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0, 4")] private int _regionCount = 1;
     [Export(PropertyHint.Range, "0, 100")] private int _erosionPercentage = 50;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _evaporation = 0.5f;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _evaporationFactor = 0.5f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _precipitationFactor = 0.5f;
 
     [Export] public HexGrid Grid {get; set; }
@@ -181,7 +183,7 @@ public sealed partial class HexMapGenerator : Node {
             if (!cell.IsUnderwater) {
                 cell.TerrainTypeIndex = cell.Elevation - cell.WaterLevel;
             }
-            cell.SetMapData(_climate[i].clouds);
+            cell.SetMapData(_climate[i].moisture);
         }
     }
 
@@ -355,10 +357,16 @@ public sealed partial class HexMapGenerator : Node {
 
         if (cell.IsUnderwater) {
             cellClimate.clouds += _evaporation;
+            cellClimate.moisture = 1f;
+        } else {
+            float evaporation = cellClimate.moisture * _evaporationFactor;
+            cellClimate.moisture -= evaporation;
+            cellClimate.clouds += evaporation;
         }
 
         float precipitation = cellClimate.clouds * _precipitationFactor;
         cellClimate.clouds -= precipitation;
+        cellClimate.moisture += precipitation;
 
         float cloudDispersal = cellClimate.clouds * (1.0f / 6.0f);
         for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
