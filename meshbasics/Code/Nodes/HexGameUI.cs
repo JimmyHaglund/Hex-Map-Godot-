@@ -55,7 +55,7 @@ public sealed partial class HexGameUI : Control {
         if (!UpdateCurrentCell()) return;
         if (!_selectedUnit.IsValidDestination(_currentCell)) return;
         _pathing = true;
-        Grid.FindPath(_selectedUnit.Location, _currentCell, 24);
+        Grid.FindPath(_selectedUnit.Location, _currentCell, _selectedUnit);
         _pathing = false;
     }
 

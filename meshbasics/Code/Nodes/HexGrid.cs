@@ -146,13 +146,13 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    public void FindPath(HexCell fromCell, HexCell toCell, int speed) {
+    public void FindPath(HexCell fromCell, HexCell toCell, HexUnit unit) {
         ClearPath();
         _currentPathFrom = fromCell;
         _currentPathTo = toCell;
         if (toCell is null) return;
-        _currentPathExists = Search(fromCell, toCell, speed);
-        ShowPath(speed);
+        _currentPathExists = Search(fromCell, toCell, unit);
+        ShowPath(unit.Speed);
     }
 
     public void AddUnit(HexUnit unit, HexCell location, float orientation) {
@@ -227,7 +227,8 @@ public sealed partial class HexGrid : Node3D {
         return position;
     }
 
-    private bool Search(HexCell fromCell, HexCell toCell, int speed) {
+    private bool Search(HexCell fromCell, HexCell toCell, HexUnit unit) {
+        int speed = unit.Speed;
         _searchFrontierPhase += 2;
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
@@ -253,24 +254,13 @@ public sealed partial class HexGrid : Node3D {
                 if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase) {
                     continue;
                 }
-                if (neighbor.IsUnderwater || neighbor.Unit != null) {
+
+                if (!unit.IsValidDestination(neighbor)) {
                     continue;
                 }
-                HexEdgeType edgeType = current.GetEdgeType(neighbor);
-                if (edgeType == HexEdgeType.Cliff) {
+                int moveCost = unit.GetMoveCost(current, neighbor, d);
+                if (moveCost < 0) {
                     continue;
-                }
-                int moveCost;
-                if (current.HasRoadThroughEdge(d)) {
-                    moveCost = 1;
-                }
-                else if (current.Walled != neighbor.Walled) {
-                    continue;
-                }
-                else {
-                    moveCost = edgeType == HexEdgeType.Flat ? 5 : 10;
-                    moveCost += neighbor.UrbanLevel + neighbor.FarmLevel +
-                        neighbor.PlantLevel;
                 }
 
                 int distance = current.Distance + moveCost;
