@@ -40,8 +40,11 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _precipitationFactor = 0.5f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _runoffFactor = 0.25f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _seepageFactor = 0.125f;
+    [Export] private HexDirection _windDirection = HexDirection.NW;
+    [Export(PropertyHint.Range, "1.0, 10.0")] private float _windStrength = 4.0f;
 
     [Export] public HexGrid Grid {get; set; }
+
 
     public void GenerateMap(int x, int z) {
         if (_staticSeed) {
@@ -370,7 +373,8 @@ public sealed partial class HexMapGenerator : Node {
         cellClimate.clouds -= precipitation;
         cellClimate.moisture += precipitation;
 
-        float cloudDispersal = cellClimate.clouds * (1.0f / 6.0f);
+        HexDirection mainDispersalDirection = _windDirection.Opposite();
+        float cloudDispersal = cellClimate.clouds * (1.0f / (5f + _windStrength));
         float runoff = cellClimate.moisture * _runoffFactor * (1f / 6f);
         float seepage = cellClimate.moisture * _seepageFactor * (1f / 6f);
         for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
@@ -379,7 +383,12 @@ public sealed partial class HexMapGenerator : Node {
                 continue;
             }
             ClimateData neighborClimate = _climate[neighbor.Index];
-            neighborClimate.clouds += cloudDispersal;
+            if (d == mainDispersalDirection) {
+                neighborClimate.clouds += cloudDispersal * _windStrength;
+            }
+            else {
+                neighborClimate.clouds += cloudDispersal;
+            }
             int elevationDelta = neighbor.ViewElevation - cell.ViewElevation;
             if (elevationDelta < 0) {
                 cellClimate.moisture -= runoff;
