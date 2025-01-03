@@ -28,6 +28,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "6, 10")] private int _elevationMaximum = 8;
     [Export(PropertyHint.Range, "0, 10")] private int _mapBorderX = 5;
     [Export(PropertyHint.Range, "0, 10")] private int _mapBorderZ = 5;
+    [Export(PropertyHint.Range, "0, 10")] private int _regionBorder = 10;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -184,9 +185,13 @@ public sealed partial class HexMapGenerator : Node {
 
         MapRegion region;
         region.xMin = _mapBorderX;
-        region.xMax = Grid.CellCountX - _mapBorderX;
+        region.xMax = Grid.CellCountX / 2 - _regionBorder;
         region.zMin = _mapBorderZ;
         region.zMax = Grid.CellCountZ - _mapBorderZ;
+        _regions.Add(region);
+
+        region.xMin = Grid.CellCountX / 2 - _regionBorder;
+        region.xMax = Grid.CellCountX - _mapBorderX;
         _regions.Add(region);
     }
 
