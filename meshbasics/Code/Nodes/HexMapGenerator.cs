@@ -43,7 +43,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _seepageFactor = 0.125f;
     [Export] private HexDirection _windDirection = HexDirection.NW;
     [Export(PropertyHint.Range, "1.0, 10.0")] private float _windStrength = 4.0f;
-    [Export(PropertyHint.Range, "0.0, 1.0")] private float _startingMoisture = 1.0f;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _startingMoisture = 0.1f;
     [Export] public HexGrid Grid {get; set; }
 
 
@@ -63,6 +63,7 @@ public sealed partial class HexMapGenerator : Node {
         CreateLand();
         ErodeLand();
         CreateClimate();
+        CreateRivers();
         SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
@@ -207,7 +208,6 @@ public sealed partial class HexMapGenerator : Node {
             else {
                 cell.TerrainTypeIndex = 2;
             }
-            cell.SetMapData(moisture);
         }
     }
 
@@ -442,4 +442,29 @@ public sealed partial class HexMapGenerator : Node {
         _climate[cellIndex] = new ClimateData();
     }
 
+    private void CreateRivers() {
+        List<HexCell> riverOrigins = ListPool<HexCell>.Get();
+        for (int i = 0; i < _cellCount; i++) {
+            HexCell cell = Grid.GetCell(i);
+            if (cell.IsUnderwater) {
+                continue;
+            }
+            ClimateData data = _climate[i];
+            float weight =
+                data.moisture * (cell.Elevation - _waterLevel) /
+                (_elevationMaximum - _waterLevel);
+            if (weight > 0.75f) {
+                riverOrigins.Add(cell);
+                riverOrigins.Add(cell);
+            }
+            if (weight > 0.5f) {
+                riverOrigins.Add(cell);
+            }
+            if (weight > 0.25f) {
+                riverOrigins.Add(cell);
+            }
+        }
+
+        ListPool<HexCell>.Add(riverOrigins);
+    }
 }
