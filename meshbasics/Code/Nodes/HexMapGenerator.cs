@@ -179,7 +179,30 @@ public sealed partial class HexMapGenerator : Node {
         }
     }
 
-    private void ErodeLand() { }
+    private void ErodeLand() {
+        List<HexCell> erodibleCells = ListPool<HexCell>.Get();
+        for (int i = 0; i < _cellCount; i++) {
+            HexCell cell = Grid.GetCell(i);
+            if (IsErodible(cell)) {
+                erodibleCells.Add(cell);
+            }
+        }
+
+        int targetErodibleCount = (int)(erodibleCells.Count * (100 - _erosionPercentage) * 0.01f);
+
+        ListPool<HexCell>.Add(erodibleCells);
+    }
+
+    private bool IsErodible(HexCell cell) {
+        int erodibleElevation = cell.Elevation - 2;
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+            HexCell neighbor = cell.GetNeighbor(d);
+            if (neighbor != null && neighbor.Elevation <= erodibleElevation) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void CreateRegions() {
         if (_regions == null) {
