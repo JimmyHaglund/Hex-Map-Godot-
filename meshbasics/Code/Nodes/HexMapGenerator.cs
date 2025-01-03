@@ -372,7 +372,11 @@ public sealed partial class HexMapGenerator : Node {
         float precipitation = cellClimate.clouds * _precipitationFactor;
         cellClimate.clouds -= precipitation;
         cellClimate.moisture += precipitation;
-
+        float cloudMaximum = 1f - cell.ViewElevation / (_elevationMaximum + 1f);
+        if (cellClimate.clouds > cloudMaximum) {
+            cellClimate.moisture += cellClimate.clouds - cloudMaximum;
+            cellClimate.clouds = cloudMaximum;
+        }
         HexDirection mainDispersalDirection = _windDirection.Opposite();
         float cloudDispersal = cellClimate.clouds * (1.0f / (5f + _windStrength));
         float runoff = cellClimate.moisture * _runoffFactor * (1f / 6f);
