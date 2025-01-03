@@ -18,6 +18,8 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 0.4")] private float _sinkProbability = 0.2f;
     [Export(PropertyHint.Range, "-4, 0")] private int _elevationMinimum = -2;
     [Export(PropertyHint.Range, "6, 10")] private int _elevationMaximum = 8;
+    [Export(PropertyHint.Range, "0, 10")] private int _mapBorderX = 5;
+    [Export(PropertyHint.Range, "0, 10")] private int _mapBorderY = 5;
 
     [Export]public HexGrid Grid {get; set; }
 
