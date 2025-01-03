@@ -8,7 +8,8 @@ uniform sampler2DArray _MainTex;
 uniform sampler2D _GridTex;
 uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
-uniform float metallic : hint_range(0.0, 1.0) = 0.0;
+// uniform float metallic : hint_range(0.0, 1.0) = 0.0;
+uniform float _Specular : hint_range(0.0, 1.0) = 0.2;
 uniform int layer = 0;
 varying vec4 indices;
 varying vec4 visibility;
@@ -35,11 +36,17 @@ vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {
 	vec4 c = texture(_MainTex, uvw);
 	return c * (clr[index] * visibility[index]);
 }
+
 void fragment() {
 	vec3 world_vertex = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
     vec4 c = (GetTerrainColor(world_vertex, COLOR, 0)
 	 + GetTerrainColor(world_vertex, COLOR, 1)
 	 + GetTerrainColor(world_vertex, COLOR, 2));
+	
+	// vec3 specular = _Specular.xyz;
+	// vec3 view_dir = normalize(-VIEW);
+    // vec3 light_dir = normalize(light());
+    // vec3 half_vec = normalize(view_dir + light_dir);
 	
 	vec4 grid = vec4(1.0, 1.0, 1.0, 1.0);
 	if (GRID_ON) {
@@ -50,6 +57,6 @@ void fragment() {
 	}
 	float explored = visibility.w;
 	ALBEDO = c.rgb * grid.rgb * color.rgb * explored;
-    METALLIC = metallic;
+	SPECULAR = _Specular * explored;
     ROUGHNESS = 1.0 - glossiness;
 }
