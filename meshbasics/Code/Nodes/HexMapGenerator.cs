@@ -14,6 +14,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "5, 95")] private int _landPercentage = 50;
     [Export(PropertyHint.Range, "1, 5")] private int _waterLevel = 2;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _highRiseProbability = 0.25f;
+    [Export(PropertyHint.Range, "0.0, 0.4")] private float _sinkProbability = 0.2f;
 
     [Export]public HexGrid Grid {get; set; }
 
@@ -40,10 +41,13 @@ public sealed partial class HexMapGenerator : Node {
     private void CreateLand() {
         int landBudget = Mathf.RoundToInt(_cellCount * _landPercentage * 0.01f);
         while (landBudget > 0) {
-            landBudget = RaiseTerrain(
-                (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax + 1),
-                landBudget
-            );
+            int chunkSize = (int)_rng.NextInt64(_chunkSizeMin, _chunkSizeMax - 1);
+            if (_rng.NextDouble() < _sinkProbability) {
+                landBudget = SinkTerrain(chunkSize, landBudget);
+            }
+            else {
+                landBudget = RaiseTerrain(chunkSize + 1, landBudget);
+            }
         }
     }
 
@@ -67,6 +71,43 @@ public sealed partial class HexMapGenerator : Node {
                 --budget == 0
             ) {
                 break;
+            }
+            size += 1;
+
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor != null && neighbor.SearchPhase < _searchFrontierPhase) {
+                    neighbor.SearchPhase = _searchFrontierPhase;
+                    neighbor.Distance = neighbor.Coordinates.DistanceTo(center); ;
+                    neighbor.SearchHeuristic = _rng.NextDouble() < _jitterProbability ? 1 : 0;
+                    _searchFrontier.Enqueue(neighbor);
+                }
+            }
+        }
+        _searchFrontier.Clear();
+        return budget;
+    }
+
+    private int SinkTerrain(int chunkSize, int budget) {
+        _searchFrontierPhase += 1;
+        HexCell firstCell = GetRandomCell();
+        firstCell.SearchPhase = _searchFrontierPhase;
+        firstCell.Distance = 0;
+        firstCell.SearchHeuristic = 0;
+        _searchFrontier.Enqueue(firstCell);
+        HexCoordinates center = firstCell.Coordinates;
+
+        int sink = _rng.NextDouble() < _highRiseProbability ? 2 : 1;
+        int size = 0;
+        while (size < chunkSize && _searchFrontier.Count > 0) {
+            HexCell current = _searchFrontier.Dequeue();
+            int originalElevation = current.Elevation;
+            current.Elevation = originalElevation - sink;
+            if (originalElevation >= _waterLevel &&
+                current.Elevation < _waterLevel &&
+                --budget == 0
+            ) {
+                budget += 1;
             }
             size += 1;
 
