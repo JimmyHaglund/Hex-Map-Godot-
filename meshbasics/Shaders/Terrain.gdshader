@@ -11,9 +11,12 @@ uniform float glossiness : hint_range(0.0, 1.0) = 0.5;
 // uniform float metallic : hint_range(0.0, 1.0) = 0.0;
 uniform float _Specular : hint_range(0.0, 1.0) = 0.2;
 uniform int layer = 0;
+uniform vec3 _BackgroundColor : source_color = vec3(0.0, 0.0, 0.0);
+uniform bool SHOW_MAP_DATA;
+
 varying vec4 indices;
 varying vec4 visibility;
-uniform vec3 _BackgroundColor : source_color = vec3(0.0, 0.0, 0.0);
+varying float mapData;
 
 void vertex() {
 	indices = CUSTOM0;
@@ -31,6 +34,11 @@ void vertex() {
 	visibility.z = cell2.x;
 	visibility.xyz = mix(vec3(0.25), vec3(1.0), visibility.xyz);
 	visibility.w = cell0.y * COLOR.x + cell1.y * COLOR.y + cell2.y * COLOR.z;
+	
+	if (SHOW_MAP_DATA) {
+		mapData = cell0.z * COLOR.x + cell1.z * COLOR.y + cell2.z * COLOR.z;
+	}
+	
 }
 vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {
 	vec3 uvw = vec3(worldPos.xz * 0.02, indices[index]);
@@ -57,7 +65,11 @@ void fragment() {
 		grid = texture(_GridTex, gridUV);
 	}
 	float explored = visibility.w;
-	ALBEDO = c.rgb * grid.rgb * color.rgb * explored;
+	if (SHOW_MAP_DATA) {
+		ALBEDO = (mapData * grid).xyz;
+	} else{
+		ALBEDO = c.rgb * grid.rgb * color.rgb * explored;
+	}
 	SPECULAR = _Specular * explored;
     ROUGHNESS = 1.0 - glossiness;
 	EMISSION = _BackgroundColor * (1.0 - explored);

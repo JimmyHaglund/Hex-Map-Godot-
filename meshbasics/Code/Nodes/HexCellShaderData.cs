@@ -21,7 +21,13 @@ public sealed partial class HexCellShaderData : Node {
         foreach(var shader in _instance._shaders) { 
             shader.SetShaderParameter(parameterName, value);
         }
-    } 
+    }
+
+    public void SetMapData(HexCell cell, float data) {
+        _cellTextureData[cell.Index].B = data < 0.0f ? 0.0f : 
+            (data < 1.0f ? (254.0f / 255.0f) * data : 254.0f / 255.0f);
+        ProcessMode = ProcessModeEnum.Inherit;
+    }
 
     public void Initialize(int x, int z) {
         //if (_cellTexture is not null) {
@@ -100,7 +106,7 @@ public sealed partial class HexCellShaderData : Node {
         Color data = _cellTextureData[index];
         bool stillUpdating = false;
 
-        if (cell.IsExplored && data.G < 1.0f) {
+        if (cell.IsExplored && data.G == 1.0f) {
             stillUpdating = true;
             float t = data.G + delta;
             data.G = Mathf.Min(t, 1.0f);

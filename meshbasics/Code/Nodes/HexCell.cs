@@ -310,6 +310,15 @@ public sealed partial class HexCell : Node3D {
         Label.Visible = visible;
     }
 
+    public void SetMapData(float data) {
+        ShaderData.SetMapData(this, data);
+    }
+
+    public void SetNeighbor(HexDirection direction, HexCell cell) {
+        _neighbors[(int)direction] = cell;
+        cell._neighbors[(int)direction.Opposite()] = this;
+    }
+
     public HexCell GetNeighbor(HexDirection direction) {
         return _neighbors[(int)direction];
     }
@@ -319,11 +328,7 @@ public sealed partial class HexCell : Node3D {
         return difference >= 0 ? difference : -difference;
     }
 
-    public void SetNeighbor(HexDirection direction, HexCell cell) {
-        _neighbors[(int)direction] = cell;
-        cell._neighbors[(int)direction.Opposite()] = this;
-    }
-
+    
     public HexEdgeType GetEdgeType(HexDirection direction) {
         return HexMetrics.GetEdgeType(
             Elevation, _neighbors[(int)direction].Elevation
@@ -400,6 +405,8 @@ public sealed partial class HexCell : Node3D {
             ShaderData.RefreshVisibility(this);
         }
     }
+
+    
 
     public void Save(BinaryWriter writer) {
         writer.Write((byte)_terrainTypeIndex);
@@ -478,6 +485,7 @@ public sealed partial class HexCell : Node3D {
     }
 
     
+
 
     private bool IsValidRiverDestination(HexCell neighbor) {
         if (neighbor is null) return false;

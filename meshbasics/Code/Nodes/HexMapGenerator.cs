@@ -176,6 +176,10 @@ public sealed partial class HexMapGenerator : Node {
             if (!cell.IsUnderwater) {
                 cell.TerrainTypeIndex = cell.Elevation - cell.WaterLevel;
             }
+            cell.SetMapData(
+                (cell.Elevation - _elevationMinimum) /
+                (float)(_elevationMaximum - _elevationMinimum)
+            );
         }
     }
 

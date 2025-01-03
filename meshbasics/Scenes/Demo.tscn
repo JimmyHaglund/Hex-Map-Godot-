@@ -169,7 +169,8 @@ custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
 color = Color(0.169245, 0.169245, 0.169245, 1)
 
-[node name="EditMode" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer"]
+[node name="ShowMapData" type="CheckButton" parent="HexMapEditor/Controls/VBoxContainer"]
+visible = false
 layout_direction = 3
 layout_mode = 2
 text = "Edit Mode"
@@ -621,7 +622,7 @@ Grid = NodePath("../HexGrid")
 [connection signal="toggled" from="CheckButton" to="HexGameUI" method="SetEditMode"]
 [connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/ToggleGrid" to="HexMapEditor" method="ShowGrid"]
 [connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/ToggleHexUI" to="HexGrid" method="SetUIVisible"]
-[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/EditMode" to="HexMapEditor" method="SetEditMode"]
+[connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/ShowMapData" to="HexMapEditor" method="SetEditMode"]
 [connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/Color/CheckButton" to="HexMapEditor" method="SetApplyTerrainType"]
 [connection signal="toggled" from="HexMapEditor/Controls/VBoxContainer/Color/CheckButton" to="HexMapEditor/Controls/VBoxContainer/Color/HSlider" method="set_editable"]
 [connection signal="value_changed" from="HexMapEditor/Controls/VBoxContainer/Color/HSlider" to="HexMapEditor" method="SetTerrainTypeIndex"]
