@@ -24,6 +24,7 @@ public sealed partial class HexMapGenerator : Node {
             _searchFrontier = new HexCellPriorityQueue();
         }
         CreateLand();
+        SetTerrainType();
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
         }
@@ -51,11 +52,9 @@ public sealed partial class HexMapGenerator : Node {
         int size = 0;
         while (size < chunkSize && _searchFrontier.Count > 0) {
             HexCell current = _searchFrontier.Dequeue();
-            if (current.TerrainTypeIndex == 0) {
-                current.TerrainTypeIndex = 1;
-                if (--budget == 0) {
-                    break;
-                }
+            current.Elevation += 1;
+            if (current.Elevation == 1 && --budget == 0) {
+                break;
             }
             size += 1;
 
@@ -64,7 +63,7 @@ public sealed partial class HexMapGenerator : Node {
                 if (neighbor != null && neighbor.SearchPhase < _searchFrontierPhase) {
                     neighbor.SearchPhase = _searchFrontierPhase;
                     neighbor.Distance = neighbor.Coordinates.DistanceTo(center); ;
-                    neighbor.SearchHeuristic = _rng.Next() < _jitterProbability ? 1 : 0;
+                    neighbor.SearchHeuristic = _rng.NextDouble() < _jitterProbability ? 1 : 0;
                     _searchFrontier.Enqueue(neighbor);
                 }
             }
@@ -76,5 +75,12 @@ public sealed partial class HexMapGenerator : Node {
     HexCell GetRandomCell() {
         return Grid.GetCell((int)_rng.NextInt64(0, _cellCount));
     }
+    private void SetTerrainType() {
+        for (int i = 0; i < _cellCount; i++) {
+            HexCell cell = Grid.GetCell(i);
+            cell.TerrainTypeIndex = cell.Elevation;
+        }
+    }
+
 
 }
