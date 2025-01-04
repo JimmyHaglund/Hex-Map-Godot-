@@ -57,6 +57,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _lowTemperature = 0.0f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _highTemperature = 1.0f;
     [Export] private HemisphereMode _hemisphere;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _temperatureJitter = 0.1f;
 
 
     public void GenerateMap(int x, int z) {
@@ -587,6 +588,7 @@ public sealed partial class HexMapGenerator : Node {
         return length;
     }
 
+    int temperatureJitterChannel;
     private float DetermineTemperature(HexCell cell) {
         float latitude = (float)cell.Coordinates.Z / Grid.CellCountZ;
         if (_hemisphere == HemisphereMode.Both) {
@@ -601,6 +603,8 @@ public sealed partial class HexMapGenerator : Node {
         float temperature = Mathf.Lerp(_lowTemperature, _highTemperature, latitude);
         temperature *= 1f - (cell.ViewElevation - _waterLevel) /
             (_elevationMaximum - _waterLevel + 1f);
+        float jitter = HexMetrics.SampleNoise(cell.Position * 0.1f)[temperatureJitterChannel];
+        temperature += (jitter * 2f - 1f) * _temperatureJitter;
         return temperature;
     }
 }
