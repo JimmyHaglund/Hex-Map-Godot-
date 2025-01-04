@@ -120,6 +120,7 @@ public sealed partial class HexGrid : Node3D {
     public void Save(BinaryWriter writer) {
         writer.Write(CellCountX);
         writer.Write(CellCountZ);
+        writer.Write(_wrapping);
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Save(writer);
         }
@@ -138,7 +139,8 @@ public sealed partial class HexGrid : Node3D {
             x = reader.ReadInt32();
             z = reader.ReadInt32();
         }
-        if (x != CellCountX && z != CellCountZ) { 
+        bool wrapping = header >= 5 ? reader.ReadBoolean() : false;
+        if (x != CellCountX && z != CellCountZ || _wrapping != wrapping) { 
             if (!CreateMap(x, z, _wrapping)) {
                 return;
             }
