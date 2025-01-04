@@ -460,7 +460,8 @@ public sealed partial class HexGrid : Node3D {
                 cell.SetNeighbor(HexDirection.SE, _cells[i - CellCountX]);
                 if (x > 0) {
                     cell.SetNeighbor(HexDirection.SW, _cells[i - CellCountX - 1]);
-                } else if (Wrapping) {
+                } 
+                else if (Wrapping) {
                     cell.SetNeighbor(HexDirection.SW, _cells[i - 1]);
                 }
             }
@@ -468,7 +469,8 @@ public sealed partial class HexGrid : Node3D {
                 cell.SetNeighbor(HexDirection.SW, _cells[i - CellCountX]);
                 if (x < CellCountX - 1) {
                     cell.SetNeighbor(HexDirection.SE, _cells[i - CellCountX + 1]);
-                } else if (Wrapping) {
+                } 
+                else if (Wrapping) {
                     cell.SetNeighbor(
                         HexDirection.SE, _cells[i - CellCountX * 2 + 1]
                     );

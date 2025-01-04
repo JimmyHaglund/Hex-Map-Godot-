@@ -134,19 +134,45 @@ public static class HexMetrics {
     public static Vector4 SampleNoise(Vector3 position) {
         var w = NoiseSource.GetWidth();
         var h = NoiseSource.GetHeight();
-        position *= w;
-        position *= NoiseScale;
-        position.X = position.X % w;
-        position.Z = position.Z % h;
+        Vector2 pixelPos = new(position.X, position.Z);
+        pixelPos *= w;
+        pixelPos *= NoiseScale;
+        pixelPos.X = pixelPos.X % w;
+        pixelPos.Y = pixelPos.Y % h;
 
-        if (position.X < 0) position.X += w;
-        if (position.Z < 0) position.Z += h;
-        if (position.X == w) position.X -= w;
-        if (position.Z == h) position.Z -= h;
+        if (pixelPos.X < 0) pixelPos.X += w;
+        if (pixelPos.Y < 0) pixelPos.Y += h;
+        if (pixelPos.X == w) pixelPos.X -= w;
+        if (pixelPos.Y == h) pixelPos.Y -= h;
 
 
-        var pixel = NoiseSource.GetPixel((int)position.X, (int)position.Z);
-        return new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
+        var pixel = NoiseSource.GetPixel((int)pixelPos.X, (int)pixelPos.Y);
+        var sample = new Vector4(pixel.R, pixel.G, pixel.B, pixel.A);
+
+        if (Wrapping && position.X < InnerDiameter * 1.5f) {
+            var posX2 = (position.X + wrapSize * InnerDiameter);
+
+            // var posY2 = position.Z * NoiseScale;
+            var pixelPosY2 = pixelPos.Y;// posY2 * h;
+            var pixelPosX2 = posX2 * w * NoiseScale;
+            pixelPosX2 = pixelPosX2 % w;
+            // pixelPosY2 = pixelPosY2 % h;
+            if (pixelPosX2 == w) pixelPosX2 -= w;
+            // if (pixelPosY2 == h) pixelPosY2 -= h;
+
+            var pixel2 = NoiseSource.GetPixel(
+                (int)pixelPosX2,
+                (int)pixelPosY2
+            );
+            var sample2 = new Vector4(pixel2.R, pixel2.G, pixel2.B, pixel2.A);
+            var toLerp = position.X * (1.0f / InnerDiameter) - 0.5f;
+            // In Godot, the Lerp value does not clamp and so we can get negative lerping. Kind of cool... but took a lot of time to debug this, as Unity does clamp it and the result was incorrect.
+            toLerp = Mathf.Clamp(toLerp, 0.0f, 1.0f);
+            sample = sample2.Lerp(sample, toLerp);
+            
+            
+        }
+        return sample;
     }
 
     public static HexHash SampleHashGrid(Vector3 position) {
