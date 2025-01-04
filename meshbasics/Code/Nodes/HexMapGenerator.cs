@@ -216,6 +216,8 @@ public sealed partial class HexMapGenerator : Node {
     }
 
     private void SetTerrainType() {
+        temperatureJitterChannel = (int)_rng.Next(0, 4);
+        int rockDesertElevation = _elevationMaximum - (_elevationMaximum - _waterLevel) / 2;
         for (int i = 0; i < _cellCount; i++) {
             HexCell cell = Grid.GetCell(i);
             float temperature = DetermineTemperature(cell);
@@ -235,6 +237,17 @@ public sealed partial class HexMapGenerator : Node {
                     }
                 }
                 Biome cellBiome = biomes[t * 4 + m];
+
+                if (cellBiome.terrain == 0) {
+                    if (cell.Elevation >= rockDesertElevation) {
+                        cellBiome.terrain = 3;
+                    }
+                }
+                else if (cell.Elevation == _elevationMaximum) {
+                    cellBiome.terrain = 4;
+                }
+
+
                 cell.TerrainTypeIndex = cellBiome.terrain;
             }
             else {
