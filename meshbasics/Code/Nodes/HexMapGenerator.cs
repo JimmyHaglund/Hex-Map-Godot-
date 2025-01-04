@@ -266,7 +266,7 @@ public sealed partial class HexMapGenerator : Node {
                         HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++
                     ) {
                         HexCell neighbor = cell.GetNeighbor(d);
-                        if (neighbor != null) {
+                        if (neighbor is null) {
                             continue;
                         }
                         int delta = neighbor.Elevation - cell.WaterLevel;
