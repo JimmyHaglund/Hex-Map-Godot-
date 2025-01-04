@@ -51,6 +51,8 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _startingMoisture = 0.1f;
     [Export(PropertyHint.Range, "0, 20")] private int _riverPercentage = 10;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _extraLakeProbability = 0.25f;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _lowTemperature = 0.0f;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _highTemperature = 1.0f;
 
 
 
@@ -196,6 +198,8 @@ public sealed partial class HexMapGenerator : Node {
     private void SetTerrainType() {
         for (int i = 0; i < _cellCount; i++) {
             HexCell cell = Grid.GetCell(i);
+            float temperature = DetermineTemperature(cell);
+            cell.SetMapData(temperature);
             float moisture = _climate[i].moisture;
             if (!cell.IsUnderwater) {
                 if (moisture < 0.05f) {
@@ -578,5 +582,11 @@ public sealed partial class HexMapGenerator : Node {
             cell = cell.GetNeighbor(direction);
         }
         return length;
+    }
+
+    private float DetermineTemperature(HexCell cell) {
+        float latitude = (float)cell.Coordinates.Z / Grid.CellCountZ;
+        float temperature = Mathf.Lerp(_lowTemperature, _highTemperature, latitude);
+        return temperature;
     }
 }
