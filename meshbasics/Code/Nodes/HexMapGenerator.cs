@@ -42,7 +42,6 @@ public sealed partial class HexMapGenerator : Node {
     private int _landCells;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
-    
 
     [Export] public HexGrid Grid {get; set; }
 
@@ -78,12 +77,12 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _temperatureJitter = 0.1f;
 
 
-    public void GenerateMap(int x, int z) {
+    public void GenerateMap(int x, int z, bool wrap) {
         if (_staticSeed) {
             _rng = new(_seed);
         }
         _cellCount = x * z;
-        Grid.CreateMap(x, z);
+        Grid.CreateMap(x, z, wrap);
         if (_searchFrontier == null) {
             _searchFrontier = new HexCellPriorityQueue();
         }

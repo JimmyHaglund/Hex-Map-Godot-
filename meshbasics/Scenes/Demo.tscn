@@ -461,7 +461,6 @@ layout_mode = 2
 text = "New Map"
 
 [node name="NewMapMenu" type="Control" parent="HexMapEditor" node_paths=PackedStringArray("_grid", "_generator")]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -497,10 +496,15 @@ vertical = true
 layout_mode = 2
 text = "Create New Map"
 
-[node name="CheckBox" type="CheckBox" parent="HexMapEditor/NewMapMenu/BoxContainer"]
+[node name="Generate" type="CheckBox" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
 button_pressed = true
 text = "Generate"
+
+[node name="Wrap" type="CheckBox" parent="HexMapEditor/NewMapMenu/BoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Wrap"
 
 [node name="CreateSmallMapButton" type="Button" parent="HexMapEditor/NewMapMenu/BoxContainer"]
 layout_mode = 2
@@ -604,8 +608,8 @@ Grid = NodePath("../HexGrid")
 
 [node name="MapGenerator" type="Node" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("16_npjkd")
-_staticSeed = true
 Grid = NodePath("../HexGrid")
+_staticSeed = true
 
 [connection signal="toggled" from="CheckButton" to="HexMapEditor" method="SetEditMode"]
 [connection signal="toggled" from="CheckButton" to="HexGameUI" method="SetEditMode"]
@@ -641,7 +645,8 @@ Grid = NodePath("../HexGrid")
 [connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/SaveLoad/LoadButton" to="HexMapEditor/SaveLoadMenu" method="Open" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/NewMapButton" to="HexMapCamera" method="SetLocked" binds= [true]]
 [connection signal="pressed" from="HexMapEditor/Controls/VBoxContainer/NewMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [true]]
-[connection signal="toggled" from="HexMapEditor/NewMapMenu/BoxContainer/CheckBox" to="HexMapEditor/NewMapMenu" method="SetGenerate"]
+[connection signal="toggled" from="HexMapEditor/NewMapMenu/BoxContainer/Generate" to="HexMapEditor/NewMapMenu" method="SetGenerate"]
+[connection signal="toggled" from="HexMapEditor/NewMapMenu/BoxContainer/Wrap" to="HexMapEditor/NewMapMenu" method="SetWrapping"]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapEditor/NewMapMenu" method="CreateMap" binds= [20, 15]]

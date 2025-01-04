@@ -32,6 +32,7 @@ public sealed partial class HexGrid : Node3D {
     private HexCell _currentPathTo;
     private bool _currentPathExists;
     private List<HexUnit> _units = new List<HexUnit>();
+    private bool _wrapping;
     [Export] private HexCellShaderData _cellShaderData;
 
     public static event Action MapReset;
@@ -48,7 +49,7 @@ public sealed partial class HexGrid : Node3D {
         _cellShaderData.Grid = this;
         // _cellShaderData = new();
         // AddChild(_cellShaderData);
-        CreateMap(CellCountX, CellCountZ);
+        CreateMap(CellCountX, CellCountZ, _wrapping);
     }
 
     public HexCell GetCell(Vector3 position) {
@@ -84,7 +85,8 @@ public sealed partial class HexGrid : Node3D {
         foreach (var chunk in _chunks) chunk.SetUIVisible(visible);
     }
 
-    public bool CreateMap(int cellCountX, int cellCountZ) {
+    public bool CreateMap(int cellCountX, int cellCountZ, bool wrap) {
+        
         if (
             cellCountX <= 0 || cellCountX % HexMetrics.ChunkSizeX != 0 ||
             cellCountZ <= 0 || cellCountZ % HexMetrics.ChunkSizeZ != 0
@@ -102,6 +104,7 @@ public sealed partial class HexGrid : Node3D {
 
         CellCountX = cellCountX;
         CellCountZ = cellCountZ;
+        _wrapping = wrap;
 
         _chunkCountX = CellCountX / HexMetrics.ChunkSizeX;
         _chunkCountZ = CellCountZ / HexMetrics.ChunkSizeZ;
@@ -136,7 +139,7 @@ public sealed partial class HexGrid : Node3D {
             z = reader.ReadInt32();
         }
         if (x != CellCountX && z != CellCountZ) { 
-            if (!CreateMap(x, z)) {
+            if (!CreateMap(x, z, _wrapping)) {
                 return;
             }
         }
@@ -193,7 +196,7 @@ public sealed partial class HexGrid : Node3D {
         _currentPathFrom = _currentPathTo = null;
     }
 
-    public List<HexCell> GetPath() {
+    public new List<HexCell> GetPath() {
         if (!_currentPathExists) {
             return null;
         }
