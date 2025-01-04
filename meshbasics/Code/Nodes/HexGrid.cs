@@ -34,6 +34,8 @@ public sealed partial class HexGrid : Node3D {
     private bool _currentPathExists;
     private List<HexUnit> _units = new List<HexUnit>();
     private bool _wrapping;
+    private int _currentCenterColumnIndex = -1;
+
     [Export] private HexCellShaderData _cellShaderData;
 
     public static event Action MapReset;
@@ -107,6 +109,7 @@ public sealed partial class HexGrid : Node3D {
         CellCountX = cellCountX;
         CellCountZ = cellCountZ;
         _wrapping = wrap;
+        _currentCenterColumnIndex = -1;
         HexMetrics.wrapSize = _wrapping ? CellCountX : 0;
 
         _chunkCountX = CellCountX / HexMetrics.ChunkSizeX;
@@ -239,6 +242,29 @@ public sealed partial class HexGrid : Node3D {
         for (int i = 0; i < _units.Count; i++) {
             HexUnit unit = _units[i];
             IncreaseVisibility(unit.Location, unit.VisionRange);
+        }
+    }
+
+    public void CenterMap(float xPosition) {
+        int centerColumnIndex = (int)(xPosition / (HexMetrics.InnerDiameter * HexMetrics.ChunkSizeX));
+        if (centerColumnIndex == _currentCenterColumnIndex) {
+            return;
+        }
+        _currentCenterColumnIndex = centerColumnIndex;
+        int minColumnIndex = centerColumnIndex - _chunkCountX / 2;
+        int maxColumnIndex = centerColumnIndex + _chunkCountX / 2;
+        Vector3 position = new(0.0f, 0.0f, 0.0f);
+        for (int i = 0; i < _columns.Length; i++) {
+            if (i < minColumnIndex) {
+                position.X = _chunkCountX * (HexMetrics.InnerDiameter * HexMetrics.ChunkSizeX);
+            }
+            else if (i > maxColumnIndex) {
+                position.X = _chunkCountX * -(HexMetrics.InnerDiameter * HexMetrics.ChunkSizeX);
+            }
+            else {
+                position.X = 0f;
+            }
+            _columns[i].Position = position;
         }
     }
 
