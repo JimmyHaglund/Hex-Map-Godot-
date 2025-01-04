@@ -447,6 +447,7 @@ public sealed partial class HexGrid : Node3D {
         cell.Position = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Index = i;
+        cell.ColumnIndex = x / HexMetrics.ChunkSizeX;
         cell.ShaderData = _cellShaderData;
         
         if (x > 0) {

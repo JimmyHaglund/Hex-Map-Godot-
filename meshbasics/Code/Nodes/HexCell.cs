@@ -34,6 +34,7 @@ public sealed partial class HexCell : Node3D {
     public HexCell NextWithSamePriority { get; set; }
     public HexUnit Unit { get; set; }
     public bool Explorable { get; set; }
+    public int ColumnIndex { get; set; }
 
     public bool IsExplored { 
         get {

@@ -441,6 +441,12 @@ public sealed partial class HexGridChunk : Node3D {
         Water.AddTriangleCellData(indices, _weights1);
 
         Vector3 center2 = neighbor.Position;
+        if (neighbor.ColumnIndex < cell.ColumnIndex - 1) {
+            center2.X += HexMetrics.wrapSize * HexMetrics.InnerDiameter;
+        }
+        else if (neighbor.ColumnIndex > cell.ColumnIndex + 1) {
+            center2.X -= HexMetrics.wrapSize * HexMetrics.InnerDiameter;
+        }
         center2.Y = center.Y;
 
         EdgeVertices e2 = new EdgeVertices(
@@ -467,7 +473,14 @@ public sealed partial class HexGridChunk : Node3D {
 
         HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
         if (nextNeighbor != null) {
-            Vector3 v3 = nextNeighbor.Position + (nextNeighbor.IsUnderwater ?
+            Vector3 center3 = nextNeighbor.Position;
+            if (nextNeighbor.ColumnIndex < cell.ColumnIndex - 1) {
+                center3.X += HexMetrics.wrapSize * HexMetrics.InnerDiameter;
+            }
+            else if (nextNeighbor.ColumnIndex > cell.ColumnIndex + 1) {
+                center3.X -= HexMetrics.wrapSize * HexMetrics.InnerDiameter;
+            }
+            Vector3 v3 = center3 + (nextNeighbor.IsUnderwater ?
                 HexMetrics.GetFirstWaterCorner(direction.Previous()) :
                 HexMetrics.GetFirstSolidCorner(direction.Previous()));
             v3.Y = center.Y;

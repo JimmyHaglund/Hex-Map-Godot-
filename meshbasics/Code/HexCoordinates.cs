@@ -14,6 +14,15 @@ public struct HexCoordinates {
     public int Y => -X - Z;
 
     public HexCoordinates(int x, int z) {
+        if (HexMetrics.Wrapping) {
+            int oX = x + z / 2;
+            if (oX < 0) {
+                x += HexMetrics.wrapSize;
+            }
+            else if (oX >= HexMetrics.wrapSize) {
+                x -= HexMetrics.wrapSize;
+            }
+        }
         X = x;
         Z = z;
     }
