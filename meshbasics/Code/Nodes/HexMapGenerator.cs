@@ -599,6 +599,8 @@ public sealed partial class HexMapGenerator : Node {
             latitude = 1f - latitude;
         }
         float temperature = Mathf.Lerp(_lowTemperature, _highTemperature, latitude);
+        temperature *= 1f - (cell.ViewElevation - _waterLevel) /
+            (_elevationMaximum - _waterLevel + 1f);
         return temperature;
     }
 }
