@@ -185,6 +185,11 @@ public sealed partial class HexGrid : Node3D {
         unit.Orientation = orientation;
     }
 
+    public void MakeChildOfColumn(HexUnit child, int columnIndex) {
+        child.GetParent().RemoveChild(child);
+        _columns[columnIndex].AddChild(child);
+    }
+
     public void RemoveUnit(HexUnit unit) {
         _units.Remove(unit);
         unit.Die();

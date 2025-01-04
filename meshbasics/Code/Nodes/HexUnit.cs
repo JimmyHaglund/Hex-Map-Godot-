@@ -46,6 +46,7 @@ public sealed partial class HexUnit : Node3D {
             _location.Unit = this;
             Grid?.IncreaseVisibility(_location, VisionRange);
             Position = value.Position;
+            // Grid.MakeChildOfColumn(this, value.ColumnIndex);
         }
     }
 
@@ -180,12 +181,19 @@ public sealed partial class HexUnit : Node3D {
 
         if (_pathToTravel is null) return;
         _moveProgress += delta * _travelSpeed;
+        int fromColumn = 0;
+        int toColumn = 0;
         while (_moveProgress >= 1.0f) {
             if (_travelIndex + 1 < _pathToTravel.Count) {
                 Grid.DecreaseVisibility(CurrentTravelLocation, VisionRange);
             }
+            fromColumn = toColumn = CurrentTravelLocation.ColumnIndex;
             _travelIndex++;
             _moveProgress--;
+            if (CurrentTravelLocation != null) {
+                toColumn = CurrentTravelLocation.ColumnIndex;
+                Grid.MakeChildOfColumn(this, CurrentTravelLocation.ColumnIndex);
+            }
             if (_travelIndex > 0) {
                 Grid.IncreaseVisibility(CurrentTravelLocation, VisionRange);
             }
@@ -203,11 +211,23 @@ public sealed partial class HexUnit : Node3D {
 
         if (_travelIndex > 0) { 
             a = (_pathToTravel[_travelIndex - 1].Position + _pathToTravel[_travelIndex].Position) * 0.5f;
-        
         }
         if (_travelIndex + 1 < _pathToTravel.Count) {
             c = (b + _pathToTravel[_travelIndex + 1].Position) * 0.5f;
         }
+
+        if (toColumn < fromColumn - 1) {
+            a.X -= HexMetrics.InnerDiameter * HexMetrics.wrapSize;
+            b.X -= HexMetrics.InnerDiameter * HexMetrics.wrapSize;
+        }
+        else if (toColumn > fromColumn + 1) {
+            a.X += HexMetrics.InnerDiameter * HexMetrics.wrapSize;
+            b.X += HexMetrics.InnerDiameter * HexMetrics.wrapSize;
+        }
+        if (_travelIndex + 1 < _pathToTravel.Count) {
+            c = (b + _pathToTravel[_travelIndex + 1].Position) * 0.5f;
+        }
+
         Position = Bezier.GetPoint(a, b, c, _moveProgress);
 
         if (_travelIndex + 1 < _pathToTravel.Count) { 

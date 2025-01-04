@@ -30,15 +30,6 @@ public sealed partial class HexCellShaderData : Node {
     }
 
     public void Initialize(int x, int z) {
-        //if (_cellTexture is not null) {
-        //    _image.Dispose
-        //    _image.Resize(x, z, Image.Interpolation.Nearest);
-        //    _cellTexture.Update(_image);
-        //    Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
-        //    foreach (var material in _shaders) {
-        //        material.SetShaderParameter("texel_size", texelSize);
-        //    }
-        //} else {
         if (_cellTexture is not null) { 
             _cellTexture.Dispose();
             _image.Dispose();
@@ -106,7 +97,7 @@ public sealed partial class HexCellShaderData : Node {
         Color data = _cellTextureData[index];
         bool stillUpdating = false;
 
-        if (cell.IsExplored && data.G == 1.0f) {
+        if (cell.IsExplored && data.G < 1.0f) {
             stillUpdating = true;
             float t = data.G + delta;
             data.G = Mathf.Min(t, 1.0f);
