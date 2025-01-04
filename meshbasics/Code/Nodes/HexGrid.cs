@@ -484,8 +484,12 @@ public sealed partial class HexGrid : Node3D {
         cell.Elevation = 0;
         cell.Label = label;
 
-        cell.Explorable = x > 0 && z > 0 && x < CellCountX - 1 && z < CellCountZ - 1;
-
+        if (Wrapping) {
+            cell.Explorable = z > 0 && z < CellCountZ - 1;
+        }
+        else {
+            cell.Explorable = x > 0 && z > 0 && x < CellCountX - 1 && z < CellCountZ - 1;
+        }
         AddCellToChunk(x, z, cell);
     }
 
