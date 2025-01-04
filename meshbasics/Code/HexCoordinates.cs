@@ -69,11 +69,28 @@ public struct HexCoordinates {
     }
 
     public int DistanceTo(HexCoordinates other) {
-        return (
+        int xy =
             (X < other.X ? other.X - X : X - other.X) +
-            (Y < other.Y ? other.Y - Y : Y - other.Y) +
-            (Z < other.Z ? other.Z - Z : Z - other.Z)
-        ) / 2;
+            (Y < other.Y ? other.Y - Y : Y - other.Y);
+        if (HexMetrics.Wrapping) {
+            other.X += HexMetrics.wrapSize;
+            int xyWrapped =
+                (X < other.X ? other.X - X : X - other.X) +
+                (Y < other.Y ? other.Y - Y : Y - other.Y);
+            if (xyWrapped < xy) {
+                xy = xyWrapped;
+            }
+            else {
+                other.X -= 2 * HexMetrics.wrapSize;
+                xyWrapped =
+                    (X < other.X ? other.X - X : X - other.X) +
+                    (Y < other.Y ? other.Y - Y : Y - other.Y);
+                if (xyWrapped < xy) {
+                    xy = xyWrapped;
+                }
+            }
+        }
+        return (xy + (Z < other.Z ? other.Z - Z : Z - other.Z)) / 2;
     }
 
     public void Save(BinaryWriter writer) { 

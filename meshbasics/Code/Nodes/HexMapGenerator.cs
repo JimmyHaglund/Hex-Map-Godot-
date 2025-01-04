@@ -394,29 +394,36 @@ public sealed partial class HexMapGenerator : Node {
             _regions.Clear();
         }
 
+        int borderX = Grid.Wrapping ? _regionBorder : _mapBorderX;
         MapRegion region;
         switch (_regionCount) {
             default:
-                region.xMin = _mapBorderX;
-                region.xMax = Grid.CellCountX - _mapBorderX;
+                if (Grid.Wrapping) {
+                    borderX = 0;
+                }
+                region.xMin = borderX;
+                region.xMax = Grid.CellCountX - borderX;
                 region.zMin = _mapBorderZ;
                 region.zMax = Grid.CellCountZ - _mapBorderZ;
                 _regions.Add(region);
                 break;
             case 2:
+                if (Grid.Wrapping) {
+                    borderX = 0;
+                }
                 if (_rng.NextDouble() < 0.5f) {
-                    region.xMin = _mapBorderX;
+                    region.xMin = borderX;
                     region.xMax = Grid.CellCountX / 2 - _regionBorder;
                     region.zMin = _mapBorderZ;
                     region.zMax = Grid.CellCountZ - _mapBorderZ;
                     _regions.Add(region);
                     region.xMin = Grid.CellCountX / 2 + _regionBorder;
-                    region.xMax = Grid.CellCountX - _mapBorderX;
+                    region.xMax = Grid.CellCountX - borderX;
                     _regions.Add(region);
                 }
                 else {
-                    region.xMin = _mapBorderX;
-                    region.xMax = Grid.CellCountX - _mapBorderX;
+                    region.xMin = borderX;
+                    region.xMax = Grid.CellCountX - borderX;
                     region.zMin = _mapBorderZ;
                     region.zMax = Grid.CellCountZ / 2 - _regionBorder;
                     _regions.Add(region);
@@ -426,7 +433,7 @@ public sealed partial class HexMapGenerator : Node {
                 }
                 break;
             case 3:
-                region.xMin = _mapBorderX;
+                region.xMin = borderX;
                 region.xMax = Grid.CellCountX / 3 - _regionBorder;
                 region.zMin = _mapBorderZ;
                 region.zMax = Grid.CellCountZ - _mapBorderZ;
@@ -437,22 +444,22 @@ public sealed partial class HexMapGenerator : Node {
                 _regions.Add(region);
 
                 region.xMin = Grid.CellCountX * 2 / 3 + _regionBorder;
-                region.xMax = Grid.CellCountX - _mapBorderX;
+                region.xMax = Grid.CellCountX - borderX;
                 _regions.Add(region);
                 break;
             case 4:
-                region.xMin = _mapBorderX;
+                region.xMin = borderX;
                 region.xMax = Grid.CellCountX / 2 - _regionBorder;
                 region.zMin = _mapBorderZ;
                 region.zMax = Grid.CellCountZ / 2 - _regionBorder;
                 _regions.Add(region);
                 region.xMin = Grid.CellCountX / 2 + _regionBorder;
-                region.xMax = Grid.CellCountX - _mapBorderX;
+                region.xMax = Grid.CellCountX - borderX;
                 _regions.Add(region);
                 region.zMin = Grid.CellCountZ / 2 + _regionBorder;
                 region.zMax = Grid.CellCountZ - _mapBorderZ;
                 _regions.Add(region);
-                region.xMin = _mapBorderX;
+                region.xMin = borderX;
                 region.xMax = Grid.CellCountX / 2 - _regionBorder;
                 _regions.Add(region);
                 break;
