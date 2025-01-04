@@ -259,7 +259,50 @@ public sealed partial class HexMapGenerator : Node {
                 cell.PlantLevel = cellBiome.Plant;
             }
             else {
-                cell.TerrainTypeIndex = 2;
+                int terrain;
+                if (cell.Elevation == _waterLevel - 1) {
+                    int cliffs = 0, slopes = 0;
+                    for (
+                        HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++
+                    ) {
+                        HexCell neighbor = cell.GetNeighbor(d);
+                        if (neighbor != null) {
+                            continue;
+                        }
+                        int delta = neighbor.Elevation - cell.WaterLevel;
+                        if (delta == 0) {
+                            slopes += 1;
+                        }
+                        else if (delta > 0) {
+                            cliffs += 1;
+                        }
+                    }
+                    if (cliffs + slopes > 3) {
+                        terrain = 1;
+                    }
+                    else if (cliffs > 0) {
+                        terrain = 3;
+                    }
+                    else if (slopes > 0) {
+                        terrain = 0;
+                    }
+                    else {
+                        terrain = 1;
+                    }
+                }
+                else if (cell.Elevation >= _waterLevel) {
+                    terrain = 1;
+                }
+                else if (cell.Elevation < 0) {
+                    terrain = 3;
+                }
+                else {
+                    terrain = 2;
+                }
+                if (terrain == 1 && temperature < temperatureBands[0]) {
+                    terrain = 2;
+                }
+                cell.TerrainTypeIndex = terrain;
             }
         }
     }
