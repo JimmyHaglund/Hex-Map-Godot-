@@ -17,20 +17,22 @@ public sealed partial class HexMapGenerator : Node {
         Both, North, South
     }
     struct Biome {
-        public int terrain;
+        public int Terrain {get; set; }
+        public int Plant {get; set; }
 
-        public Biome(int terrain) {
-            this.terrain = terrain;
+        public Biome(int terrain, int plant) {
+            Terrain = terrain;
+            Plant = plant;
         }
     }
 
     private static float[] temperatureBands = { 0.1f, 0.3f, 0.6f };
     private static float[] moistureBands = { 0.12f, 0.28f, 0.85f };
     static Biome[] biomes = {
-        new Biome(0), new Biome(4), new Biome(4), new Biome(4),
-        new Biome(0), new Biome(2), new Biome(2), new Biome(2),
-        new Biome(0), new Biome(1), new Biome(1), new Biome(1),
-        new Biome(0), new Biome(1), new Biome(1), new Biome(1)
+        new Biome(0, 0), new Biome(4, 0), new Biome(4, 0), new Biome(4, 0),
+        new Biome(0, 0), new Biome(2, 0), new Biome(2, 1), new Biome(2, 2),
+        new Biome(0, 0), new Biome(1, 0), new Biome(1, 1), new Biome(1, 2),
+        new Biome(0, 0), new Biome(1, 1), new Biome(1, 2), new Biome(1, 3)
     };
     private List<ClimateData> _climate = new List<ClimateData>();
     private List<ClimateData> _nextClimate = new List<ClimateData>();
@@ -238,17 +240,23 @@ public sealed partial class HexMapGenerator : Node {
                 }
                 Biome cellBiome = biomes[t * 4 + m];
 
-                if (cellBiome.terrain == 0) {
+                if (cellBiome.Terrain == 0) {
                     if (cell.Elevation >= rockDesertElevation) {
-                        cellBiome.terrain = 3;
+                        cellBiome.Terrain = 3;
                     }
                 }
                 else if (cell.Elevation == _elevationMaximum) {
-                    cellBiome.terrain = 4;
+                    cellBiome.Terrain = 4;
                 }
 
-
-                cell.TerrainTypeIndex = cellBiome.terrain;
+                if (cellBiome.Terrain == 4) {
+                    cellBiome.Plant = 0;
+                }
+                else if (cellBiome.Plant < 3 && cell.HasRiver) {
+                    cellBiome.Plant += 1;
+                }
+                cell.TerrainTypeIndex = cellBiome.Terrain;
+                cell.PlantLevel = cellBiome.Plant;
             }
             else {
                 cell.TerrainTypeIndex = 2;
