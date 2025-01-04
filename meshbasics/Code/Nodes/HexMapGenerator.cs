@@ -496,6 +496,7 @@ public sealed partial class HexMapGenerator : Node {
     private int CreateRiver(HexCell origin) {
         int length = 1;
         HexCell cell = origin;
+        HexDirection direction = HexDirection.NE;
         while (!cell.IsUnderwater) {
             flowDirections.Clear();
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
@@ -503,6 +504,25 @@ public sealed partial class HexMapGenerator : Node {
                 if (neighbor is null || neighbor.HasRiver) {
                     continue;
                 }
+                int delta = neighbor.Elevation - cell.Elevation;
+                
+                if (delta > 0) {
+                    continue;
+                }
+                
+                if (delta < 0) {
+                    flowDirections.Add(d);
+                    flowDirections.Add(d);
+                    flowDirections.Add(d);
+                }
+
+                if (
+                    length == 1 ||
+                    (d != direction.Next2() && d != direction.Previous2())
+                ) {
+                    flowDirections.Add(d);
+                }
+
                 flowDirections.Add(d);
             }
 
@@ -510,7 +530,7 @@ public sealed partial class HexMapGenerator : Node {
                 return length > 1 ? length : 0;
             }
 
-            HexDirection direction = flowDirections[_rng.Next(0, flowDirections.Count)];
+            direction = flowDirections[_rng.Next(0, flowDirections.Count)];
             cell.SetOutgoingRiver(direction);
             length += 1;
             cell = cell.GetNeighbor(direction);
