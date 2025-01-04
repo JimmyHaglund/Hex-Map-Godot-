@@ -222,21 +222,20 @@ public sealed partial class HexMapGenerator : Node {
             cell.SetMapData(temperature);
             float moisture = _climate[i].moisture;
             if (!cell.IsUnderwater) {
-                if (moisture < 0.05f) {
-                    cell.TerrainTypeIndex = 4;
+                int t = 0;
+                for (; t < temperatureBands.Length; t++) {
+                    if (temperature < temperatureBands[t]) {
+                        break;
+                    }
                 }
-                else if (moisture < 0.12f) {
-                    cell.TerrainTypeIndex = 0;
+                int m = 0;
+                for (; m < moistureBands.Length; m++) {
+                    if (moisture < moistureBands[m]) {
+                        break;
+                    }
                 }
-                else if (moisture < 0.28f) {
-                    cell.TerrainTypeIndex = 3;
-                }
-                else if (moisture < 0.85f) {
-                    cell.TerrainTypeIndex = 1;
-                }
-                else {
-                    cell.TerrainTypeIndex = 2;
-                }
+                Biome cellBiome = biomes[t * 4 + m];
+                cell.TerrainTypeIndex = cellBiome.terrain;
             }
             else {
                 cell.TerrainTypeIndex = 2;
