@@ -16,7 +16,22 @@ public sealed partial class HexMapGenerator : Node {
     public enum HemisphereMode {
         Both, North, South
     }
+    struct Biome {
+        public int terrain;
 
+        public Biome(int terrain) {
+            this.terrain = terrain;
+        }
+    }
+
+    private static float[] temperatureBands = { 0.1f, 0.3f, 0.6f };
+    private static float[] moistureBands = { 0.12f, 0.28f, 0.85f };
+    static Biome[] biomes = {
+        new Biome(0), new Biome(4), new Biome(4), new Biome(4),
+        new Biome(0), new Biome(2), new Biome(2), new Biome(2),
+        new Biome(0), new Biome(1), new Biome(1), new Biome(1),
+        new Biome(0), new Biome(1), new Biome(1), new Biome(1)
+    };
     private List<ClimateData> _climate = new List<ClimateData>();
     private List<ClimateData> _nextClimate = new List<ClimateData>();
     private List<MapRegion> _regions;
@@ -25,6 +40,7 @@ public sealed partial class HexMapGenerator : Node {
     private int _landCells;
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
+    
 
     [Export] public HexGrid Grid {get; set; }
 
