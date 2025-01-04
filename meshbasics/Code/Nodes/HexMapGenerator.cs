@@ -481,7 +481,17 @@ public sealed partial class HexMapGenerator : Node {
             riverOrigins.RemoveAt(lastIndex);
 
             if (!origin.HasRiver) {
-                riverBudget -= CreateRiver(origin);
+                bool isValidOrigin = true;
+                for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
+                    HexCell neighbor = origin.GetNeighbor(d);
+                    if (neighbor != null && (neighbor.HasRiver || neighbor.IsUnderwater)) {
+                        isValidOrigin = false;
+                        break;
+                    }
+                }
+                if (isValidOrigin) {
+                    riverBudget -= CreateRiver(origin);
+                }
             }
         }
 
