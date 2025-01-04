@@ -50,6 +50,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "1.0, 10.0")] private float _windStrength = 4.0f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _startingMoisture = 0.1f;
     [Export(PropertyHint.Range, "0, 20")] private int _riverPercentage = 10;
+    [Export(PropertyHint.Range, "0.0, 1.0")] private float _extraLakeProbability = 0.25f;
 
 
 
@@ -556,7 +557,7 @@ public sealed partial class HexMapGenerator : Node {
                     return 0;
                 }
 
-                if (minNeighborElevation >= cell.Elevation) {
+                if (minNeighborElevation >= cell.Elevation && _rng.NextDouble() < _extraLakeProbability) {
                     cell.WaterLevel = minNeighborElevation;
                     if (minNeighborElevation == cell.Elevation) {
                         cell.Elevation = minNeighborElevation - 1;
@@ -568,6 +569,12 @@ public sealed partial class HexMapGenerator : Node {
             direction = flowDirections[_rng.Next(0, flowDirections.Count)];
             cell.SetOutgoingRiver(direction);
             length += 1;
+
+            if (minNeighborElevation >= cell.Elevation) {
+                cell.WaterLevel = cell.Elevation;
+                cell.Elevation -= 1;
+            }
+
             cell = cell.GetNeighbor(direction);
         }
         return length;
