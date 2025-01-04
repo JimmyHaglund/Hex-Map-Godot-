@@ -501,15 +501,21 @@ public sealed partial class HexMapGenerator : Node {
             flowDirections.Clear();
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = cell.GetNeighbor(d);
-                if (neighbor is null || neighbor.HasRiver) {
+                if (neighbor is null || neighbor == origin || neighbor.HasIncomingRiver) {
                     continue;
                 }
+
                 int delta = neighbor.Elevation - cell.Elevation;
                 
                 if (delta > 0) {
                     continue;
                 }
-                
+
+                if (neighbor.HasOutgoingRiver) {
+                    cell.SetOutgoingRiver(d);
+                    return length;
+                }
+
                 if (delta < 0) {
                     flowDirections.Add(d);
                     flowDirections.Add(d);
