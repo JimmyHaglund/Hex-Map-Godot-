@@ -23,7 +23,7 @@ public struct HexCoordinates {
     }
 
     public static HexCoordinates FromPosition(Vector3 position) {
-        float x = position.X / (HexMetrics.InnerRadius * 2f);
+        float x = position.X / (HexMetrics.InnerDiameter);
         float y = -x;
 
         float offset = position.Z / (HexMetrics.OuterRadius * 3f);

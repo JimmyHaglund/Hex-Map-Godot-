@@ -102,8 +102,7 @@ public sealed partial class HexMapCamera : Node3D {
 
     private Vector3 ClampPosition(Vector3 position) {
         float xMax =
-            (Grid.CellCountX - 0.5f) *
-            (2f * HexMetrics.InnerRadius);
+            (Grid.CellCountX - 0.5f) * HexMetrics.InnerDiameter;
         position.X = Mathf.Clamp(position.X, 0f, xMax);
 
         float zMax =

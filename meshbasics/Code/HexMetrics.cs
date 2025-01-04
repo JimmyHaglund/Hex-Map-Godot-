@@ -41,6 +41,7 @@ public static class HexMetrics {
     public const float BridgeDesignLength = 7.0f;
     
     public const float InnerRadius = OuterRadius * 0.866025404f;
+    public const float InnerDiameter = InnerRadius * 2f;
     public const float BlendFactor = 1.0f - SolidFactor;
     public const float WaterBlendFactor = 1.0f - WaterFactor;
     public const int TerraceSteps = TerracesPerSlope * 2 + 1;
