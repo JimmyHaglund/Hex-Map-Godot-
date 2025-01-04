@@ -46,6 +46,7 @@ public sealed partial class HexGrid : Node3D {
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
+        HexMetrics.wrapSize = _wrapping ? CellCountX : 0;
         _cellShaderData.Grid = this;
         // _cellShaderData = new();
         // AddChild(_cellShaderData);
@@ -105,6 +106,7 @@ public sealed partial class HexGrid : Node3D {
         CellCountX = cellCountX;
         CellCountZ = cellCountZ;
         _wrapping = wrap;
+        HexMetrics.wrapSize = _wrapping ? CellCountX : 0;
 
         _chunkCountX = CellCountX / HexMetrics.ChunkSizeX;
         _chunkCountZ = CellCountZ / HexMetrics.ChunkSizeZ;

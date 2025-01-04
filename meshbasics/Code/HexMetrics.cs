@@ -11,6 +11,14 @@ public static class HexMetrics {
         new float[] {0.4f, 0.6f, 0.8f}
     };
 
+    public static int wrapSize;
+
+    public static bool Wrapping {
+        get {
+            return wrapSize > 0;
+        }
+    }
+
     public const float OuterRadius = 10.0f;
     public const float SolidFactor = 0.80f;
     public const float ElevationStep = 3.0f;
