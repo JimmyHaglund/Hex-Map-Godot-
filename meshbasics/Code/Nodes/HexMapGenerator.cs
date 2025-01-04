@@ -13,6 +13,9 @@ public sealed partial class HexMapGenerator : Node {
         public float clouds;
         public float moisture;
     }
+    public enum HemisphereMode {
+        Both, North, South
+    }
 
     private List<ClimateData> _climate = new List<ClimateData>();
     private List<ClimateData> _nextClimate = new List<ClimateData>();
@@ -53,7 +56,7 @@ public sealed partial class HexMapGenerator : Node {
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _extraLakeProbability = 0.25f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _lowTemperature = 0.0f;
     [Export(PropertyHint.Range, "0.0, 1.0")] private float _highTemperature = 1.0f;
-
+    [Export] private HemisphereMode _hemisphere;
 
 
     public void GenerateMap(int x, int z) {
@@ -586,6 +589,15 @@ public sealed partial class HexMapGenerator : Node {
 
     private float DetermineTemperature(HexCell cell) {
         float latitude = (float)cell.Coordinates.Z / Grid.CellCountZ;
+        if (_hemisphere == HemisphereMode.Both) {
+            latitude *= 2f;
+            if (latitude > 1f) {
+                latitude = 2f - latitude;
+            }
+        }
+        else if (_hemisphere == HemisphereMode.North) {
+            latitude = 1f - latitude;
+        }
         float temperature = Mathf.Lerp(_lowTemperature, _highTemperature, latitude);
         return temperature;
     }
