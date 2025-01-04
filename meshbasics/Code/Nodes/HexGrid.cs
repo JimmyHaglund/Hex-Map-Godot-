@@ -11,6 +11,7 @@ public sealed partial class HexGrid : Node3D {
     private HexGridChunk[] _chunks;
     private int _chunkCountZ;
     private int _chunkCountX;
+    private Node3D[] _columns;
 
     [ExportCategory("HexGrid Dependencies")]
     [Export] private PackedScene _hexUnitPrefab;
@@ -97,9 +98,9 @@ public sealed partial class HexGrid : Node3D {
         }
         ClearPath();
         ClearUnits();
-        if (_chunks != null) {
-            for (int i = 0; i < _chunks.Length; i++) {
-                _chunks[i].QueueFree();
+        if (_columns != null) {
+            for (int i = 0; i < _columns.Length; i++) {
+                _columns[i].QueueFree();
             }
         }
 
@@ -383,11 +384,17 @@ public sealed partial class HexGrid : Node3D {
     }
 
     private void CreateChunks() {
+        _columns = new Node3D[_chunkCountX];
+        for (int x = 0; x < _chunkCountX; x++) {
+            _columns[x] = new Node3D();
+            _columns[x].Name = $"Column_{x}";
+            AddChild(_columns[x]);
+        }
         _chunks = new HexGridChunk[_chunkCountX * _chunkCountZ];
 
         for (int z = 0, i = 0; z < _chunkCountZ; z++) {
             for (int x = 0; x < _chunkCountX; x++) {
-                var chunk = this.InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
+                var chunk = _columns[x].InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
                 _chunks[i++] = chunk;
                 chunk.RefreshStarted += () => _refreshStack++;
                 chunk.RefreshCompleted += () => _refreshStack--;
