@@ -1,5 +1,6 @@
 shader_type spatial;
 #include "HexCellData.gdshaderinc"
+#include "HexMetrics.gdshaderinc"
 
 render_mode blend_mix, cull_back, depth_draw_opaque;
 
@@ -41,7 +42,7 @@ void vertex() {
 	
 }
 vec4 GetTerrainColor (vec3 worldPos, vec4 clr, int index) {
-	vec3 uvw = vec3(worldPos.xz * 0.02, indices[index]);
+	vec3 uvw = vec3(worldPos.xz * (2.0 * TILING_SCALE), indices[index]);
 	vec4 c = texture(_MainTex, uvw);
 	return c * (clr[index] * visibility[index]);
 }

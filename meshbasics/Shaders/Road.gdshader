@@ -1,5 +1,6 @@
 shader_type spatial;
 #include "HexCellData.gdshaderinc"
+#include "HexMetrics.gdshaderinc"
 
 uniform vec4 _Color : source_color = vec4(1, 1, 1, 1);
 uniform sampler2D _MainTex;
@@ -22,7 +23,7 @@ void vertex() {
 void fragment() {
     vec2 modified_uv = UV;
 	vec3 world_vertex = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	vec4 noise = texture(_MainTex, world_vertex.xz * 0.025);
+	vec4 noise = texture(_MainTex, world_vertex.xz * (3.0 * TILING_SCALE));
 	
 	float blend = modified_uv.x;
 	blend *= noise.x + 0.5;

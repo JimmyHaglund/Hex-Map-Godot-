@@ -1,8 +1,10 @@
+#include "HexMetrics.gdshaderinc"
+
 float Foam(float shore, vec2 worldXZ, sampler2D noiseTex) {
 	shore = sqrt(shore) * 0.9;
 
 	vec2 noiseUV = worldXZ + TIME * 0.25;
-	vec4 noise = texture(noiseTex, noiseUV * 0.015);
+	vec4 noise = texture(noiseTex, noiseUV * (2.0 * TILING_SCALE));
 
 	float distortion1 = noise.x * (1.0 - shore);
 	float foam1 = sin((shore + distortion1) * 10.0 - TIME);
@@ -18,11 +20,11 @@ float Foam(float shore, vec2 worldXZ, sampler2D noiseTex) {
 float Waves(vec2 worldXZ, sampler2D noiseTex) {
 	vec2 uv1 = worldXZ;
 	uv1.y += TIME;
-	vec4 noise1 = texture(noiseTex, uv1 * 0.025);
+	vec4 noise1 = texture(noiseTex, uv1 * (3.0 * TILING_SCALE));
 
 	vec2 uv2 = worldXZ;
 	uv2.x += TIME;
-	vec4 noise2 = texture(noiseTex, uv2 * 0.025);
+	vec4 noise2 = texture(noiseTex, uv2 * (3.0 * TILING_SCALE));
 
 	float blendWave = sin(
 		(worldXZ.x + worldXZ.y) * 0.1
