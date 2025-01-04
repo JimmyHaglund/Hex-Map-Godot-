@@ -451,18 +451,27 @@ public sealed partial class HexGrid : Node3D {
         
         if (x > 0) {
             cell.SetNeighbor(HexDirection.W, _cells[i - 1]);
+            if (Wrapping && x == CellCountX - 1) {
+                cell.SetNeighbor(HexDirection.E, _cells[i - x]);
+            }
         }
         if (z > 0) {
             if ((z & 1) == 0) {
                 cell.SetNeighbor(HexDirection.SE, _cells[i - CellCountX]);
                 if (x > 0) {
                     cell.SetNeighbor(HexDirection.SW, _cells[i - CellCountX - 1]);
+                } else if (Wrapping) {
+                    cell.SetNeighbor(HexDirection.SW, _cells[i - 1]);
                 }
             }
             else {
                 cell.SetNeighbor(HexDirection.SW, _cells[i - CellCountX]);
                 if (x < CellCountX - 1) {
                     cell.SetNeighbor(HexDirection.SE, _cells[i - CellCountX + 1]);
+                } else if (Wrapping) {
+                    cell.SetNeighbor(
+                        HexDirection.SE, _cells[i - CellCountX * 2 + 1]
+                    );
                 }
             }
         }
