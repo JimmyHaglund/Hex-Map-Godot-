@@ -37,6 +37,7 @@ public sealed partial class HexMapCamera : Node3D {
         _swivel = GetChild<Node3D>(0);
         _stick = _swivel.GetChild<Node3D>(0);
         _instance = this;
+        ValidatePosition();
     }
 
     public override void _ExitTree() {
@@ -97,7 +98,23 @@ public sealed partial class HexMapCamera : Node3D {
         Vector3 direction = Quaternion.FromEuler(Rotation) * new Vector3(xDelta, 0.0f, zDelta).Normalized();
         float distance = Mathf.Lerp(ZoomedOutMovementSpeed, ZoomedInMovementSpeed, _zoomedInPercentage) * timeDelta;
         position += direction * distance;
-        Position = ClampPosition(position);
+        Position = Grid.Wrapping ? WrapPosition(position) : ClampPosition(position);
+    }
+
+    Vector3 WrapPosition(Vector3 position) {
+        float width = Grid.CellCountX * HexMetrics.InnerDiameter;
+        while (position.X < 0f) {
+            position.X += width;
+        }
+        while (position.X > width) {
+            position.X -= width;
+        }
+
+        float zMax = (Grid.CellCountZ - 1) * (1.5f * HexMetrics.OuterRadius);
+        position.Z = Mathf.Clamp(position.Z, 0f, zMax);
+
+        Grid.CenterMap(position.X);
+        return position;
     }
 
     private Vector3 ClampPosition(Vector3 position) {

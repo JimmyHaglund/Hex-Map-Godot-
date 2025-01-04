@@ -19,12 +19,12 @@
 
 [node name="HexGrid" type="Node3D" node_paths=PackedStringArray("_cellShaderData")]
 script = ExtResource("1_52rku")
+_cellShaderData = NodePath("CellShaderData")
 _hexUnitPrefab = ExtResource("2_lta86")
 HexCellPrefab = ExtResource("2_dagm6")
 CellLabelPrefab = ExtResource("3_48iag")
 NoiseSource = ExtResource("4_77bli")
 ChunkPrefab = ExtResource("5_3ypkl")
-_cellShaderData = NodePath("CellShaderData")
 
 [node name="CellShaderData" type="Node" parent="."]
 script = ExtResource("7_ovv7j")

@@ -13,6 +13,7 @@ public sealed partial class HexGrid : Node3D {
     private int _chunkCountX;
     private Node3D[] _columns;
 
+    [Export] private HexCellShaderData _cellShaderData;
     [ExportCategory("HexGrid Dependencies")]
     [Export] private PackedScene _hexUnitPrefab;
     [Export] public int CellCountX { get; set; } = 20;
@@ -33,10 +34,9 @@ public sealed partial class HexGrid : Node3D {
     private HexCell _currentPathTo;
     private bool _currentPathExists;
     private List<HexUnit> _units = new List<HexUnit>();
-    private bool _wrapping;
     private int _currentCenterColumnIndex = -1;
 
-    [Export] private HexCellShaderData _cellShaderData;
+    public bool Wrapping {get; set; }
 
     public static event Action MapReset;
 
@@ -49,11 +49,11 @@ public sealed partial class HexGrid : Node3D {
     public override void _EnterTree() {
         HexMetrics.NoiseSource = NoiseSource.GetImage();
         HexMetrics.InitializeHashGrid(Seed);
-        HexMetrics.wrapSize = _wrapping ? CellCountX : 0;
+        HexMetrics.wrapSize = Wrapping ? CellCountX : 0;
         _cellShaderData.Grid = this;
         // _cellShaderData = new();
         // AddChild(_cellShaderData);
-        CreateMap(CellCountX, CellCountZ, _wrapping);
+        CreateMap(CellCountX, CellCountZ, Wrapping);
     }
 
     public HexCell GetCell(Vector3 position) {
@@ -108,9 +108,9 @@ public sealed partial class HexGrid : Node3D {
 
         CellCountX = cellCountX;
         CellCountZ = cellCountZ;
-        _wrapping = wrap;
+        Wrapping = wrap;
         _currentCenterColumnIndex = -1;
-        HexMetrics.wrapSize = _wrapping ? CellCountX : 0;
+        HexMetrics.wrapSize = Wrapping ? CellCountX : 0;
 
         _chunkCountX = CellCountX / HexMetrics.ChunkSizeX;
         _chunkCountZ = CellCountZ / HexMetrics.ChunkSizeZ;
@@ -126,7 +126,7 @@ public sealed partial class HexGrid : Node3D {
     public void Save(BinaryWriter writer) {
         writer.Write(CellCountX);
         writer.Write(CellCountZ);
-        writer.Write(_wrapping);
+        writer.Write(Wrapping);
         for (int i = 0; i < _cells.Length; i++) {
             _cells[i].Save(writer);
         }
@@ -146,8 +146,8 @@ public sealed partial class HexGrid : Node3D {
             z = reader.ReadInt32();
         }
         bool wrapping = header >= 5 ? reader.ReadBoolean() : false;
-        if (x != CellCountX && z != CellCountZ || _wrapping != wrapping) { 
-            if (!CreateMap(x, z, _wrapping)) {
+        if (x != CellCountX && z != CellCountZ || Wrapping != wrapping) { 
+            if (!CreateMap(x, z, Wrapping)) {
                 return;
             }
         }
