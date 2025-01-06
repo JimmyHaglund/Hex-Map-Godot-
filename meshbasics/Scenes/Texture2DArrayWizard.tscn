@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://ddf521xrdbv2e"]
 
-[ext_resource type="Script" path="res://Code/Nodes/Texture2DArrayWizard.cs" id="1_6rkry"]
+[ext_resource type="Script" path="res://Code/_Nodes/Texture2DArrayWizard.cs" id="1_6rkry"]
 [ext_resource type="Texture2D" uid="uid://70ioqf3kh8bc" path="res://Pictures/Textures/sand.png" id="2_uqg2x"]
 [ext_resource type="Texture2D" uid="uid://d4xo66yqxbhu" path="res://Pictures/Textures/grass.png" id="3_uqtjh"]
 [ext_resource type="Texture2D" uid="uid://b3kktiyemxo2v" path="res://Pictures/Textures/mud.png" id="4_x2ynr"]
