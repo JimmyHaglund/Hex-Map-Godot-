@@ -24,14 +24,14 @@ void fragment() {
     vec2 modified_uv = UV;
 	vec3 world_vertex = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec4 noise = texture(_MainTex, world_vertex.xz * (3.0 * TILING_SCALE));
-	
+
 	float blend = modified_uv.x;
 	blend *= noise.x + 0.5;
 	blend = smoothstep(0.4, 0.7, blend);
-	
+
     vec4 c =  _Color * (noise.y * 0.75 + 0.25) * visibility.x;
 	float explored = visibility.y;
-	
+
     ALBEDO = c.rgb;
     SPECULAR = _Specular * explored;
     ROUGHNESS = 1.0 - _Glossiness;

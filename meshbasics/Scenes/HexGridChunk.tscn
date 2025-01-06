@@ -104,7 +104,6 @@ UseCollider = false
 UseCellData = true
 
 [node name="WaterShore" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.00315, 0, 0, 0, 1.00315, 0, 0, 0, 1.00315, 0, 0, 0)
 material_override = ExtResource("6_gl15j")
 cast_shadow = 0
 gi_mode = 2
