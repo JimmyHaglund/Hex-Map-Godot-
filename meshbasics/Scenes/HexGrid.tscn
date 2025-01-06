@@ -1,9 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://bkqosooy180ch"]
+[gd_scene load_steps=18 format=3 uid="uid://bkqosooy180ch"]
 
 [ext_resource type="Script" path="res://Code/Nodes/HexGrid.cs" id="1_52rku"]
-[ext_resource type="PackedScene" uid="uid://dacbihjsexuto" path="res://Scenes/HexCell.tscn" id="2_dagm6"]
 [ext_resource type="PackedScene" uid="uid://txryec2ia6mi" path="res://Scenes/Unit.tscn" id="2_lta86"]
 [ext_resource type="PackedScene" uid="uid://dw07o3wx2d4h6" path="res://Scenes/HexCellLabel.tscn" id="3_48iag"]
+[ext_resource type="Script" path="res://Code/Nodes/HexCell.cs" id="3_e71pq"]
 [ext_resource type="Texture2D" uid="uid://d2pjgfavgepqg" path="res://Pictures/noise.png" id="4_77bli"]
 [ext_resource type="PackedScene" uid="uid://bwok11esd24iw" path="res://Scenes/HexGridChunk.tscn" id="5_3ypkl"]
 [ext_resource type="Script" path="res://Code/Nodes/HexCellShaderData.cs" id="7_ovv7j"]
@@ -17,11 +17,24 @@
 [ext_resource type="Material" uid="uid://bi3rfema8om7k" path="res://Materials/PlantMaterial.tres" id="15_rh0ap"]
 [ext_resource type="Material" uid="uid://c61ir5defoy8i" path="res://Materials/FarmMaterial.tres" id="16_gp14x"]
 
+[sub_resource type="PackedScene" id="PackedScene_icy1v"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("HexCell", "Node3D", "script"),
+"node_count": 1,
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 1, 2, 0, 0),
+"variants": [ExtResource("3_e71pq")],
+"version": 3
+}
+
 [node name="HexGrid" type="Node3D" node_paths=PackedStringArray("_cellShaderData")]
 script = ExtResource("1_52rku")
 _cellShaderData = NodePath("CellShaderData")
 _hexUnitPrefab = ExtResource("2_lta86")
-HexCellPrefab = ExtResource("2_dagm6")
+HexCellPrefab = SubResource("PackedScene_icy1v")
 CellLabelPrefab = ExtResource("3_48iag")
 NoiseSource = ExtResource("4_77bli")
 ChunkPrefab = ExtResource("5_3ypkl")

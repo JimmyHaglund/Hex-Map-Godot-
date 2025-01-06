@@ -18,7 +18,6 @@ public sealed partial class HexGrid : Node3D {
     [Export] private PackedScene _hexUnitPrefab;
     [Export] public int CellCountX { get; set; } = 20;
     [Export] public int CellCountZ { get; set; } = 15;
-    [Export] public PackedScene HexCellPrefab { get; set; }
     [Export] public PackedScene CellLabelPrefab { get; set; }
     [Export] public Texture2D NoiseSource { get; set; }
     [Export] public PackedScene ChunkPrefab { get; set; }
@@ -448,7 +447,7 @@ public sealed partial class HexGrid : Node3D {
         position.Y = 0f;
         position.Z = z * HexMetrics.OuterRadius * 1.5f;
 
-        HexCell cell = _cells[i] = this.InstantiateOrphan<HexCell>(HexCellPrefab, $"HexCell_{i}");
+        HexCell cell = _cells[i] = new();//  this.InstantiateOrphan<HexCell>(HexCellPrefab, $"HexCell_{i}");
         cell.Position = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Index = i;

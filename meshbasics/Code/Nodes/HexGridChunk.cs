@@ -40,13 +40,14 @@ public sealed partial class HexGridChunk : Node3D {
     public void AddCell(int index, HexCell cell) {
         _cells[index] = cell;
         cell.Chunk = this;
-        this.AddChild(cell);
+        // this.AddChild(cell);
 
         if (cell.Label is not null) this.AddChild(cell.Label);
         cell.Label.Visible = _labelsVisible;
     }
 
     public void Refresh() {
+
         _shouldUpdate = true;// HexMesh.Triangulate(_cells);
     }
 
@@ -83,7 +84,7 @@ public sealed partial class HexGridChunk : Node3D {
     }
 
     private void Triangulate(HexCell cell) {
-        if (cell is null || cell.IsQueuedForDeletion()) return;
+        if (cell is null) return;
         for (HexDirection direction = HexDirection.NE; direction <= HexDirection.NW; direction++) {
             Triangulate(direction, cell);
         }

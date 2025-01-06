@@ -1,10 +1,9 @@
 using System.IO;
 using Godot;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace JHM.MeshBasics;
 
-public sealed partial class HexCell : Node3D {
+public sealed partial class HexCell {
     private HexCell[] _neighbors = new HexCell[6];
     private int _elevation = int.MinValue;
     private Label3D _label;
@@ -24,6 +23,7 @@ public sealed partial class HexCell : Node3D {
     private int _visibility;
     private bool _isExplored = false;
 
+    public Vector3 Position {get; set;}
     public HexCoordinates Coordinates { get; set; }
     public HexGridChunk Chunk { get; set; }
     public HexCell PathFrom { get; set; }
@@ -585,7 +585,6 @@ public sealed partial class HexCell : Node3D {
     }
 
     private void SetHighlightVisible(bool visible, Color color) {
-        if (IsQueuedForDeletion()) return;
         if (Label is null) return;
         if (Label.IsQueuedForDeletion()) return;
         var highlight = Label.GetChild<Sprite3D>(0);
