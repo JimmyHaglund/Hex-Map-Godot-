@@ -76,3 +76,18 @@ RotateLeft={
 textures/canvas_textures/default_texture_filter=2
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
 environment/defaults/default_clear_color=Color(0.407843, 0.380392, 0.356863, 1)
+
+[shader_globals]
+
+HEX_MAP_EDIT_MODE={
+"type": "bool",
+"value": false
+}
+HEX_TEXEL_SIZE={
+"type": "vec4",
+"value": Vector4(0, 0, 0, 0)
+}
+HEX_CELL_DATA={
+"type": "sampler2D",
+"value": ""
+}

@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Scenes\" />
+    <Folder Include="Code\_Nodes\HexGrid\" />
   </ItemGroup>
 </Project>

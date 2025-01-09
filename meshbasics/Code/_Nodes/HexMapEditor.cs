@@ -38,7 +38,7 @@ public sealed partial class HexMapEditor : Control {
         ShowGrid(true);
         HexUnit.UnitPrefab = _unitPrefab;
         HexGrid.MapReset += OnMapReset;
-        HexCellShaderData.SetShaderParameter("HEX_MAP_EDIT_MODE", true);
+        RenderingServer.GlobalShaderParameterSet("HEX_MAP_EDIT_MODE", true);
         SetEditMode(true);
     }
 

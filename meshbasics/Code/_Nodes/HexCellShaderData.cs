@@ -1,10 +1,9 @@
 ﻿using Godot;
 using System.Collections.Generic;
+
 namespace JHM.MeshBasics;
 
 public sealed partial class HexCellShaderData : Node {
-    [Export] private ShaderMaterial[] _shaders;
-
     private const float _transitionSpeed = 1.0f;
     private ImageTexture _cellTexture;
     private Image _image;
@@ -16,16 +15,10 @@ public sealed partial class HexCellShaderData : Node {
     public bool ImmediateMode { get; set; } = false;
     public HexGrid Grid {get; set;}
 
-    public static void SetShaderParameter(string parameterName, Godot.Variant value) { 
-        if (_instance is null) return;
-        foreach(var shader in _instance._shaders) { 
-            shader.SetShaderParameter(parameterName, value);
-        }
-    }
-
     public void SetMapData(HexCell cell, float data) {
         _cellTextureData[cell.Index].B = data < 0.0f ? 0.0f : 
             (data < 1.0f ? (254.0f / 255.0f) * data : 254.0f / 255.0f);
+
         ProcessMode = ProcessModeEnum.Inherit;
     }
 
@@ -39,11 +32,9 @@ public sealed partial class HexCellShaderData : Node {
         _image = Image.CreateEmpty(x, z, useMipmaps: false, Image.Format.Rgba8);
         _cellTexture = ImageTexture.CreateFromImage(_image);
         Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
-        foreach (var material in _shaders) {
-            material.SetShaderParameter("texel_size", texelSize);
-            material.SetShaderParameter("hex_cell_data", _cellTexture);
-        }
-        //}
+        RenderingServer.GlobalShaderParameterSet("HEX_TEXEL_SIZE", texelSize);
+        RenderingServer.GlobalShaderParameterSet("HEX_CELL_DATA", _cellTexture);
+        
 
         if (_cellTextureData == null || _cellTextureData.Length != x * z) {
             _cellTextureData = new Color[x * z];
