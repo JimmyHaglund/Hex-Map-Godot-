@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Godot;
+using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
 
@@ -10,7 +11,7 @@ public sealed partial class SaveLoadMenu : Control {
     private bool _saveMode;
     private const int _mapVersion = 5;
 
-    [Export] public HexGrid HexGrid { get; set; }
+    [Export] public HexGrid.HexGrid HexGrid { get; set; }
     [Export] public Label Title { get; set; }
     [Export] public Button ActionButton { get; set; }
     [Export] public TextEdit NameInput { get; set; }
@@ -62,34 +63,29 @@ public sealed partial class SaveLoadMenu : Control {
     }
 
     public void Save(string filePath) {
-        using var fileStream = File.Open(filePath, FileMode.Create);
-        using var writer = new BinaryWriter(fileStream);
-        writer.Write(_mapVersion);
-        HexGrid.Save(writer);
+        BinarySaveLoad.Save(filePath, w => { 
+            w.Write(_mapVersion);
+            HexGrid.Save(w);
+        });
     }
 
     public void Load(string filePath) {
-        if (!File.Exists(filePath)) {
-            GD.PrintErr($"File does not exist at path: {filePath}");
-            return;
-        }
-        using var fileStream = File.OpenRead(filePath);
-        using var reader = new BinaryReader(fileStream);
-        int header = reader.ReadInt32();
-        if (header > _mapVersion || header < 0) {
-            GD.PrintErr($"Unknown map format {header}");
-            return;
-        }
-        HexGrid.Load(reader, header);
+        BinarySaveLoad.Load(filePath, r => {
+            int header = r.ReadInt32();
+            if (header > _mapVersion || header < 0) {
+                GD.PrintErr($"Unknown map format {header}");
+                return;
+            }
+            HexGrid.Load(r, header);
+        });
     }
 
     public void Delete() {
         string path = GetSelectedPath();
-        if (path == null) {
+        if (string.IsNullOrEmpty(path)) {
             return;
         }
-        if (File.Exists(path)) return;
-        File.Delete(path);
+        BinarySaveLoad.Delete(path);
         NameInput.Text = "";
         FillFileList();
     }

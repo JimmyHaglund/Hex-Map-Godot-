@@ -1,12 +1,7 @@
 ﻿using Godot;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
 public struct HexCoordinates {
     public int X { get; private set; }

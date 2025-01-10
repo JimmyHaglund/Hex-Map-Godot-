@@ -1,7 +1,7 @@
 using System.IO;
 using Godot;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
 public sealed partial class HexCell {
     private HexCell[] _neighbors = new HexCell[6];

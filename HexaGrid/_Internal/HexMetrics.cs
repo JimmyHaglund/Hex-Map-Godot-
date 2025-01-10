@@ -1,9 +1,8 @@
 using Godot;
-using System;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
-public static class HexMetrics {
+internal static class HexMetrics {
     private static HexHash[] _hashGrid;
     private static float[][] _featureThresholds = {
         new float[] {0.0f, 0.0f, 0.4f},

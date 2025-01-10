@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
-public struct HexHash {
+internal struct HexHash {
     public float A { get; private set; }
     public float B { get; private set; }
     public float C { get; private set; }

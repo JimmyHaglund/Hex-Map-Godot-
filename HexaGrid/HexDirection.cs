@@ -1,4 +1,4 @@
-﻿namespace JHM.MeshBasics;
+﻿namespace JHM.HexaGrid;
 
 public enum HexDirection {
     NE, E, SE, SW, W, NW

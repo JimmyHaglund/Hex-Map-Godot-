@@ -1,26 +1,24 @@
 ﻿using Godot;
-using System.ComponentModel;
-using System.Xml.Linq;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
-public sealed partial class HexFeatureManager : Node3D {
-    [Export] public PackedSceneContainer[] UrbanPrefabs { get; set; }
-    [Export] public PackedSceneContainer[] FarmPrefabs { get; set; }
-    [Export] public PackedSceneContainer[] PlantPrefabs { get; set; }
-    [Export] public HexMesh Walls { get; set; }
-    [Export] public PackedScene WallTower { get; set; }
-    [Export] public PackedScene Bridge { get; set; }
-    [Export] public PackedScene[] SpecialFeatures { get; set; }
+public sealed class HexFeatureManager : Node3D {
+    public PackedScene[][]? UrbanPrefabs { get; set; }
+    public PackedScene[][]? FarmPrefabs { get; set; }
+    public PackedScene[][]? PlantPrefabs { get; set; }
+    public HexMesh? Walls { get; set; }
+    public PackedScene? WallTower { get; set; }
+    public PackedScene? Bridge { get; set; }
+    public PackedScene[]? SpecialFeatures { get; set; }
 
-    private Node3D _container;
+    private Node3D? _container;
 
-    private PackedScene PickPrefab(PackedSceneContainer[] collection, int level, float hash, float choice) {
+    private PackedScene? PickPrefab(PackedScene[][] collection, int level, float hash, float choice) {
         if (level > 0) {
             float[] thresholds = HexMetrics.GetFeatureThresholds(level - 1);
             for (int i = 0; i < thresholds.Length; i++) {
                 if (hash < thresholds[i]) {
-                    return collection[i].Scenes[(int)(choice * collection[i].Scenes.Length)];
+                    return collection[i][(int)(choice * collection[i].Length)];
                 }
             }
         }

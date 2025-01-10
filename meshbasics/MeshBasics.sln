@@ -1,12 +1,20 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeshBasics", "MeshBasics.csproj", "{98A5F929-7080-478D-91B1-3553F95471AE}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeshBasics", "MeshBasics.csproj", "{98A5F929-7080-478D-91B1-3553F95471AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "..\Tools\Tools.csproj", "{3550147E-8F4A-4C87-9F09-7268A99B4F28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexaGrid", "..\HexaGrid\HexaGrid.csproj", "{ED69E8C6-2D95-4197-AB55-778D5CA76766}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-	Debug|Any CPU = Debug|Any CPU
-	ExportDebug|Any CPU = ExportDebug|Any CPU
-	ExportRelease|Any CPU = ExportRelease|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{98A5F929-7080-478D-91B1-3553F95471AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -15,5 +23,26 @@ Global
 		{98A5F929-7080-478D-91B1-3553F95471AE}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{98A5F929-7080-478D-91B1-3553F95471AE}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{98A5F929-7080-478D-91B1-3553F95471AE}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{98A5F929-7080-478D-91B1-3553F95471AE}.Release|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{98A5F929-7080-478D-91B1-3553F95471AE}.Release|Any CPU.Build.0 = ExportRelease|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3550147E-8F4A-4C87-9F09-7268A99B4F28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED69E8C6-2D95-4197-AB55-778D5CA76766}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

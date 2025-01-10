@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
 public sealed partial class HexMesh : MeshInstance3D {
     private List<Vector3> _vertices = new();

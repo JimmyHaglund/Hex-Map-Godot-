@@ -75,7 +75,7 @@ public static class SceneInstantiator {
     private static bool ValidateInstance() {
         var result = _instance is not null;
         if (!result) {
-            GD.PrintErr("SceneInstantiator must be assigned a parent via the SceneInstantiator.SetParent method.");
+            GD.PrintErr("SceneInstantiator must be assigned a parent via the SceneInstantiator.SetDefaultParent method.");
         }
         return result;
     }

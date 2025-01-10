@@ -1,6 +1,5 @@
 ﻿using Godot;
-
-namespace JHM.MeshBasics;
+namespace JHM;
 
 public static class Bezier {
     public static Vector3 GetPoint(Vector3 a, Vector3 b, Vector3 c, float t) {

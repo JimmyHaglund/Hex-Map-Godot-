@@ -4,9 +4,9 @@ using System.Reflection;
 using Godot;
 using static Godot.RenderingServer;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
-public sealed partial class HexGridChunk : Node3D {
+public sealed class HexGridChunk {
     HexCell[] _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
     // Canvas GridCanvas;
     private bool _shouldUpdate = true;

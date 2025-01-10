@@ -1,8 +1,8 @@
 ﻿using Godot;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
-public struct EdgeVertices {
+internal struct EdgeVertices {
     public Vector3 v1, v2, v3, v4, v5;
 
     public EdgeVertices(Vector3 corner1, Vector3 corner2) {

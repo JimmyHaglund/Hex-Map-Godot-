@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JHM.MeshBasics;
+namespace JHM.HexaGrid;
 
 public sealed class HexCellPriorityQueue {
 

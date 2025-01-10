@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace JHM.MeshBasics;
+﻿namespace JHM;
 
 public static class ListPool<T> {
     private static Stack<List<T>> _stack = new Stack<List<T>>();

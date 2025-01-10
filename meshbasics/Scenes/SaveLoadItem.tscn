@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dxitv45u170cv"]
 
-[ext_resource type="Script" path="res://Code/_Nodes/SaveLoadItem.cs" id="1_hfeas"]
+[ext_resource type="Script" path="res://_Nodes/HexGrid/SaveLoadItem.cs" id="1_hfeas"]
 
 [node name="SaveLoadItem" type="Button"]
 text = "MapNameHere"
