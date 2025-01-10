@@ -11,7 +11,7 @@ public sealed partial class SaveLoadMenu : Control {
     private bool _saveMode;
     private const int _mapVersion = 5;
 
-    [Export] public HexGrid.HexGrid HexGrid { get; set; }
+    [Export] public HexGrid HexGrid { get; set; }
     [Export] public Label Title { get; set; }
     [Export] public Button ActionButton { get; set; }
     [Export] public TextEdit NameInput { get; set; }

@@ -4,7 +4,7 @@ using System.Reflection;
 using Godot;
 using static Godot.RenderingServer;
 
-namespace JHM.HexGrid;
+namespace JHM.MeshBasics;
 
 public sealed partial class HexGridChunk : Node3D {
     HexCell[] _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];

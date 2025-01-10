@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
-using Godot;
-
+﻿using Godot;
 namespace JHM;
+
 public static class BinarySaveLoad {
     public static void Save(string filePath, Action<BinaryWriter> writeAction) {
         using var fileStream = File.Open(filePath, FileMode.Create);

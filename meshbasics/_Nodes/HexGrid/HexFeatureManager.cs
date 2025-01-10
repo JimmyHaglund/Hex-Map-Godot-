@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Xml.Linq;
 
-namespace JHM.HexGrid;
+namespace JHM.MeshBasics;
 
 public sealed partial class HexFeatureManager : Node3D {
     [Export] public PackedSceneContainer[] UrbanPrefabs { get; set; }

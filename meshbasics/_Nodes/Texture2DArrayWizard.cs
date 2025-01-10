@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace JHM.MeshBasics;
+namespace JHM;
 
 public sealed partial class Texture2DArrayWizard : Node {
     [Export] public Texture2D[] Images { get; set; }

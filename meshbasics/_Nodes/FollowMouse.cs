@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace JHM.MeshBasics; 
+namespace JHM; 
 
 public sealed partial class FollowMouse : Node3D{
     public override void _Process(double delta) {

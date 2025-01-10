@@ -3,7 +3,7 @@ using System;
 using Godot;
 using System.Collections.Generic;
 
-namespace JHM.HexGrid;
+namespace JHM.MeshBasics;
 
 public sealed partial class HexGrid : Node3D {
     // private HexMesh _hexMesh;
