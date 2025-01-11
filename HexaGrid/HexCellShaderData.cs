@@ -1,9 +1,8 @@
 ﻿using Godot;
-using System.Collections.Generic;
+using System;
+namespace JHM.HexaGrid;
 
-namespace JHM.MeshBasics;
-
-public sealed partial class HexCellShaderData : Node {
+public sealed class HexCellShaderData {
     private const float _transitionSpeed = 1.0f;
     private ImageTexture _cellTexture;
     private Image _image;
@@ -13,17 +12,16 @@ public sealed partial class HexCellShaderData : Node {
     private bool _needsVisibilityReset;
 
     public bool ImmediateMode { get; set; } = false;
-    public HexGrid Grid {get; set;}
+    public HexGrid Grid { get; set; }
+    public bool HasTransitioningCells => _transitioningCells.Count > 0;
 
     public void SetMapData(HexCell cell, float data) {
-        _cellTextureData[cell.Index].B = data < 0.0f ? 0.0f : 
+        _cellTextureData[cell.Index].B = data < 0.0f ? 0.0f :
             (data < 1.0f ? (254.0f / 255.0f) * data : 254.0f / 255.0f);
-
-        ProcessMode = ProcessModeEnum.Inherit;
     }
 
     public void Initialize(int x, int z) {
-        if (_cellTexture is not null) { 
+        if (_cellTexture is not null) {
             _cellTexture.Dispose();
             _image.Dispose();
             _cellTexture = null;
@@ -34,7 +32,7 @@ public sealed partial class HexCellShaderData : Node {
         Vector2 texelSize = new(1.0f / _cellTexture.GetWidth(), 1.0f / _cellTexture.GetHeight());
         RenderingServer.GlobalShaderParameterSet("HEX_TEXEL_SIZE", texelSize);
         RenderingServer.GlobalShaderParameterSet("HEX_CELL_DATA", _cellTexture);
-        
+
 
         if (_cellTextureData == null || _cellTextureData.Length != x * z) {
             _cellTextureData = new Color[x * z];
@@ -45,13 +43,10 @@ public sealed partial class HexCellShaderData : Node {
             }
         }
         _transitioningCells.Clear();
-        ProcessMode = ProcessModeEnum.Inherit;
     }
 
     public void RefreshTerrain(HexCell cell) {
         _cellTextureData[cell.Index].A = (float)cell.TerrainTypeIndex / 4.0f;
-        ProcessMode = ProcessModeEnum.Inherit;
-
     }
 
     public void RefreshVisibility(HexCell cell) {
@@ -59,28 +54,15 @@ public sealed partial class HexCellShaderData : Node {
         if (ImmediateMode) {
             _cellTextureData[index].R = cell.IsVisible ? 1.0f : 0.0f;
             _cellTextureData[index].G = cell.IsExplored ? 1.0f : 0.0f;
-        } else if (_cellTextureData[index].B < 1.0f) {
+        }
+        else if (_cellTextureData[index].B < 1.0f) {
             _cellTextureData[index].B = 1.0f;
             _transitioningCells.Add(cell);
         }
-        ProcessMode = ProcessModeEnum.Inherit;
     }
 
     public void ViewElevationChanged() {
         _needsVisibilityReset = true;
-        ProcessMode = ProcessModeEnum.Inherit;
-    }
-
-    public override void _EnterTree() {
-        _instance = this;
-    }
-
-    public override void _ExitTree() {
-        if (_instance == this) _instance = null;
-    }
-
-    public override void _Process(double delta) {
-        CallDeferred("LateUpdate", (float)delta);
     }
 
     private bool UpdateCellData(HexCell cell, float delta) {
@@ -107,14 +89,14 @@ public sealed partial class HexCellShaderData : Node {
             data.R = t < 0.0f ? 0.0f : t;
         }
 
-        if (!stillUpdating) { 
+        if (!stillUpdating) {
             data.B = 0.0f;
         }
         _cellTextureData[index] = data;
         return !stillUpdating;
     }
 
-    private void LateUpdate(float deltaTime) {
+    public void Update(float deltaTime) {
         if (_needsVisibilityReset) {
             _needsVisibilityReset = false;
             Grid.ResetVisibility();
@@ -137,9 +119,5 @@ public sealed partial class HexCellShaderData : Node {
             }
         }
         _cellTexture.Update(_image);
-
-        if (_transitioningCells.Count == 0) { 
-            ProcessMode = ProcessModeEnum.Disabled;
-        }
     }
 }
