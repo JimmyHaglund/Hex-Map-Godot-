@@ -16,6 +16,7 @@ public sealed class HexUnit {
     public int VisionRange => 3;
     public List<HexCell>? PathToTravel {get; private set; }
     public Vector3 Position { get; private set; }
+    public Node3D Node { get; set; }
 
     public static Action<BinaryReader, HexGrid> LoadImplementation = (r, g) => { 
         throw new NotImplementedException("Loading and instantiating units must be handled by engine-side code.");
@@ -28,6 +29,8 @@ public sealed class HexUnit {
             return PathToTravel[_travelIndex];
         }
     }
+
+    public void ValidateLocation() => Location = _location;
 
 
     public HexCell? Location {
@@ -128,7 +131,7 @@ public sealed class HexUnit {
             _moveProgress--;
             if (CurrentTravelLocation != null) {
                 toColumn = CurrentTravelLocation.ColumnIndex;
-                Grid.MakeChildOfColumn(this, CurrentTravelLocation.ColumnIndex);
+                Grid.MakeChildOfColumn(Node, CurrentTravelLocation.ColumnIndex);
             }
             if (_travelIndex > 0) {
                 Grid.IncreaseVisibility(CurrentTravelLocation, VisionRange);

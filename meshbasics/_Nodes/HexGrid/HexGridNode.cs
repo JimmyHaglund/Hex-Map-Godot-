@@ -7,7 +7,7 @@ using JHM.HexaGrid;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexGridNode : Node3D {
-    public HexGrid  Grid {get; set; }
+    public HexGrid  Grid { get; set; }
     // private HexMesh _hexMesh;
     private HexCell[] _cells;
     private HexGridChunk[] _chunks;
@@ -30,6 +30,8 @@ public sealed partial class HexGridNode : Node3D {
     public bool Wrapping { get => Grid.Wrapping; set => Grid.Wrapping = value; }
 
     public bool HasPath => Grid.HasPath;
+
+    public bool IsRefreshing => Grid.IsRefreshing;
 
     public override void _EnterTree() {
         HexGridChunk.InstantiateChunkMethod = InstantiateChunk;

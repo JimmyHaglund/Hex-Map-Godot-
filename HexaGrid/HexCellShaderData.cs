@@ -1,5 +1,4 @@
 ﻿using Godot;
-using System;
 namespace JHM.HexaGrid;
 
 public sealed class HexCellShaderData {

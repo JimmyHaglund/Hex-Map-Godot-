@@ -8,6 +8,5 @@
   <ItemGroup>
     <ProjectReference Include="..\HexaGrid\HexaGrid.csproj" />
     <ProjectReference Include="..\Tools\Tools.csproj" />
-    <ProjectReference Include="HexGrid\HexGrid.csproj" />
   </ItemGroup>
 </Project>

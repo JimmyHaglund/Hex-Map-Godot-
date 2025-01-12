@@ -1,10 +1,10 @@
 [gd_scene load_steps=24 format=3 uid="uid://7x60g5iqbehg"]
 
 [ext_resource type="PackedScene" uid="uid://bkqosooy180ch" path="res://Scenes/HexGrid.tscn" id="1_k1ek6"]
-[ext_resource type="Script" path="res://_Nodes/HexGrid/Mouse3D.cs" id="1_qmp3k"]
+[ext_resource type="Script" path="res://_Nodes/Mouse3D.cs" id="1_qmp3k"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/HexMapEditor.cs" id="4_fqh23"]
 [ext_resource type="ButtonGroup" uid="uid://c4mj36swn000w" path="res://Misc/RiverControlButtonGroup.tres" id="4_olliq"]
-[ext_resource type="Script" path="res://_Nodes/HexGrid/FollowMouse.cs" id="4_qyimf"]
+[ext_resource type="Script" path="res://_Nodes/FollowMouse.cs" id="4_qyimf"]
 [ext_resource type="ButtonGroup" uid="uid://13l07g23mpmk" path="res://Misc/RoadControlButtonGroup.tres" id="5_0l2ld"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/HexGameUI.cs" id="5_dnd0l"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/HexMapCamera.cs" id="5_mpgou"]
@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://txryec2ia6mi" path="res://Scenes/Unit.tscn" id="7_7igmr"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/SaveLoadMenu.cs" id="9_dqswk"]
 [ext_resource type="PackedScene" uid="uid://dxitv45u170cv" path="res://Scenes/SaveLoadItem.tscn" id="10_4ppnm"]
-[ext_resource type="Script" path="res://_Nodes/HexGrid/FileNameTextEdit.cs" id="10_ip72k"]
+[ext_resource type="Script" path="res://_Nodes/FileNameTextEdit.cs" id="10_ip72k"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/CreateMapMenu.cs" id="11_0q6vo"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/HexMapGenerator.cs" id="16_npjkd"]
 
@@ -60,7 +60,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -45)
 [node name="Camera3D" type="Camera3D" parent="HexMapCamera/CameraSwivel/CameraStick"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0318947, -0.00157928, -0.00157928)
 
-[node name="Node3D" type="Node3D" parent="HexMapCamera" node_paths=PackedStringArray("Camera")]
+[node name="Mouse3D" type="Node3D" parent="HexMapCamera" node_paths=PackedStringArray("Camera")]
 transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0.911991, 3.58617e-08, 0.911991, -0.41021, 170, 150, 1.5)
 script = ExtResource("1_qmp3k")
 Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
@@ -112,7 +112,7 @@ offset_bottom = 38.0
 button_pressed = true
 shortcut = SubResource("Shortcut_gs0f4")
 
-[node name="HexMapEditor" type="Control" parent="." node_paths=PackedStringArray("HexGrid")]
+[node name="HexMapEditor" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -127,7 +127,6 @@ script = ExtResource("4_fqh23")
 _terrainMaterial = ExtResource("6_388q4")
 _unitPrefab = ExtResource("7_7igmr")
 Colors = PackedColorArray(0.905049, 0.848337, 0.424126, 1, 0.259905, 0.630793, 0.479689, 1, 0.108825, 0.339266, 0.971792, 1, 0.838877, 0.111098, 0.348332, 1)
-HexGrid = NodePath("../HexGrid")
 
 [node name="Controls" type="ColorRect" parent="HexMapEditor"]
 layout_mode = 2
@@ -523,7 +522,7 @@ text = "Large"
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveLoadMenu" type="Control" parent="HexMapEditor" node_paths=PackedStringArray("_listContentParent", "HexGrid", "Title", "ActionButton", "NameInput")]
+[node name="SaveLoadMenu" type="Control" parent="HexMapEditor" node_paths=PackedStringArray("_listContentParent", "Title", "ActionButton", "NameInput")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -538,7 +537,6 @@ grow_vertical = 2
 script = ExtResource("9_dqswk")
 _listContentParent = NodePath("Menu/FileListContainer/FileList")
 _saveLoadItemPrefab = ExtResource("10_4ppnm")
-HexGrid = NodePath("../../HexGrid")
 Title = NodePath("Menu/Title")
 ActionButton = NodePath("Menu/ActionButtonsContainer/ActionButton")
 NameInput = NodePath("Menu/FileNameEdit")

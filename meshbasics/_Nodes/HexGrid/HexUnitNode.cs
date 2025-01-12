@@ -37,7 +37,7 @@ public sealed partial class HexUnitNode : Node3D {
     private float TravelSpeed => Unit.TravelSpeed;
 
     public void ValidateLocation() {
-        Position = Unit.Position;
+        Location = Unit.Location;
     }
 
     public bool IsValidDestination(HexCell cell) => Unit.IsValidDestination(cell);
@@ -70,6 +70,7 @@ public sealed partial class HexUnitNode : Node3D {
         float orientation = reader.ReadSingle();
 
         var unit = SceneInstantiator.InstantiateOrphan<HexUnitNode>(HexUnit.UnitPrefab);
+        unit.Unit.Node = unit;
         
         grid.AddUnit(
             unit.Unit,

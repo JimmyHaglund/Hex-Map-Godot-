@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://txryec2ia6mi"]
 
-[ext_resource type="Script" path="res://_Nodes/HexGrid/HexUnit.cs" id="1_58sjs"]
+[ext_resource type="Script" path="res://_Nodes/HexGrid/HexUnitNode.cs" id="1_58sjs"]
 [ext_resource type="PackedScene" uid="uid://b8ut180ru35w3" path="res://Scenes/PathDisplay.tscn" id="2_lmwtw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nin1x"]

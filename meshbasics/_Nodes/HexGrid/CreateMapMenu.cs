@@ -1,9 +1,10 @@
 ﻿using Godot;
+using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
 
 public sealed partial class CreateMapMenu : Control {
-    [Export] private HexGrid _grid;
+    [Export] private HexGridNode _grid;
     [Export] private HexMapGenerator _generator;
 
     private bool _generate = true;

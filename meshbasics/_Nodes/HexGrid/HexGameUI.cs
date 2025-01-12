@@ -1,4 +1,5 @@
 ﻿using Godot;
+using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
 
@@ -6,7 +7,7 @@ public sealed partial class HexGameUI : Control {
     private HexCell _currentCell;
     private HexUnit _selectedUnit;
 
-    [Export] public HexGrid Grid { get; set; }
+    [Export] public HexGridNode Grid { get; set; }
 
     public override void _EnterTree() {
         HexGrid.MapReset += ClearSelection;

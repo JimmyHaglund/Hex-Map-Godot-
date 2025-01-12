@@ -2,7 +2,7 @@ using Godot;
 
 namespace JHM.HexaGrid;
 
-internal static class HexMetrics {
+public static class HexMetrics {
     private static HexHash[] _hashGrid;
     private static float[][] _featureThresholds = {
         new float[] {0.0f, 0.0f, 0.4f},
@@ -174,7 +174,7 @@ internal static class HexMetrics {
         return sample;
     }
 
-    public static HexHash SampleHashGrid(Vector3 position) {
+    internal static HexHash SampleHashGrid(Vector3 position) {
         int x = (int)(position.X * HashGridScale) % HashGridSize;
         if (x < 0) {
             x += HashGridSize;

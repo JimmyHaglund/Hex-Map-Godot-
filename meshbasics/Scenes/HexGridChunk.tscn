@@ -1,39 +1,16 @@
-[gd_scene load_steps=42 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=19 format=3 uid="uid://bwok11esd24iw"]
 
-[ext_resource type="Script" path="res://_Nodes/HexGrid/HexGridChunk.cs" id="1_hk31i"]
+[ext_resource type="Script" path="res://_Nodes/HexGrid/HexGridChunkNode.cs" id="1_djf1w"]
+[ext_resource type="Script" path="res://_Nodes/HexGrid/HexMeshNode.cs" id="3_th4vj"]
 [ext_resource type="Material" uid="uid://cw84703hyjufd" path="res://Materials/RiverMaterial.tres" id="4_usb5c"]
 [ext_resource type="Material" uid="uid://bwyqw5etxq68p" path="res://Materials/TerrainMaterial.tres" id="5_a1qwg"]
 [ext_resource type="Material" uid="uid://cmgf5cc3lk3rn" path="res://Materials/WaterMaterial.tres" id="5_uat4n"]
 [ext_resource type="Material" uid="uid://dpwbat2hwd6dq" path="res://Materials/ShoreWaterMaterial.tres" id="6_gl15j"]
 [ext_resource type="Material" uid="uid://deb1ldds6tidn" path="res://Materials/RoadMaterial.tres" id="6_n8kls"]
-[ext_resource type="Script" path="res://_Nodes/HexGrid/HexMesh.cs" id="6_nfodi"]
 [ext_resource type="Material" uid="uid://c506dce10lnjn" path="res://Materials/EstuaryMaterial.tres" id="7_000k3"]
+[ext_resource type="Script" path="res://_Nodes/HexGrid/HexFeatureManagerNode.cs" id="9_48dw0"]
 [ext_resource type="Material" uid="uid://ppqhm8mxrs2o" path="res://Materials/UrbanMaterial.tres" id="9_c5j6k"]
-[ext_resource type="Script" path="res://_Nodes/HexGrid/HexFeatureManager.cs" id="9_wnj8p"]
-[ext_resource type="PackedScene" uid="uid://da1c8mo0xdw41" path="res://Scenes/TerrainFeatures/WallTower.tscn" id="10_4qouq"]
-[ext_resource type="PackedScene" uid="uid://dj6g4poa7ij1d" path="res://Scenes/TerrainFeatures/Bridge.tscn" id="11_dgxli"]
-[ext_resource type="PackedScene" uid="uid://hmcjbr4x4lc3" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh2.tscn" id="12_ef7r1"]
-[ext_resource type="PackedScene" uid="uid://0dmhwjyfsi5x" path="res://Scenes/TerrainFeatures/Urban/UrbanHigh1.tscn" id="12_gtsq6"]
-[ext_resource type="PackedScene" uid="uid://bmq2iyxklminq" path="res://Scenes/TerrainFeatures/Castle.tscn" id="12_qmqmb"]
-[ext_resource type="PackedScene" uid="uid://bwph5ffhpx74v" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium1.tscn" id="13_1dvnm"]
-[ext_resource type="PackedScene" uid="uid://b0vwtb8twgfrx" path="res://Scenes/TerrainFeatures/Ziggurat.tscn" id="13_18gre"]
-[ext_resource type="Script" path="res://_Nodes/HexGrid/PackedSceneContainer.cs" id="13_apxms"]
-[ext_resource type="PackedScene" uid="uid://bjy5eh7sxerhe" path="res://Scenes/TerrainFeatures/Urban/UrbanMedium2.tscn" id="14_ceung"]
-[ext_resource type="PackedScene" uid="uid://6a6amfhtgleh" path="res://Scenes/TerrainFeatures/MegaFlora.tscn" id="14_tencd"]
-[ext_resource type="PackedScene" uid="uid://cv765j8v1gixn" path="res://Scenes/TerrainFeatures/Urban/UrbanLow1.tscn" id="15_q64pu"]
-[ext_resource type="PackedScene" uid="uid://tkltneqplada" path="res://Scenes/TerrainFeatures/Urban/UrbanLow2.tscn" id="16_wxuhe"]
-[ext_resource type="PackedScene" uid="uid://cgu77gaaa30f5" path="res://Scenes/TerrainFeatures/Farm/FarmHigh1.tscn" id="17_nchub"]
-[ext_resource type="PackedScene" uid="uid://bulrq76qxyqx0" path="res://Scenes/TerrainFeatures/Farm/FarmHigh2.tscn" id="18_dnuwu"]
-[ext_resource type="PackedScene" uid="uid://b3gikmrsjihh" path="res://Scenes/TerrainFeatures/Farm/FarmMedium1.tscn" id="19_gr5uf"]
-[ext_resource type="PackedScene" uid="uid://c5cnv3ghggrx" path="res://Scenes/TerrainFeatures/Farm/FarmMedium2.tscn" id="20_cnxvf"]
-[ext_resource type="PackedScene" uid="uid://cjahpxwi7oley" path="res://Scenes/TerrainFeatures/Farm/FarmLow1.tscn" id="21_03m1t"]
-[ext_resource type="PackedScene" uid="uid://cgfdnr64aogqg" path="res://Scenes/TerrainFeatures/Farm/FarmLow2.tscn" id="22_1xnjq"]
-[ext_resource type="PackedScene" uid="uid://c20es8s6wmvxe" path="res://Scenes/TerrainFeatures/Plant/PlantHigh1.tscn" id="23_jak4t"]
-[ext_resource type="PackedScene" uid="uid://c6s1xpn7hro3n" path="res://Scenes/TerrainFeatures/Plant/PlantHigh2.tscn" id="24_51iwx"]
-[ext_resource type="PackedScene" uid="uid://ce1nuiml5h40g" path="res://Scenes/TerrainFeatures/Plant/PlantMedium1.tscn" id="25_ret5k"]
-[ext_resource type="PackedScene" uid="uid://umrpo487r3b0" path="res://Scenes/TerrainFeatures/Plant/PlantMedium2.tscn" id="26_tu2f6"]
-[ext_resource type="PackedScene" uid="uid://ddmr8mvtfsa5c" path="res://Scenes/TerrainFeatures/Plant/PlantLow1.tscn" id="27_4puub"]
-[ext_resource type="PackedScene" uid="uid://bnsmtfl0qocfg" path="res://Scenes/TerrainFeatures/Plant/PlantLow2.tscn" id="28_wumkn"]
+[ext_resource type="Script" path="res://_Nodes/PackedSceneContainer.cs" id="10_t1b2n"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 resource_local_to_scene = true
@@ -56,25 +33,15 @@ resource_local_to_scene = true
 [sub_resource type="ArrayMesh" id="ArrayMesh_wltgt"]
 resource_local_to_scene = true
 
-[node name="Chunk" type="Node3D" node_paths=PackedStringArray("Terrain", "Rivers", "Roads", "Water", "WaterShore", "Estuaries", "Features")]
-script = ExtResource("1_hk31i")
-Terrain = NodePath("Terrain")
-Rivers = NodePath("Rivers")
-Roads = NodePath("Roads")
-Water = NodePath("Water")
-WaterShore = NodePath("WaterShore")
-Estuaries = NodePath("Estuaries")
-Features = NodePath("Features")
+[node name="Chunk" type="Node3D"]
+script = ExtResource("1_djf1w")
 
-[node name="Terrain" type="MeshInstance3D" parent="." node_paths=PackedStringArray("CollisionShape", "AltShape")]
+[node name="Terrain" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98023e-08, -7.45058e-09, 3.72529e-08)
 material_override = ExtResource("5_a1qwg")
 gi_mode = 2
 mesh = SubResource("ArrayMesh_0fglf")
-script = ExtResource("6_nfodi")
-CollisionShape = NodePath("StaticBody3D/CollisionShape3D")
-AltShape = NodePath("AltStaticBody/AltCollisionShape3D")
-UseCellData = true
+script = ExtResource("3_th4vj")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Terrain"]
 
@@ -89,40 +56,28 @@ material_override = ExtResource("4_usb5c")
 cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("ArrayMesh_nb12b")
-script = ExtResource("6_nfodi")
-UseCollider = false
-UseCellData = true
-UseUVCoordinates = true
+script = ExtResource("3_th4vj")
 
 [node name="Water" type="MeshInstance3D" parent="."]
 material_override = ExtResource("5_uat4n")
 cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("ArrayMesh_0o867")
-script = ExtResource("6_nfodi")
-UseCollider = false
-UseCellData = true
+script = ExtResource("3_th4vj")
 
 [node name="WaterShore" type="MeshInstance3D" parent="."]
 material_override = ExtResource("6_gl15j")
 cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("ArrayMesh_i4usy")
-script = ExtResource("6_nfodi")
-UseCollider = false
-UseCellData = true
-UseUVCoordinates = true
+script = ExtResource("3_th4vj")
 
 [node name="Estuaries" type="MeshInstance3D" parent="."]
 material_override = ExtResource("7_000k3")
 cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("ArrayMesh_5q65r")
-script = ExtResource("6_nfodi")
-UseCollider = false
-UseCellData = true
-UseUVCoordinates = true
-UseUV2Coordinates = true
+script = ExtResource("3_th4vj")
 
 [node name="Roads" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001, 0)
@@ -130,56 +85,40 @@ material_override = ExtResource("6_n8kls")
 cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("ArrayMesh_kd5wo")
-script = ExtResource("6_nfodi")
-UseCollider = false
-UseCellData = true
-UseUVCoordinates = true
+script = ExtResource("3_th4vj")
 
-[node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs", "Walls")]
-script = ExtResource("9_wnj8p")
-UrbanPrefabs = [NodePath("UrbanHigh"), NodePath("UrbanMedium"), NodePath("UrbanLow")]
-FarmPrefabs = [NodePath("FarmHigh"), NodePath("FarmMedium"), NodePath("FarmLow")]
-PlantPrefabs = [NodePath("PlantHigh"), NodePath("PlantMedium"), NodePath("PlantLow")]
-Walls = NodePath("Walls")
-WallTower = ExtResource("10_4qouq")
-Bridge = ExtResource("11_dgxli")
-SpecialFeatures = Array[PackedScene]([ExtResource("12_qmqmb"), ExtResource("13_18gre"), ExtResource("14_tencd")])
+[node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs")]
+script = ExtResource("9_48dw0")
+UrbanPrefabs = []
+FarmPrefabs = []
+PlantPrefabs = []
 
 [node name="UrbanHigh" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("12_gtsq6"), ExtResource("12_ef7r1")])
+script = ExtResource("10_t1b2n")
 
 [node name="UrbanMedium" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("13_1dvnm"), ExtResource("14_ceung")])
+script = ExtResource("10_t1b2n")
 
 [node name="UrbanLow" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("15_q64pu"), ExtResource("16_wxuhe")])
+script = ExtResource("10_t1b2n")
 
 [node name="FarmHigh" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("17_nchub"), ExtResource("18_dnuwu")])
+script = ExtResource("10_t1b2n")
 
 [node name="FarmMedium" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("19_gr5uf"), ExtResource("20_cnxvf")])
+script = ExtResource("10_t1b2n")
 
 [node name="FarmLow" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("21_03m1t"), ExtResource("22_1xnjq")])
+script = ExtResource("10_t1b2n")
 
 [node name="PlantHigh" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("23_jak4t"), ExtResource("24_51iwx")])
+script = ExtResource("10_t1b2n")
 
 [node name="PlantMedium" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("25_ret5k"), ExtResource("26_tu2f6")])
+script = ExtResource("10_t1b2n")
 
 [node name="PlantLow" type="Node" parent="Features"]
-script = ExtResource("13_apxms")
-Scenes = Array[PackedScene]([ExtResource("27_4puub"), ExtResource("28_wumkn")])
+script = ExtResource("10_t1b2n")
 
 [node name="Walls" type="MeshInstance3D" parent="Features"]
 material_override = ExtResource("9_c5j6k")
@@ -187,6 +126,6 @@ cast_shadow = 2
 gi_mode = 2
 mesh = SubResource("ArrayMesh_wltgt")
 skeleton = NodePath("../..")
-script = ExtResource("6_nfodi")
+script = ExtResource("3_th4vj")
 UseCollider = false
 UseUVCoordinates = true

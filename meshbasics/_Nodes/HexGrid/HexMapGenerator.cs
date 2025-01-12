@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
 
@@ -43,7 +44,7 @@ public sealed partial class HexMapGenerator : Node {
     private HexCellPriorityQueue _searchFrontier;
     private int _searchFrontierPhase;
 
-    [Export] public HexGrid Grid {get; set; }
+    [Export] public HexGridNode Grid {get; set; }
 
     [Export] private int _seed = 1337;
     [Export] private bool _staticSeed = false;

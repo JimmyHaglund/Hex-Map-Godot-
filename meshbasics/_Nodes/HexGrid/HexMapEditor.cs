@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System;
+using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
 
@@ -7,7 +8,7 @@ public sealed partial class HexMapEditor : Control {
     [Export] private ShaderMaterial _terrainMaterial;
     [Export] private PackedScene _unitPrefab;
     [Export] public Color[] Colors { get; set; }
-    [Export] public HexGrid HexGrid { get; set; }
+    [Export] public HexGridNode Grid { get; set; }
 
     private int _activeElevation = 1;
     private int _activeTerrainTypeIndex = 0;
@@ -65,7 +66,7 @@ public sealed partial class HexMapEditor : Control {
     public void SetEditMode(bool value) {
         Visible = value;
         ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
-        HexGrid.SetUIVisible(!value);
+        Grid.SetUIVisible(!value);
     }
 
     public void SetElevation(float elevationStep) {
@@ -159,7 +160,7 @@ public sealed partial class HexMapEditor : Control {
     }
 
     private void HandleInput() {
-        if (HexGrid.IsRefreshing) return;
+        if (Grid.IsRefreshing) return;
         var cell = GetCellUnderCursor();
         if (cell is null) {
             _previousCell = null;
@@ -177,21 +178,23 @@ public sealed partial class HexMapEditor : Control {
 
     private HexCell GetCellUnderCursor() {
         var mousePosition = Mouse3D.MouseWorldPosition;
-        return HexGrid.GetCell(mousePosition);
+        return Grid.GetCell(mousePosition);
     }
 
     private void CreateUnit() { 
         var cell = GetCellUnderCursor();
         if (cell is null || cell.Unit != null) return;
         var rotation = (float)(new Random().NextDouble() * 360.0f);
-        var unit = HexGrid.InstantiateOrphan<HexUnit>(HexUnit.UnitPrefab);
-        HexGrid.AddUnit(unit, cell, rotation);
+
+        var unit = Grid.InstantiateOrphan<HexUnitNode>(HexUnit.UnitPrefab);
+        unit.Unit.Node = unit;
+        Grid.AddUnit(unit, cell, rotation);
     }
 
     private void DestroyUnit() {
         HexCell cell = GetCellUnderCursor();
         if (cell is null || cell.Unit is null) return;
-        HexGrid.RemoveUnit(cell.Unit);
+        Grid.RemoveUnit(cell.Unit);
     }
 
     private void EditCells(HexCell center) {
@@ -200,13 +203,13 @@ public sealed partial class HexMapEditor : Control {
         int centerZ = center.Coordinates.Z;
         for (int r = 0, z = centerZ - _brushSize; z <= centerZ; z++, r++) {
             for (int x = centerX - r; x <= centerX + _brushSize; x++) {
-                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+                EditCell(Grid.GetCell(new HexCoordinates(x, z)));
             }
         }
 
         for (int r = 0, z = centerZ + _brushSize; z > centerZ; z--, r++) {
             for (int x = centerX - _brushSize; x <= centerX + r; x++) {
-                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+                EditCell(Grid.GetCell(new HexCoordinates(x, z)));
             }
         }
 

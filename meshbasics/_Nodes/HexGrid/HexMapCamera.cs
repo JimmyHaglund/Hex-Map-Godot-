@@ -1,4 +1,5 @@
 ﻿using Godot;
+using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
 
@@ -10,7 +11,7 @@ public sealed partial class HexMapCamera : Node3D {
     private Node3D _stick;
 
     [ExportCategory("Dependencies")]
-    [Export] public HexGrid Grid { get; set; }
+    [Export] public HexGridNode Grid { get; set; }
 
     [ExportCategory("Movement Settings")]
     [Export] public float ZoomedInMovementSpeed { get; set; } = 40.0f;

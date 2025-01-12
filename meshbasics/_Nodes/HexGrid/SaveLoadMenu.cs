@@ -11,7 +11,7 @@ public sealed partial class SaveLoadMenu : Control {
     private bool _saveMode;
     private const int _mapVersion = 5;
 
-    [Export] public HexGrid HexGrid { get; set; }
+    [Export] public HexGridNode Grid { get; set; }
     [Export] public Label Title { get; set; }
     [Export] public Button ActionButton { get; set; }
     [Export] public TextEdit NameInput { get; set; }
@@ -65,7 +65,7 @@ public sealed partial class SaveLoadMenu : Control {
     public void Save(string filePath) {
         BinarySaveLoad.Save(filePath, w => { 
             w.Write(_mapVersion);
-            HexGrid.Save(w);
+            Grid.Save(w);
         });
     }
 
@@ -76,7 +76,7 @@ public sealed partial class SaveLoadMenu : Control {
                 GD.PrintErr($"Unknown map format {header}");
                 return;
             }
-            HexGrid.Load(r, header);
+            Grid.Grid.Load(r, header);
         });
     }
 

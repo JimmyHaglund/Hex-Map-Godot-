@@ -43,6 +43,7 @@ public sealed partial class HexCellShaderDataNode : Node {
 
     public override void _EnterTree() {
         _shaderData = new();
+        ProcessMode = ProcessModeEnum.Disabled;
     }
 
     public override void _Process(double delta) {
