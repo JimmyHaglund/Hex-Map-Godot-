@@ -1,13 +1,12 @@
 using Godot;
-using System.Collections.Generic;
 
 namespace JHM.HexaGrid;
 
-public sealed partial class HexMesh : MeshInstance3D {
+public sealed class HexMesh {
     private List<Vector3> _vertices = new();
     private List<Vector3> _normals = new();
     private List<Vector3> _cellIndices = new();
-    private ArrayMesh _mesh;
+    private ArrayMesh? _mesh;
     private List<Color> _cellWeights = new();
     // private List<int> _triangles = new();
     private CollisionShape3D _activeShape;
@@ -15,20 +14,31 @@ public sealed partial class HexMesh : MeshInstance3D {
     private List<Vector2> _uvs;
     private List<Vector2> _uv2s;
     
-    [Export] public CollisionShape3D CollisionShape { get; set; }
-    [Export] public CollisionShape3D AltShape { get; set; }
-    [Export] public bool UseCollider { get; set; } = true;
-    [Export] public bool UseCellData { get; set; }
-    [Export] public bool UseUVCoordinates { get; set; } = false;
-    [Export] public bool UseUV2Coordinates { get; set; } = false;
+    public CollisionShape3D CollisionShape { get; set; }
+    public CollisionShape3D AltShape { get; set; }
+    public bool UseCollider { get; set; } = true;
+    public bool UseCellData { get; set; }
+    public bool UseUVCoordinates { get; set; } = false;
+    public bool UseUV2Coordinates { get; set; } = false;
     
-    public override void _Ready() {
-        _mesh = Mesh as ArrayMesh;
+    public HexMesh(
+        ArrayMesh mesh,
+        CollisionShape3D collisionShape,
+        CollisionShape3D altShape,
+        bool useCollider,
+        bool useCellData,
+        bool useUVCoordinates,
+        bool useUV2Coordinates
+    ) {
+        _mesh = mesh;
+        CollisionShape = collisionShape;
+        AltShape = altShape;
+        UseCollider = useCollider;
+        UseCellData = useCellData;
+        UseUVCoordinates = useUVCoordinates;
+        UseUV2Coordinates = useUV2Coordinates;
         _activeShape = CollisionShape;
         _inactiveShape = AltShape;
-        if (_mesh is null) {
-            GD.PrintErr("HexMesh requires an ArrayMesh.");
-        }
     }
 
     public void Clear() {
@@ -49,11 +59,11 @@ public sealed partial class HexMesh : MeshInstance3D {
         }
     }
 
-    public void Apply() {
+    public void Apply(Material material) {
         var surfaceTool = new SurfaceTool();
 
         surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
-        surfaceTool.SetMaterial(this.GetActiveMaterial(0));
+        surfaceTool.SetMaterial(material);
         surfaceTool.SetCustomFormat(0, SurfaceTool.CustomFormat.RgbFloat);
         for (var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
@@ -95,7 +105,6 @@ public sealed partial class HexMesh : MeshInstance3D {
         if (!UseCollider) return;
         var shape = _mesh.CreateTrimeshShape();
         _inactiveShape.Shape = shape;
-        CallDeferred("SwapCollisionShape");
     }
 
     public void SetVertices(List<Vector3> vertices) => _vertices = vertices;
@@ -295,7 +304,7 @@ public sealed partial class HexMesh : MeshInstance3D {
         var activated = _inactiveShape;
         _activeShape = activated;
         _inactiveShape = deactivated;
-        activated.ProcessMode = ProcessModeEnum.Inherit;
-        deactivated.ProcessMode = ProcessModeEnum.Disabled;
+        activated.ProcessMode = Node.ProcessModeEnum.Inherit;
+        deactivated.ProcessMode = Node.ProcessModeEnum.Disabled;
     }
 }
