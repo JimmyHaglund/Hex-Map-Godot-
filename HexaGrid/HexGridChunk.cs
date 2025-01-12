@@ -1,60 +1,46 @@
-﻿using System;
-using System.Diagnostics.Metrics;
-using System.Reflection;
-using Godot;
-using static Godot.RenderingServer;
+﻿using Godot;
 
 namespace JHM.HexaGrid;
 
 public sealed class HexGridChunk {
-    HexCell[] _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
-    // Canvas GridCanvas;
-    private bool _shouldUpdate = true;
     private static Color _weights1 = new Color(1.0f, 0.0f, 0.0f);
     private static Color _weights2 = new Color(0.0f, 1.0f, 0.0f);
     private static Color _weights3 = new Color(0.0f, 0.0f, 1.0f);
 
-    [Export] public HexMesh Terrain { get; set; }
-    [Export] public HexMesh Rivers { get; set; }
-    [Export] public HexMesh Roads { get; set; }
-    [Export] public HexMesh Water { get; set; }
-    [Export] public HexMesh WaterShore { get; set; }
-    [Export] public HexMesh Estuaries { get; set; }
-    [Export] public HexFeatureManager Features { get; set; }
-
-    public event Action RefreshStarted;
-    public event Action RefreshCompleted;
+    private HexCell[] _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
     private bool _labelsVisible = true;
 
-    public override void _Ready() {
-        Triangulate();
-    }
+    public HexMesh Terrain { get; set; }
+    public HexMesh Rivers { get; set; }
+    public HexMesh Roads { get; set; }
+    public HexMesh Water { get; set; }
+    public HexMesh WaterShore { get; set; }
+    public HexMesh Estuaries { get; set; }
+    public HexFeatureManager Features { get; set; }
 
-    public override void _Process(double delta) {
-        if (_shouldUpdate) {
-            CallDeferred("LateUpdate");
-            RefreshStarted();
-        }
+    public HexGridChunk(
+        HexMesh terrain,
+        HexMesh rivers,
+        HexMesh roads,
+        HexMesh water,
+        HexMesh waterShore,
+        HexMesh estuaries,
+        HexFeatureManager features
+    ) {
+        Terrain = terrain;
+        Rivers = rivers;
+        Roads = roads;
+        Water = water;
+        WaterShore = waterShore;
+        Estuaries = estuaries;
+        Features = features;
+
+        Triangulate();
     }
 
     public void AddCell(int index, HexCell cell) {
         _cells[index] = cell;
         cell.Chunk = this;
-        // this.AddChild(cell);
-
-        if (cell.Label is not null) this.AddChild(cell.Label);
-        cell.Label.Visible = _labelsVisible;
-    }
-
-    public void Refresh() {
-
-        _shouldUpdate = true;// HexMesh.Triangulate(_cells);
-    }
-
-    private void LateUpdate() {
-        Triangulate();
-        _shouldUpdate = false;
-        RefreshCompleted();
     }
 
     public void SetUIVisible(bool visible) {
