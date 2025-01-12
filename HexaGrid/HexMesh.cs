@@ -13,6 +13,7 @@ public sealed class HexMesh {
     private CollisionShape3D _inactiveShape;
     private List<Vector2> _uvs;
     private List<Vector2> _uv2s;
+    private Material _material;
     
     public CollisionShape3D CollisionShape { get; set; }
     public CollisionShape3D AltShape { get; set; }
@@ -20,8 +21,10 @@ public sealed class HexMesh {
     public bool UseCellData { get; set; }
     public bool UseUVCoordinates { get; set; } = false;
     public bool UseUV2Coordinates { get; set; } = false;
+    public event Action ApplyCompleted;
     
     public HexMesh(
+        Material material,
         ArrayMesh mesh,
         CollisionShape3D collisionShape,
         CollisionShape3D altShape,
@@ -30,6 +33,7 @@ public sealed class HexMesh {
         bool useUVCoordinates,
         bool useUV2Coordinates
     ) {
+        _material = material;
         _mesh = mesh;
         CollisionShape = collisionShape;
         AltShape = altShape;
@@ -59,11 +63,11 @@ public sealed class HexMesh {
         }
     }
 
-    public void Apply(Material material) {
+    public void Apply() {
         var surfaceTool = new SurfaceTool();
 
         surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
-        surfaceTool.SetMaterial(material);
+        surfaceTool.SetMaterial(_material);
         surfaceTool.SetCustomFormat(0, SurfaceTool.CustomFormat.RgbFloat);
         for (var n = _vertices.Count - 1; n >= 0; n--) {
             var vertex = _vertices[n];
@@ -105,6 +109,7 @@ public sealed class HexMesh {
         if (!UseCollider) return;
         var shape = _mesh.CreateTrimeshShape();
         _inactiveShape.Shape = shape;
+        ApplyCompleted?.Invoke();
     }
 
     public void SetVertices(List<Vector3> vertices) => _vertices = vertices;

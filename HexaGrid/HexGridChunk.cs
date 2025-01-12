@@ -17,6 +17,11 @@ public sealed class HexGridChunk {
     public HexMesh WaterShore { get; set; }
     public HexMesh Estuaries { get; set; }
     public HexFeatureManager Features { get; set; }
+    public event Action RefreshRequested;
+    public event Action RefreshStarted;
+    public event Action RefreshCompleted;
+    public static Func<PackedScene, (Node3D, HexGridChunk)> InstantiateChunkMethod { get; set; } = _ => { throw new NotImplementedException(); };
+
 
     public HexGridChunk(
         HexMesh terrain,
@@ -37,6 +42,11 @@ public sealed class HexGridChunk {
 
         Triangulate();
     }
+
+    public void Refresh() => RefreshRequested?.Invoke();
+    public void StartRefresh() => RefreshStarted?.Invoke();
+    public void CompleteRefresh() => RefreshCompleted?.Invoke();
+
 
     public void AddCell(int index, HexCell cell) {
         _cells[index] = cell;

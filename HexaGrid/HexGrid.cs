@@ -1,30 +1,25 @@
-using System.IO;
+﻿using Godot;
 using System;
-using Godot;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JHM.MeshBasics;
-
-public sealed partial class HexGrid : Node3D {
-    // private HexMesh _hexMesh;
+namespace JHM.HexaGrid;
+public sealed class HexGrid {
     private HexCell[] _cells;
     private HexGridChunk[] _chunks;
     private int _chunkCountZ;
     private int _chunkCountX;
     private Node3D[] _columns;
 
-    [Export] private HexCellShaderData _cellShaderData;
-    [ExportCategory("HexGrid Dependencies")]
-    [Export] private PackedScene _hexUnitPrefab;
-    [Export] public int CellCountX { get; set; } = 20;
-    [Export] public int CellCountZ { get; set; } = 15;
-    [Export] public PackedScene CellLabelPrefab { get; set; }
-    [Export] public Texture2D NoiseSource { get; set; }
-    [Export] public PackedScene ChunkPrefab { get; set; }
+    private HexCellShaderData _cellShaderData;
+    private PackedScene _hexUnitPrefab;
+    public int CellCountX { get; set; } = 20;
+    public int CellCountZ { get; set; } = 15;
+    public PackedScene CellLabelPrefab { get; set; }
+    public PackedScene ChunkPrefab { get; set; }
 
-    [ExportCategory("HexGrid Configuration")]
-    [Export] public int Seed { get; set; } = 1234;
-    
     private int _refreshStack = 0;
     public bool IsRefreshing => _refreshStack > 0;
     private HexCellPriorityQueue _searchFrontier;
@@ -34,8 +29,9 @@ public sealed partial class HexGrid : Node3D {
     private bool _currentPathExists;
     private List<HexUnit> _units = new List<HexUnit>();
     private int _currentCenterColumnIndex = -1;
+    public Node3D HexGridRoot { get; private init; }
 
-    public bool Wrapping {get; set; }
+    public bool Wrapping { get; set; }
 
     public static event Action MapReset;
 
@@ -45,13 +41,12 @@ public sealed partial class HexGrid : Node3D {
         }
     }
 
-    public override void _EnterTree() {
-        HexMetrics.NoiseSource = NoiseSource.GetImage();
-        HexMetrics.InitializeHashGrid(Seed);
+    public HexGrid(Node3D root) {
+        HexGridRoot = root;
+        _cellShaderData = new() { Grid = this };
+
         HexMetrics.wrapSize = Wrapping ? CellCountX : 0;
         _cellShaderData.Grid = this;
-        // _cellShaderData = new();
-        // AddChild(_cellShaderData);
         CreateMap(CellCountX, CellCountZ, Wrapping);
     }
 
@@ -89,7 +84,7 @@ public sealed partial class HexGrid : Node3D {
     }
 
     public bool CreateMap(int cellCountX, int cellCountZ, bool wrap) {
-        
+
         if (
             cellCountX <= 0 || cellCountX % HexMetrics.ChunkSizeX != 0 ||
             cellCountZ <= 0 || cellCountZ % HexMetrics.ChunkSizeZ != 0
@@ -117,7 +112,6 @@ public sealed partial class HexGrid : Node3D {
         _cellShaderData.Initialize(cellCountX, cellCountZ);
         CreateChunks();
         CreateCells();
-        HexMapCamera.ValidatePosition();
         MapReset?.Invoke();
         return true;
     }
@@ -145,7 +139,7 @@ public sealed partial class HexGrid : Node3D {
             z = reader.ReadInt32();
         }
         bool wrapping = header >= 5 ? reader.ReadBoolean() : false;
-        if (x != CellCountX && z != CellCountZ || Wrapping != wrapping) { 
+        if (x != CellCountX && z != CellCountZ || Wrapping != wrapping) {
             if (!CreateMap(x, z, Wrapping)) {
                 return;
             }
@@ -178,13 +172,12 @@ public sealed partial class HexGrid : Node3D {
 
     public void AddUnit(HexUnit unit, HexCell location, float orientation) {
         _units.Add(unit);
-        AddChild(unit);
         unit.Grid = this;
         unit.Location = location;
         unit.Orientation = orientation;
     }
 
-    public void MakeChildOfColumn(HexUnit child, int columnIndex) {
+    public void MakeChildOfColumn(Node child, int columnIndex) {
         child.GetParent().RemoveChild(child);
         _columns[columnIndex].AddChild(child);
     }
@@ -293,8 +286,8 @@ public sealed partial class HexGrid : Node3D {
             _searchFrontier = new HexCellPriorityQueue();
         }
         _searchFrontier.Clear();
-        
-        
+
+
         fromCell.Distance = 0;
         fromCell.SearchPhase = _searchFrontierPhase;
         _searchFrontier.Enqueue(fromCell);
@@ -334,7 +327,8 @@ public sealed partial class HexGrid : Node3D {
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
                     _searchFrontier.Enqueue(neighbor);
-                } else if (distance < neighbor.Distance) {
+                }
+                else if (distance < neighbor.Distance) {
                     var oldPriority = neighbor.SearchPriority;
                     neighbor.PathFrom = current;
                     neighbor.Distance = distance;
@@ -366,7 +360,7 @@ public sealed partial class HexGrid : Node3D {
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++) {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null 
+                if (neighbor == null
                     || neighbor.SearchPhase > _searchFrontierPhase
                     || !neighbor.Explorable
                 ) {
@@ -407,7 +401,8 @@ public sealed partial class HexGrid : Node3D {
             }
             _currentPathTo.EnableHighlight(Colors.Red);
             _currentPathFrom.EnableHighlight(Colors.Blue);
-        } else if (_currentPathFrom is not null) {
+        }
+        else if (_currentPathFrom is not null) {
             _currentPathFrom.DisableHighlight();
             _currentPathTo.DisableHighlight();
         }
@@ -418,13 +413,15 @@ public sealed partial class HexGrid : Node3D {
         for (int x = 0; x < _chunkCountX; x++) {
             _columns[x] = new Node3D();
             _columns[x].Name = $"Column_{x}";
-            AddChild(_columns[x]);
+            HexGridRoot.AddChild(_columns[x]);
         }
         _chunks = new HexGridChunk[_chunkCountX * _chunkCountZ];
 
         for (int z = 0, i = 0; z < _chunkCountZ; z++) {
             for (int x = 0; x < _chunkCountX; x++) {
-                var chunk = _columns[x].InstantiateChild<HexGridChunk>(ChunkPrefab, $"Chunk_{x}-{z}");
+                var (chunkNode, chunk) = HexGridChunk.InstantiateChunkMethod(ChunkPrefab);
+                chunkNode.Name = $"Chunk_{x}-{z}";
+                _columns[x].AddChild(chunkNode);
                 _chunks[i++] = chunk;
                 chunk.RefreshStarted += () => _refreshStack++;
                 chunk.RefreshCompleted += () => _refreshStack--;
@@ -453,7 +450,7 @@ public sealed partial class HexGrid : Node3D {
         cell.Index = i;
         cell.ColumnIndex = x / HexMetrics.ChunkSizeX;
         cell.ShaderData = _cellShaderData;
-        
+
         if (x > 0) {
             cell.SetNeighbor(HexDirection.W, _cells[i - 1]);
             if (Wrapping && x == CellCountX - 1) {
@@ -465,7 +462,7 @@ public sealed partial class HexGrid : Node3D {
                 cell.SetNeighbor(HexDirection.SE, _cells[i - CellCountX]);
                 if (x > 0) {
                     cell.SetNeighbor(HexDirection.SW, _cells[i - CellCountX - 1]);
-                } 
+                }
                 else if (Wrapping) {
                     cell.SetNeighbor(HexDirection.SW, _cells[i - 1]);
                 }
@@ -474,7 +471,7 @@ public sealed partial class HexGrid : Node3D {
                 cell.SetNeighbor(HexDirection.SW, _cells[i - CellCountX]);
                 if (x < CellCountX - 1) {
                     cell.SetNeighbor(HexDirection.SE, _cells[i - CellCountX + 1]);
-                } 
+                }
                 else if (Wrapping) {
                     cell.SetNeighbor(
                         HexDirection.SE, _cells[i - CellCountX * 2 + 1]
@@ -483,7 +480,7 @@ public sealed partial class HexGrid : Node3D {
             }
         }
 
-        Label3D label = this.InstantiateOrphan<Label3D>(CellLabelPrefab);
+        Label3D label = HexGridRoot.InstantiateOrphan<Label3D>(CellLabelPrefab);
         label.Position = new Vector3(position.X, label.Position.Y, position.Z);
         cell.Elevation = 0;
         cell.Label = label;
@@ -514,21 +511,4 @@ public sealed partial class HexGrid : Node3D {
         }
         _units.Clear();
     }
-
-    // private T InstantiateChild<T>(PackedScene scene, string name = null) where T : Node{
-    //     T result = scene.Instantiate<T>();
-    //     this.AddChild(result);
-    //     if (name is not null) {
-    //         result.Name = name;
-    //     }
-    //     return result;
-    // }
-    // 
-    // private T InstantiateOrphan<T>(PackedScene scene, string name = null) where T : Node {
-    //     T result = scene.Instantiate<T>();
-    //     if (name is not null) {
-    //         result.Name = name;
-    //     }
-    //     return result;
-    // }
 }

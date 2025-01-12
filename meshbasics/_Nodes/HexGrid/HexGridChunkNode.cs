@@ -49,6 +49,7 @@ public sealed partial class HexGridChunkNode : Node3D {
             Estuaries.HexMesh,
             Features
         );
+        Chunk.RefreshRequested += Refresh;
     }
 
     public override void _Process(double delta) {
