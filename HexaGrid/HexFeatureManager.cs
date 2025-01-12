@@ -3,27 +3,38 @@
 namespace JHM.HexaGrid;
 
 public sealed class HexFeatureManager : Node3D {
-    public PackedScene[][]? UrbanPrefabs { get; set; }
-    public PackedScene[][]? FarmPrefabs { get; set; }
-    public PackedScene[][]? PlantPrefabs { get; set; }
-    public HexMesh? Walls { get; set; }
-    public PackedScene? WallTower { get; set; }
-    public PackedScene? Bridge { get; set; }
-    public PackedScene[]? SpecialFeatures { get; set; }
-
     private Node3D? _container;
 
-    private PackedScene? PickPrefab(PackedScene[][] collection, int level, float hash, float choice) {
-        if (level > 0) {
-            float[] thresholds = HexMetrics.GetFeatureThresholds(level - 1);
-            for (int i = 0; i < thresholds.Length; i++) {
-                if (hash < thresholds[i]) {
-                    return collection[i][(int)(choice * collection[i].Length)];
-                }
-            }
-        }
-        return null;
+    public PackedScene[][] UrbanPrefabs { get; set; }
+    public PackedScene[][] FarmPrefabs { get; set; }
+    public PackedScene[][] PlantPrefabs { get; set; }
+    public HexMesh Walls { get; set; }
+    public PackedScene WallTower { get; set; }
+    public PackedScene Bridge { get; set; }
+    public PackedScene[] SpecialFeatures { get; set; }
+
+    public HexFeatureManager(
+        PackedScene[][] urbanPrefabs,
+        PackedScene[][] farmPrefabs,
+        PackedScene[][] plantPrefabs,
+        HexMesh walls,
+        PackedScene wallTower,
+        PackedScene bridge,
+        PackedScene[] specialFeatures
+    ) { 
+        UrbanPrefabs = urbanPrefabs;
+        FarmPrefabs = farmPrefabs;
+        PlantPrefabs = plantPrefabs;
+        Walls = walls;
+        WallTower = wallTower;
+        Bridge = bridge;
+        SpecialFeatures = specialFeatures;
     }
+
+    public void Apply() {
+        Walls.Apply();
+    }
+
 
     public void Clear() {
         if (_container != null) {
@@ -36,10 +47,7 @@ public sealed class HexFeatureManager : Node3D {
         Walls.Clear();
     }
 
-    public void Apply() {
-        Walls.Apply();
-    }
-
+    
     public void AddFeature(HexCell cell, Vector3 position) {
         if (cell.IsSpecial) {
             return;
@@ -69,6 +77,7 @@ public sealed class HexFeatureManager : Node3D {
         instance.Position = HexMetrics.Perturb(position);
         instance.Rotation = new(0.0f, 2 * Mathf.Pi * hash.E, 0.0f);
     }
+
     public void AddWall(
         EdgeVertices near,
         HexCell nearCell,
@@ -97,9 +106,12 @@ public sealed class HexFeatureManager : Node3D {
     }
 
     public void AddWall(
-        Vector3 c1, HexCell cell1,
-        Vector3 c2, HexCell cell2,
-        Vector3 c3, HexCell cell3
+        Vector3 c1,
+        HexCell cell1,
+        Vector3 c2,
+        HexCell cell2,
+        Vector3 c3,
+        HexCell cell3
     ) {
         if (cell1.Walled) {
             if (cell2.Walled) {
@@ -125,6 +137,74 @@ public sealed class HexFeatureManager : Node3D {
         else if (cell3.Walled) {
             AddWallSegment(c3, cell3, c1, cell1, c2, cell2);
         }
+    }
+
+    public void AddBridge(Vector3 roadCenter1, Vector3 roadCenter2) {
+        roadCenter1 = HexMetrics.Perturb(roadCenter1);
+        roadCenter2 = HexMetrics.Perturb(roadCenter2);
+        var instance = _container.InstantiateChild<Node3D>(Bridge);
+        instance.LookAt(instance.Position + (roadCenter2 - roadCenter1));
+        instance.Position = (roadCenter1 + roadCenter2) * 0.5f;
+        float length = roadCenter1.DistanceTo(roadCenter2);
+        instance.Scale = new Vector3(
+            1.0f, 1.0f, length * (1.0f / HexMetrics.BridgeDesignLength)
+        );
+    }
+
+    public void AddSpecialFeature(HexCell cell, Vector3 position) {
+        var instance = _container.InstantiateChild<Node3D>(SpecialFeatures[cell.SpecialIndex - 1]);
+        instance.Position = HexMetrics.Perturb(position);
+        HexHash hash = HexMetrics.SampleHashGrid(position);
+        instance.Rotation = new(0f, 2* Mathf.Pi * hash.E, 0f);
+    }
+
+    #region Private
+    private void AddWallCap(Vector3 near, Vector3 far) {
+        near = HexMetrics.Perturb(near);
+        far = HexMetrics.Perturb(far);
+
+        Vector3 center = HexMetrics.WallLerp(near, far);
+        Vector3 thickness = HexMetrics.GetWallThicknessOffset(near, far);
+
+        Vector3 v1, v2, v3, v4;
+
+        v1 = v3 = center - thickness;
+        v2 = v4 = center + thickness;
+        v3.Y = v4.Y = center.Y + HexMetrics.WallHeight;
+        Walls.AddQuadUnperturbed(v1, v2, v3, v4);
+    }
+
+    private void AddWallWedge(Vector3 near, Vector3 far, Vector3 point) {
+        near = HexMetrics.Perturb(near);
+        far = HexMetrics.Perturb(far);
+        point = HexMetrics.Perturb(point);
+
+        Vector3 center = HexMetrics.WallLerp(near, far);
+        Vector3 thickness = HexMetrics.GetWallThicknessOffset(near, far);
+
+        Vector3 v1, v2, v3, v4;
+        Vector3 pointTop = point;
+        point.Y = center.Y;
+
+        v1 = v3 = center - thickness;
+        v2 = v4 = center + thickness;
+        v3.Y = v4.Y = pointTop.Y = center.Y + HexMetrics.WallHeight;
+
+        Walls.AddQuadUnperturbed(v1, point, v3, pointTop);
+        Walls.AddQuadUnperturbed(point, v2, pointTop, v4);
+        Walls.AddTriangleUnperturbed(pointTop, v3, v4);
+    }
+
+    private PackedScene? PickPrefab(PackedScene[][] collection, int level, float hash, float choice) {
+        if (level > 0) {
+            float[] thresholds = HexMetrics.GetFeatureThresholds(level - 1);
+            for (int i = 0; i < thresholds.Length; i++) {
+                if (hash < thresholds[i]) {
+                    return collection[i][(int)(choice * collection[i].Length)];
+                }
+            }
+        }
+        return null;
     }
 
     private void AddWallSegment(
@@ -154,7 +234,7 @@ public sealed class HexFeatureManager : Node3D {
         v1 = v3 = left - leftThicknessOffset; ;
         v2 = v4 = right - rightThicknessOffset;
         v3.Y = leftTop;
-        v4.Y = rightTop; 
+        v4.Y = rightTop;
         Walls.AddQuadUnperturbed(v1, v2, v3, v4);
 
         Vector3 t1 = v3, t2 = v4;
@@ -196,12 +276,13 @@ public sealed class HexFeatureManager : Node3D {
                     (pivot + left + right) * (1f / 3f)
                 );
                 bool hasTower = false;
-                if (leftCell.Elevation == rightCell.Elevation) { 
+                if (leftCell.Elevation == rightCell.Elevation) {
                     hasTower = hash.E < HexMetrics.WallTowerThreshold;
                 }
                 AddWallSegment(pivot, left, pivot, right, hasTower);
 
-            } else if (leftCell.Elevation < rightCell.Elevation) {
+            }
+            else if (leftCell.Elevation < rightCell.Elevation) {
                 AddWallWedge(pivot, left, right);
             }
             else {
@@ -217,59 +298,5 @@ public sealed class HexFeatureManager : Node3D {
             }
         }
     }
-
-    private void AddWallCap(Vector3 near, Vector3 far) {
-        near = HexMetrics.Perturb(near);
-        far = HexMetrics.Perturb(far);
-
-        Vector3 center = HexMetrics.WallLerp(near, far);
-        Vector3 thickness = HexMetrics.GetWallThicknessOffset(near, far);
-
-        Vector3 v1, v2, v3, v4;
-
-        v1 = v3 = center - thickness;
-        v2 = v4 = center + thickness;
-        v3.Y = v4.Y = center.Y + HexMetrics.WallHeight;
-        Walls.AddQuadUnperturbed(v1, v2, v3, v4);
-    }
-
-    void AddWallWedge(Vector3 near, Vector3 far, Vector3 point) {
-        near = HexMetrics.Perturb(near);
-        far = HexMetrics.Perturb(far);
-        point = HexMetrics.Perturb(point);
-
-        Vector3 center = HexMetrics.WallLerp(near, far);
-        Vector3 thickness = HexMetrics.GetWallThicknessOffset(near, far);
-
-        Vector3 v1, v2, v3, v4;
-        Vector3 pointTop = point;
-        point.Y = center.Y;
-
-        v1 = v3 = center - thickness;
-        v2 = v4 = center + thickness;
-        v3.Y = v4.Y = pointTop.Y = center.Y + HexMetrics.WallHeight;
-
-        Walls.AddQuadUnperturbed(v1, point, v3, pointTop);
-        Walls.AddQuadUnperturbed(point, v2, pointTop, v4);
-        Walls.AddTriangleUnperturbed(pointTop, v3, v4);
-    }
-
-    public void AddBridge(Vector3 roadCenter1, Vector3 roadCenter2) {
-        roadCenter1 = HexMetrics.Perturb(roadCenter1);
-        roadCenter2 = HexMetrics.Perturb(roadCenter2);
-        var instance = _container.InstantiateChild<Node3D>(Bridge);
-        instance.LookAt(instance.Position + (roadCenter2 - roadCenter1));
-        instance.Position = (roadCenter1 + roadCenter2) * 0.5f;
-        float length = roadCenter1.DistanceTo(roadCenter2);
-        instance.Scale = new Vector3(
-            1.0f, 1.0f, length * (1.0f / HexMetrics.BridgeDesignLength)
-        );
-    }
-
-    public void AddSpecialFeature(HexCell cell, Vector3 position) {
-        var instance = _container.InstantiateChild<Node3D>(SpecialFeatures[cell.SpecialIndex - 1]);
-        instance.Position = HexMetrics.Perturb(position);
-        HexHash hash = HexMetrics.SampleHashGrid(position);
-        instance.Rotation = new(0f, 2* Mathf.Pi * hash.E, 0f);
-    }
+    #endregion
 }
