@@ -22,7 +22,6 @@ public sealed class HexGridChunk {
     public event Action RefreshCompleted;
     public static Func<PackedScene, (Node3D, HexGridChunk)> InstantiateChunkMethod { get; set; } = _ => { throw new NotImplementedException(); };
 
-
     public HexGridChunk(
         HexMesh terrain,
         HexMesh rivers,

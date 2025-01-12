@@ -1,7 +1,6 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using JHM.HexaGrid;
 
 namespace JHM.MeshBasics;
@@ -99,8 +98,6 @@ public sealed partial class HexMapGenerator : Node {
         for (int i = 0; i < _cellCount; i++) {
             Grid.GetCell(i).SearchPhase = 0;
         }
-
-        
     }
 
     public override void _EnterTree() {

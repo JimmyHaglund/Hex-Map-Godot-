@@ -304,7 +304,7 @@ public sealed class HexMesh {
         _uv2s.Add(new Vector2(uMax, vMax));
     }
 
-    private void SwapCollisionShape() {
+    public void SwapCollisionShape() {
         var deactivated = _activeShape;
         var activated = _inactiveShape;
         _activeShape = activated;

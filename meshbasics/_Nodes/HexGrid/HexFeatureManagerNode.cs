@@ -15,6 +15,21 @@ public sealed partial class HexFeatureManagerNode : Node3D {
     [Export] public PackedScene Bridge { get; set; }
     [Export] public PackedScene[] SpecialFeatures { get; set; }
 
+    public void Initialise() {
+        if (HexFeatureManager is not null) return;
+        Walls.Initialise();
+
+        HexFeatureManager = new(
+           UrbanPrefabs.To2DArray(),
+           FarmPrefabs.To2DArray(),
+           PlantPrefabs.To2DArray(),
+           Walls.HexMesh,
+           WallTower,
+           Bridge,
+           SpecialFeatures
+       );
+    }
+
     public void Apply() => HexFeatureManager.Apply();
 
     public void Clear() => HexFeatureManager.Clear();
@@ -32,15 +47,7 @@ public sealed partial class HexFeatureManagerNode : Node3D {
     #region Lifetime
 
     public override void _EnterTree() {
-        HexFeatureManager = new( 
-            UrbanPrefabs.To2DArray(),
-            FarmPrefabs.To2DArray(),
-            PlantPrefabs.To2DArray(),
-            Walls.HexMesh,
-            WallTower,
-            Bridge,
-            SpecialFeatures
-        );
+       Initialise();
     }
 
     #endregion

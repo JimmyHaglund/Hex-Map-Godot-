@@ -17,7 +17,7 @@ public sealed partial class HexGridChunkNode : Node3D {
     [Export] public HexMeshNode Water { get; set; }
     [Export] public HexMeshNode WaterShore { get; set; }
     [Export] public HexMeshNode Estuaries { get; set; }
-    [Export] public HexFeatureManager Features { get; set; }
+    [Export] public HexFeatureManagerNode Features { get; private set; }
 
     public event Action RefreshStarted;
     public event Action RefreshCompleted;
@@ -39,7 +39,20 @@ public sealed partial class HexGridChunkNode : Node3D {
 
     #region Lifetime
 
-    public override void _Ready() {
+    public override void _EnterTree() {
+        CreateChunk();
+    }
+
+    public void CreateChunk() {
+        if (Chunk is not null) return;
+        Terrain.Initialise();
+        Rivers.Initialise();
+        Roads.Initialise();
+        Water.Initialise();
+        WaterShore.Initialise();
+        Estuaries.Initialise();
+        Features.Initialise();
+
         Chunk = new(
             Terrain.HexMesh,
             Rivers.HexMesh,
@@ -47,20 +60,20 @@ public sealed partial class HexGridChunkNode : Node3D {
             Water.HexMesh,
             WaterShore.HexMesh,
             Estuaries.HexMesh,
-            Features
+            Features.HexFeatureManager
         );
         Chunk.RefreshRequested += Refresh;
     }
 
     public override void _Process(double delta) {
         CallDeferred("LateUpdate");
-        RefreshStarted();
+        RefreshStarted?.Invoke();
     }
 
     private void LateUpdate() {
         Triangulate();
         ProcessMode = ProcessModeEnum.Disabled;
-        RefreshCompleted();
+        RefreshCompleted?.Invoke();
     }
     #endregion
 }

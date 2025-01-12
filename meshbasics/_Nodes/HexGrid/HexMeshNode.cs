@@ -5,21 +5,34 @@ using JHM.HexaGrid;
 namespace JHM.MeshBasics;
 
 public sealed partial class HexMeshNode : MeshInstance3D {
+    public HexMesh HexMesh { get; set; }
     [Export] public CollisionShape3D CollisionShape { get; set; }
     [Export] public CollisionShape3D AltShape { get; set; }
     [Export] public bool UseCollider { get; set; } = true;
     [Export] public bool UseCellData { get; set; }
     [Export] public bool UseUVCoordinates { get; set; } = false;
     [Export] public bool UseUV2Coordinates { get; set; } = false;
-    public HexMesh HexMesh {get; set; }
     
     public override void _Ready() {
+        Initialise();
+    }
+
+    public void Initialise() {
+        if (HexMesh is not null) return;
         var mesh = Mesh as ArrayMesh;
-        if (HexMesh is null) {
+        if (Mesh is null) {
             GD.PrintErr("HexMesh requires an ArrayMesh.");
             return;
         }
-        HexMesh = new HexMesh(GetActiveMaterial(0), mesh, CollisionShape, AltShape, UseCollider, UseCellData, UseUVCoordinates, UseUV2Coordinates);
+        HexMesh = new HexMesh(
+            GetActiveMaterial(0),
+            mesh, CollisionShape,
+            AltShape,
+            UseCollider,
+            UseCellData,
+            UseUVCoordinates,
+            UseUV2Coordinates
+        );
         HexMesh.ApplyCompleted += () => CallDeferred("SwapCollisionShape");
     }
 
@@ -60,4 +73,6 @@ public sealed partial class HexMeshNode : MeshInstance3D {
     public void AddQuadUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4) => HexMesh.AddQuadUV2(uv1, uv2, uv3, uv4);
 
     public void AddQuadUV2(float uMin, float uMax, float vMin, float vMax) => HexMesh.AddQuadUV2(uMin, uMax, vMin, vMax);
+
+    private void SwapCollisionShape() => HexMesh.SwapCollisionShape();
 }

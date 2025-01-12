@@ -1,11 +1,7 @@
 ﻿using Godot;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JHM.HexaGrid;
+
 public sealed class HexGrid {
     private HexCell[] _cells;
     private HexGridChunk[] _chunks;
@@ -14,7 +10,6 @@ public sealed class HexGrid {
     private Node3D[] _columns;
 
     private HexCellShaderData _cellShaderData;
-    private PackedScene _hexUnitPrefab;
     public int CellCountX { get; set; } = 20;
     public int CellCountZ { get; set; } = 15;
     public PackedScene CellLabelPrefab { get; set; }
@@ -33,7 +28,7 @@ public sealed class HexGrid {
 
     public bool Wrapping { get; set; }
 
-    public static event Action MapReset;
+    public static event Action? MapReset;
 
     public bool HasPath {
         get {
@@ -41,14 +36,12 @@ public sealed class HexGrid {
         }
     }
 
-    public HexGrid(Node3D root) {
+    public HexGrid(Node3D root, PackedScene chunkPrefab) {
         HexGridRoot = root;
         _cellShaderData = new() { Grid = this };
-
-        HexMetrics.wrapSize = Wrapping ? CellCountX : 0;
-        _cellShaderData.Grid = this;
-        CreateMap(CellCountX, CellCountZ, Wrapping);
+        ChunkPrefab = chunkPrefab;
     }
+
 
     public HexCell GetCell(Vector3 position) {
         position = ClampPositionToGrid(position);
@@ -113,6 +106,8 @@ public sealed class HexGrid {
         CreateChunks();
         CreateCells();
         MapReset?.Invoke();
+
+        GD.Print($"Created grid map. Size:{CellCountX}, {CellCountZ}");
         return true;
     }
 

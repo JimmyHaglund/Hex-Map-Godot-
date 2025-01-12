@@ -45,6 +45,9 @@ events = [SubResource("InputEventKey_y58fe")]
 [node name="Demo" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0261192, -0.033123, -0.00343847)
 
+[node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.443542, 1.12439, 2.39325)
+
 [node name="HexMapCamera" type="Node3D" parent="." node_paths=PackedStringArray("Grid")]
 script = ExtResource("5_mpgou")
 Grid = NodePath("../HexGrid")
@@ -65,15 +68,15 @@ transform = Transform3D(-1, -7.96301e-15, -8.74228e-08, -7.97288e-08, 0.41021, 0
 script = ExtResource("1_qmp3k")
 Camera = NodePath("../CameraSwivel/CameraStick/Camera3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="PerspectiveFloor" type="MeshInstance3D" parent="."]
 transform = Transform3D(108.303, -0.292489, 0.122549, 0.29247, 108.303, 0.0168388, -0.122594, -0.0165083, 108.304, 0, -3.23711, 0)
 visible = false
 gi_mode = 0
 mesh = SubResource("PlaneMesh_bnbs1")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PerspectiveFloor"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PerspectiveFloor/StaticBody3D"]
 transform = Transform3D(1, -4.55302e-10, 0, 5.11591e-12, 1, -4.36557e-11, -2.32831e-10, 2.91038e-11, 1, -0.00637123, 1.40015e-05, 0.0206239)
 shape = SubResource("BoxShape3D_vp18b")
 
@@ -93,9 +96,6 @@ shadow_normal_bias = 4.022
 shadow_opacity = 0.0
 shadow_blur = 0.0
 
-[node name="HexGrid" parent="." instance=ExtResource("1_k1ek6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.443542, 1.12439, 2.39325)
-
 [node name="MousePointer" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0477524, 0.0898705, 0.0283718)
 script = ExtResource("4_qyimf")
@@ -112,7 +112,7 @@ offset_bottom = 38.0
 button_pressed = true
 shortcut = SubResource("Shortcut_gs0f4")
 
-[node name="HexMapEditor" type="Control" parent="."]
+[node name="HexMapEditor" type="Control" parent="." node_paths=PackedStringArray("Grid")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -127,6 +127,7 @@ script = ExtResource("4_fqh23")
 _terrainMaterial = ExtResource("6_388q4")
 _unitPrefab = ExtResource("7_7igmr")
 Colors = PackedColorArray(0.905049, 0.848337, 0.424126, 1, 0.259905, 0.630793, 0.479689, 1, 0.108825, 0.339266, 0.971792, 1, 0.838877, 0.111098, 0.348332, 1)
+Grid = NodePath("../HexGrid")
 
 [node name="Controls" type="ColorRect" parent="HexMapEditor"]
 layout_mode = 2
@@ -648,13 +649,14 @@ _staticSeed = true
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateSmallMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
+[connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateMediumMapButton" to="HexMapEditor/NewMapMenu" method="CreateMap" binds= [40, 60]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/CreateLargeMapButton" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/NewMapMenu/BoxContainer/Cancel" to="HexMapEditor/NewMapMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/ActionButton" to="HexMapEditor/SaveLoadMenu" method="PerformAction"]
-[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexGrid" method="CreateMap" binds= [40, 30]]
+[connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Delete" to="HexMapEditor/SaveLoadMenu" method="set_visible" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapCamera" method="SetLocked" binds= [false]]
 [connection signal="pressed" from="HexMapEditor/SaveLoadMenu/Menu/ActionButtonsContainer/Cancel" to="HexMapEditor/SaveLoadMenu" method="set_visible" binds= [false]]
