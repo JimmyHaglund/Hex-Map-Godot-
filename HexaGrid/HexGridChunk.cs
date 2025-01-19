@@ -67,7 +67,9 @@ public sealed class HexGridChunk {
         Estuaries.Clear();
         Features.Clear();
         for (int i = 0; i < _cells.Length; i++) {
+            if (_cells[i] is null) continue;
             Triangulate(_cells[i]);
+            ApplyFeatures(_cells[i]);
         }
         Terrain.Apply();
         Rivers.Apply();
@@ -79,10 +81,12 @@ public sealed class HexGridChunk {
     }
 
     private void Triangulate(HexCell cell) {
-        if (cell is null) return;
         for (HexDirection direction = HexDirection.NE; direction <= HexDirection.NW; direction++) {
             Triangulate(direction, cell);
         }
+    }
+
+    private void ApplyFeatures(HexCell cell) {
         if (!cell.IsUnderwater) {
             if (!cell.HasRiver && !cell.HasRoads) {
                 Features.AddFeature(cell, cell.Position);

@@ -144,9 +144,9 @@ UseUV2Coordinates = true
 
 [node name="Features" type="Node3D" parent="." node_paths=PackedStringArray("UrbanPrefabs", "FarmPrefabs", "PlantPrefabs", "Walls")]
 script = ExtResource("9_48dw0")
-UrbanPrefabs = [NodePath("UrbanLow"), NodePath("UrbanMedium"), NodePath("UrbanHigh")]
-FarmPrefabs = [NodePath("FarmLow"), NodePath("FarmMedium"), NodePath("FarmHigh")]
-PlantPrefabs = [NodePath("PlantLow"), NodePath("PlantMedium"), NodePath("PlantHigh")]
+UrbanPrefabs = [NodePath("UrbanHigh"), NodePath("UrbanMedium"), NodePath("UrbanLow")]
+FarmPrefabs = [NodePath("FarmHigh"), NodePath("FarmMedium"), NodePath("FarmLow")]
+PlantPrefabs = [NodePath("PlantHigh"), NodePath("PlantMedium"), NodePath("PlantLow")]
 Walls = NodePath("Walls")
 WallTower = ExtResource("10_4qouq")
 Bridge = ExtResource("11_dgxli")

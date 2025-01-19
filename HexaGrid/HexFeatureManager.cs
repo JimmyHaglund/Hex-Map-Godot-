@@ -2,8 +2,9 @@
 
 namespace JHM.HexaGrid;
 
-public sealed class HexFeatureManager : Node3D {
-    private Node3D? _container;
+public sealed class HexFeatureManager {
+    private Node3D _container;
+    private Node3D _root;
 
     public PackedScene[][] UrbanPrefabs { get; set; }
     public PackedScene[][] FarmPrefabs { get; set; }
@@ -14,6 +15,7 @@ public sealed class HexFeatureManager : Node3D {
     public PackedScene[] SpecialFeatures { get; set; }
 
     public HexFeatureManager(
+        Node3D root,
         PackedScene[][] urbanPrefabs,
         PackedScene[][] farmPrefabs,
         PackedScene[][] plantPrefabs,
@@ -21,7 +23,10 @@ public sealed class HexFeatureManager : Node3D {
         PackedScene wallTower,
         PackedScene bridge,
         PackedScene[] specialFeatures
-    ) { 
+    ) {
+        _root = root;
+        _container = new() {Name = "HexFeatureContainer"};
+        _root.AddChild(_container);
         UrbanPrefabs = urbanPrefabs;
         FarmPrefabs = farmPrefabs;
         PlantPrefabs = plantPrefabs;
@@ -40,10 +45,11 @@ public sealed class HexFeatureManager : Node3D {
         if (_container != null) {
             _container.QueueFree();
         }
-        _container = new Node3D();
-        this.AddChild(_container);
-        _container.Position = Position;
-        _container.Name = "FeatureContainer";
+        _container = new Node3D() { 
+            Name = "HexFeatureContainer",
+            Position = _root.Position
+        };
+        _root.AddChild(_container);
         Walls.Clear();
     }
 

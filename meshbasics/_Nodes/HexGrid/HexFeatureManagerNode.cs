@@ -18,8 +18,11 @@ public sealed partial class HexFeatureManagerNode : Node3D {
     public void Initialise() {
         if (HexFeatureManager is not null) return;
         Walls.Initialise();
+        _container = new() { Name= "HexFeaturesContainer" };
+        AddChild(_container);
 
         HexFeatureManager = new(
+            _container,
            UrbanPrefabs.To2DArray(),
            FarmPrefabs.To2DArray(),
            PlantPrefabs.To2DArray(),
