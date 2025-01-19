@@ -42,6 +42,16 @@ public sealed partial class HexGridNode : Node3D {
         CreateMap(CellCountX, CellCountZ, Wrapping);
     }
 
+    public override void _Process(double delta) {
+        if (!Grid.ShouldUpdate) return;
+        var deltaTime = (float)delta;
+        CallDeferred(nameof(LateUpdate), delta);
+    }
+
+    private void LateUpdate(float deltaTime) { 
+        Grid.LateUpdate(deltaTime);
+    }
+
     private static (Node3D, HexGridChunk) InstantiateChunk(PackedScene chunkPrefab) {
         var chunk = SceneInstantiator.InstantiateOrphan<HexGridChunkNode>(chunkPrefab);
         chunk.CreateChunk();

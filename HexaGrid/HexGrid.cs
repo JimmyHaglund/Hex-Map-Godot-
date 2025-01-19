@@ -27,6 +27,7 @@ public sealed class HexGrid {
     public Node3D HexGridRoot { get; private init; }
 
     public bool Wrapping { get; set; }
+    public bool ShouldUpdate { get; set; }
 
     public static event Action? MapReset;
 
@@ -39,9 +40,9 @@ public sealed class HexGrid {
     public HexGrid(Node3D root, PackedScene chunkPrefab) {
         HexGridRoot = root;
         _cellShaderData = new() { Grid = this };
+        _cellShaderData.ActiveSet += value => ShouldUpdate = value;
         ChunkPrefab = chunkPrefab;
     }
-
 
     public HexCell GetCell(Vector3 position) {
         position = ClampPositionToGrid(position);
@@ -259,6 +260,12 @@ public sealed class HexGrid {
             _columns[i].Position = position;
         }
     }
+
+    public void LateUpdate(float deltaTime) { 
+        _cellShaderData.Update(deltaTime);
+    }
+
+    #region Private
 
     private Vector3 ClampPositionToGrid(Vector3 position) {
         float xMax =
@@ -506,4 +513,6 @@ public sealed class HexGrid {
         }
         _units.Clear();
     }
+
+    #endregion
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://bwok11esd24iw"]
+[gd_scene load_steps=44 format=3 uid="uid://bwok11esd24iw"]
 
 [ext_resource type="Script" path="res://_Nodes/HexGrid/HexGridChunkNode.cs" id="1_djf1w"]
 [ext_resource type="Script" path="res://_Nodes/HexGrid/HexMeshNode.cs" id="3_th4vj"]
@@ -37,6 +37,10 @@
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0fglf"]
 resource_local_to_scene = true
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_pye4h"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_55si3"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_nb12b"]
 resource_local_to_scene = true
@@ -79,10 +83,12 @@ UseCellData = true
 [node name="StaticBody3D" type="StaticBody3D" parent="Terrain"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_pye4h")
 
 [node name="AltStaticBody" type="StaticBody3D" parent="Terrain"]
 
 [node name="AltCollisionShape3D" type="CollisionShape3D" parent="Terrain/AltStaticBody"]
+shape = SubResource("ConvexPolygonShape3D_55si3")
 
 [node name="Rivers" type="MeshInstance3D" parent="."]
 material_override = ExtResource("4_usb5c")
